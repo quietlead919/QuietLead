@@ -196,7 +196,7 @@ export default function Home() {
         <section className="hero-bg relative overflow-hidden px-4 pt-32 pb-10 text-center text-white sm:pt-40">
           <div className="relative mx-auto max-w-5xl">
             <div className="fade-up">
-              <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
+              <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 text-emerald-400" />
                 Private beta · 50 founding spots<span className="hidden sm:inline">&nbsp;at 50% off for life</span>
               </p>
@@ -282,7 +282,7 @@ export default function Home() {
                       <p className="mt-2.5 leading-relaxed text-ink-soft">{it.text}</p>
                       <a
                         href="#waitlist"
-                        className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl border border-ink/10 bg-white px-4 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
+                        className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
                       >
                         Join the waitlist <span aria-hidden="true">→</span>
                       </a>

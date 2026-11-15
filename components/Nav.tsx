@@ -50,7 +50,7 @@ export function Nav() {
         </ul>
         <a
           href="#waitlist"
-          className="relative inline-flex h-10 items-center rounded-xl border border-white/30 bg-brand px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-px"
+          className="relative inline-flex h-10 items-center rounded-xl bg-brand px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-px"
         >
           Join waitlist
           <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 rounded-full bg-pink-500 px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap text-white">
