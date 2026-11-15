@@ -1,41 +1,61 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const links = [
   { href: "#how", label: "How it works" },
   { href: "#features", label: "Features" },
   { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
+  { href: "#faq", label: "FAQs" },
 ];
 
+// Transparent with white text over the blue hero, white bar once you scroll.
 export function Nav() {
+  const [solid, setSolid] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-4 z-50 px-4">
-      <nav className="glass mx-auto flex h-14 max-w-5xl items-center justify-between rounded-full py-2 pr-2 pl-3">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        solid ? "border-b border-ink/5 bg-white/90 backdrop-blur-md" : "bg-transparent"
+      }`}
+    >
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <a href="#top" className="flex items-center gap-2.5" aria-label="QuietLead home">
-          <Image
-            src="/brand/quietlead-icon.png"
-            alt=""
-            width={34}
-            height={34}
-            className="rounded-[10px]"
-            priority
-          />
-          <span className="text-[17px] font-medium tracking-tight">QuietLead</span>
+          <Image src="/brand/quietlead-icon.png" alt="" width={32} height={32} className="rounded-[9px]" priority />
+          <span className={`text-[17px] font-semibold tracking-tight ${solid ? "text-ink" : "text-white"}`}>
+            QuietLead
+          </span>
         </a>
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="rounded-full px-3.5 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-white/70 hover:text-ink"
+                className={`text-sm font-medium transition-colors ${
+                  solid ? "text-ink-soft hover:text-ink" : "text-white/85 hover:text-white"
+                }`}
               >
                 {l.label}
               </a>
             </li>
           ))}
         </ul>
-        <a href="#waitlist" className="btn-primary h-10 px-4 text-sm">
+        <a
+          href="#waitlist"
+          className="relative inline-flex h-10 items-center rounded-xl border border-white/30 bg-brand px-4 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition-transform hover:-translate-y-px"
+        >
           Join waitlist
+          <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 rounded-full bg-pink-500 px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap text-white">
+            −50% for life
+          </span>
         </a>
       </nav>
     </header>

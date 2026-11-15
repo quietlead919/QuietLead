@@ -9,10 +9,12 @@ export function WaitlistForm({
   source,
   size = "lg",
   onDark = false,
+  center = false,
 }: {
   source: string;
   size?: "md" | "lg";
   onDark?: boolean;
+  center?: boolean;
 }) {
   const [state, action, pending] = useActionState(joinWaitlist, initial);
   const h = size === "lg" ? "h-14" : "h-12";
@@ -21,7 +23,9 @@ export function WaitlistForm({
     return (
       <p
         role="status"
-        className={`glass flex ${h} w-full max-w-md items-center gap-3 rounded-full px-5 text-[15px] font-medium text-brand`}
+        className={`flex ${h} w-full max-w-md items-center gap-3 rounded-2xl px-5 text-[15px] font-medium text-brand ${
+          onDark ? "bg-white shadow-xl shadow-black/15" : "glass"
+        } ${center ? "mx-auto" : ""}`}
       >
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs text-white">
           ✓
@@ -32,9 +36,9 @@ export function WaitlistForm({
   }
 
   return (
-    <form action={action} className="w-full max-w-md">
+    <form action={action} className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}>
       <div
-        className={`flex ${h} items-center gap-2 rounded-full p-1.5 pl-5 ${
+        className={`flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
           onDark ? "bg-white shadow-xl shadow-black/15" : "glass"
         }`}
       >
@@ -62,14 +66,14 @@ export function WaitlistForm({
         <button
           type="submit"
           disabled={pending}
-          className="btn-primary h-full px-5 text-[15px]"
+          className="btn-primary h-full rounded-xl px-5 text-[15px]"
         >
-          {pending ? "Joining…" : "Get early access"}
+          {pending ? "Joining…" : "Get early access →"}
         </button>
       </div>
       <p
         aria-live="polite"
-        className={`mt-3 pl-5 text-sm ${
+        className={`mt-3 text-sm ${center ? "" : "pl-5"} ${
           state.status === "error"
             ? onDark
               ? "font-medium text-white"

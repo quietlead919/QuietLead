@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import "@fontsource/open-sauce-one/400.css";
+import "@fontsource/open-sauce-one/500.css";
+import "@fontsource/open-sauce-one/600.css";
+import "@fontsource/open-sauce-one/700.css";
+import "@fontsource/open-sauce-one/500-italic.css";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "QuietLead · Finding leads without the noise",
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
+    <html lang="en" className="h-full">
       <body className="min-h-full overflow-x-hidden">{children}</body>
     </html>
   );
