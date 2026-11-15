@@ -52,7 +52,7 @@ export function WaitlistForm({
           required
           autoComplete="email"
           placeholder="you@company.com"
-          className="min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-ink-faint focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus-visible:outline-none"
         />
         <input type="hidden" name="source" value={source} />
         <input

@@ -179,9 +179,12 @@ body {
   background: #fff;
 }
 
-:focus-visible {
-  outline: 2px solid #3b6cf6;
-  outline-offset: 3px;
+/* In the base layer so utilities like focus:outline-none can override it */
+@layer base {
+  :focus-visible {
+    outline: 2px solid #3b6cf6;
+    outline-offset: 3px;
+  }
 }
 
 /* Floating gradient blobs */
