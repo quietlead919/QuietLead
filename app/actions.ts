@@ -1,6 +1,8 @@
 "use server";
 
+import { after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendMail, signupNotice, welcomeMail } from "@/lib/mail";
 
 export type WaitlistState = {
   status: "idle" | "success" | "error";
@@ -54,6 +56,17 @@ export async function joinWaitlist(
       message: "Something went wrong. Please try again.",
     };
   }
+
+  // Send emails after the response so the form stays fast; failures never block a signup.
+  after(async () => {
+    try {
+      await sendMail({ to: email, ...welcomeMail() });
+      const owner = process.env.NOTIFY_EMAIL;
+      if (owner) await sendMail({ to: owner, replyTo: email, ...signupNotice(email, source) });
+    } catch (err) {
+      console.error("[waitlist] email failed:", err);
+    }
+  });
 
   return {
     status: "success",

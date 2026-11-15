@@ -22,6 +22,26 @@ Open http://localhost:3000.
 
 Signups appear in **Table Editor > waitlist**. Without the env vars the form shows "The waitlist isn't connected yet."
 
+## Emails (Resend)
+
+After a signup the person gets a short welcome email and `NOTIFY_EMAIL` gets a "new signup" notice. Both are skipped if `RESEND_API_KEY` is not set.
+
+1. Create a Resend account and an API key, put it in `RESEND_API_KEY`. Set `NOTIFY_EMAIL` to your address.
+2. Until a domain is verified in Resend, the test sender `onboarding@resend.dev` can only deliver to the email of your Resend account. After verifying your domain set `MAIL_FROM`, e.g. `QuietLead <hello@yourdomain.com>`.
+3. Add the same three variables in Vercel (Production) and redeploy.
+
+### Launch email
+
+Edit the text at the top of [`scripts/send-launch.mjs`](scripts/send-launch.mjs), run [`supabase/launch.sql`](supabase/launch.sql) once and set `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`. Then:
+
+```bash
+node --env-file=.env.local scripts/send-launch.mjs                    # dry run, lists recipients
+node --env-file=.env.local scripts/send-launch.mjs --test you@x.com   # one test copy to you
+node --env-file=.env.local scripts/send-launch.mjs --send             # send to everyone not mailed yet
+```
+
+Each address is marked with `launch_sent_at`, so running it again never mails anyone twice.
+
 ## Subscriptions (Stripe, test mode)
 
 1. Put `STRIPE_SECRET_KEY` (sk_test_...) in `.env.local`.
