@@ -280,15 +280,15 @@ export default function Home() {
                     <div key={it.title}>
                       <h3 className="text-xl font-semibold text-[var(--panel-ink)]">{it.title}</h3>
                       <p className="mt-2.5 leading-relaxed text-ink-soft">{it.text}</p>
-                      <a
-                        href="#waitlist"
-                        className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
-                      >
-                        Join the waitlist <span aria-hidden="true">→</span>
-                      </a>
                     </div>
                   ))}
                 </div>
+                <a href="#waitlist" className="link-arrow mt-10">
+                  Join the waitlist
+                  <span className="arrow" aria-hidden="true">
+                    →
+                  </span>
+                </a>
               </div>
             </Reveal>
           ))}

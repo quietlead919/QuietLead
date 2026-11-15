@@ -38,31 +38,59 @@ body {
   background: linear-gradient(180deg, #002a7a 0%, #004cad 32%, #2f6ae6 62%, #9cb9ff 84%, #ffffff 100%);
 }
 
-/* Colored feature panels */
+/* Feature panels: quiet pastel surfaces, no borders */
 .panel {
   border-radius: 40px;
-  border: 1.5px solid var(--panel-border);
-  background: linear-gradient(var(--panel-tint), var(--panel-tint)), rgba(255, 255, 255, 0.9);
+  background: var(--panel-bg);
 }
+/* ice */
 .panel-blue {
-  --panel-border: #7aa6ff;
-  --panel-tint: rgba(0, 76, 173, 0.08);
-  --panel-ink: #002a7a;
+  --panel-bg: #eef3fb;
+  --panel-ink: #17325e;
+  --panel-accent: #004cad;
 }
+/* sage */
 .panel-green {
-  --panel-border: #8ae817;
-  --panel-tint: rgba(41, 163, 41, 0.12);
-  --panel-ink: #144607;
+  --panel-bg: #edf2ec;
+  --panel-ink: #26402b;
+  --panel-accent: #4a7451;
 }
+/* lavender */
 .panel-purple {
-  --panel-border: #b994ff;
-  --panel-tint: rgba(124, 58, 237, 0.1);
-  --panel-ink: #3b1680;
+  --panel-bg: #f0eef8;
+  --panel-ink: #342d5c;
+  --panel-accent: #6458a8;
 }
+/* sand */
 .panel-pink {
-  --panel-border: #ff9fd0;
-  --panel-tint: rgba(236, 72, 153, 0.1);
-  --panel-ink: #7a0f45;
+  --panel-bg: #f6f0e8;
+  --panel-ink: #4e3a29;
+  --panel-accent: #9a6a43;
+}
+
+/* Text link with a filled arrow circle that nudges on hover */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--panel-ink, var(--color-brand));
+}
+.link-arrow .arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: var(--panel-accent, var(--color-brand));
+  color: #fff;
+  font-size: 14px;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.link-arrow:hover .arrow {
+  transform: translateX(4px);
 }
 
 /* Step cards */
