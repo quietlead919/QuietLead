@@ -24,7 +24,7 @@ export function WaitlistForm({
       <p
         role="status"
         className={`flex ${h} w-full max-w-md items-center gap-3 rounded-2xl px-5 text-[15px] font-medium text-brand ${
-          onDark ? "bg-white shadow-xl shadow-black/15" : "glass"
+          onDark ? "bg-white" : "glass"
         } ${center ? "mx-auto" : ""}`}
       >
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs text-white">
@@ -39,7 +39,7 @@ export function WaitlistForm({
     <form action={action} className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}>
       <div
         className={`flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
-          onDark ? "bg-white shadow-xl shadow-black/15" : "glass"
+          onDark ? "bg-white" : "glass"
         }`}
       >
         <label htmlFor={`email-${source}`} className="sr-only">

@@ -145,8 +145,8 @@ export function HeroMockup() {
                     aria-pressed={active}
                     className={`w-full rounded-2xl p-3 text-left transition-all duration-200 ${
                       active
-                        ? "bg-brand text-white shadow-lg shadow-brand/25"
-                        : "bg-white/70 text-ink hover:bg-white hover:shadow-md hover:shadow-brand/10"
+                        ? "bg-brand text-white"
+                        : "bg-white/70 text-ink hover:bg-white"
                     } ${done && !active ? "opacity-60" : ""}`}
                   >
                     <span className="flex items-center justify-between gap-2">

@@ -194,7 +194,6 @@ export default function Home() {
       <main id="top">
         {/* HERO */}
         <section className="hero-bg relative overflow-hidden px-4 pt-32 pb-10 text-center text-white sm:pt-40">
-          <div className="hero-stars absolute inset-0" aria-hidden="true" />
           <div className="relative mx-auto max-w-5xl">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
@@ -248,7 +247,7 @@ export default function Home() {
             {steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 90}>
                 <div className="step-card px-6 py-7 text-center">
-                  <span className="inline-block rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white shadow-md shadow-orange-500/30">
+                  <span className="inline-block rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
                     Step {s.n}
                   </span>
                   <h3 className="mt-3 text-2xl font-semibold tracking-tight">{s.title}</h3>
@@ -283,7 +282,7 @@ export default function Home() {
                       <p className="mt-2.5 leading-relaxed text-ink-soft">{it.text}</p>
                       <a
                         href="#waitlist"
-                        className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl border border-ink/10 bg-white px-4 text-sm font-semibold text-ink shadow-sm transition-transform hover:-translate-y-px"
+                        className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl border border-ink/10 bg-white px-4 text-sm font-semibold text-ink transition-transform hover:-translate-y-px"
                       >
                         Join the waitlist <span aria-hidden="true">→</span>
                       </a>
@@ -308,7 +307,7 @@ export default function Home() {
             text="Volume tools fill inboxes. QuietLead fills calendars."
           />
           <Reveal className="mx-auto mt-14 max-w-4xl">
-            <div className="overflow-hidden rounded-[28px] border border-[#e3eaf8] bg-white shadow-[0_30px_70px_-45px_rgba(0,58,133,0.35)]">
+            <div className="overflow-hidden rounded-[28px] border border-[#e3eaf8] bg-white">
               <div className="grid grid-cols-3 border-b border-ink/5 bg-mist/60 px-5 py-4 text-sm font-semibold sm:px-8">
                 <span />
                 <span className="text-ink-faint">Volume tools</span>
@@ -343,7 +342,7 @@ export default function Home() {
         </section>
 
         {/* PRICING */}
-        <section id="pricing" className="scroll-mt-24 bg-gradient-to-b from-white via-mist to-white px-4 py-24">
+        <section id="pricing" className="scroll-mt-24 px-4 py-24">
           <SectionHead
             eyebrow="Pricing"
             title="Simple plans. Founding price for life."
@@ -354,7 +353,7 @@ export default function Home() {
               <Reveal key={p.name} delay={i * 90}>
                 <div
                   className={`relative flex h-full flex-col rounded-3xl p-7 ${
-                    p.popular ? "bg-brand text-white shadow-2xl shadow-brand/30" : "glass"
+                    p.popular ? "bg-brand text-white" : "glass"
                   }`}
                 >
                   {p.popular && (
@@ -407,7 +406,7 @@ export default function Home() {
           <div className="mx-auto mt-12 max-w-3xl space-y-3">
             {faqs.map((f, i) => (
               <Reveal key={f.q} delay={i * 60}>
-                <details className="group rounded-2xl border border-[#e3eaf8] bg-white px-6 py-5 shadow-sm">
+                <details className="group rounded-2xl border border-[#e3eaf8] bg-white px-6 py-5">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold">
                     {f.q}
                     <span className="faq-icon flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mist text-brand transition-transform duration-300">
@@ -424,8 +423,8 @@ export default function Home() {
         {/* FINAL CTA */}
         <section id="waitlist" className="scroll-mt-24 px-4 pt-6 pb-28">
           <Reveal className="mx-auto max-w-6xl">
-            <div className="relative overflow-hidden rounded-[40px] bg-[linear-gradient(180deg,#002a7a_0%,#004cad_45%,#2f6ae6_100%)] px-6 py-16 text-center text-white sm:px-16 sm:py-20">
-              <div className="hero-stars absolute inset-0" aria-hidden="true" />
+            <div className="relative overflow-hidden rounded-[40px] bg-brand px-6 py-16 text-center text-white sm:px-16 sm:py-20">
+              
               <div className="relative">
                 <Image
                   src="/brand/quietlead-icon.png"

@@ -42,7 +42,7 @@ export function PipelineCalculator() {
   ];
 
   return (
-    <div className="grid gap-6 rounded-[40px] border border-[#e3eaf8] bg-white p-6 shadow-[0_30px_70px_-40px_rgba(0,58,133,0.35)] sm:p-10 lg:grid-cols-[1.1fr_1fr]">
+    <div className="grid gap-6 rounded-[40px] border border-[#e3eaf8] bg-white p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
       <div className="space-y-7">
         {fields.map((f) => {
           const v = values[f.key];
