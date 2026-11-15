@@ -107,6 +107,16 @@ const faqs = [
   },
 ];
 
+// Pricing buttons open Stripe Checkout only when this flag is on (set it to
+// "true" in .env.local for testing, leave it off in production until launch).
+const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "true";
+
+function planButton(popular?: boolean) {
+  return popular
+    ? "inline-flex items-center justify-center rounded-full bg-white font-medium text-brand transition-transform hover:-translate-y-px"
+    : "btn-primary";
+}
+
 function SectionHead({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
   return (
     <Reveal className="mx-auto max-w-2xl text-center">
@@ -289,16 +299,18 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href="#waitlist"
-                    className={`mt-8 h-12 text-[15px] ${
-                      p.popular
-                        ? "inline-flex items-center justify-center rounded-full bg-white font-medium text-brand transition-transform hover:-translate-y-px"
-                        : "btn-primary"
-                    }`}
-                  >
-                    Join the waitlist
-                  </a>
+                  {checkoutEnabled ? (
+                    <form action="/api/checkout" method="post" className="mt-8">
+                      <input type="hidden" name="plan" value={p.name.toLowerCase()} />
+                      <button type="submit" className={`h-12 w-full text-[15px] ${planButton(p.popular)}`}>
+                        Start 7-day free trial
+                      </button>
+                    </form>
+                  ) : (
+                    <a href="#waitlist" className={`mt-8 h-12 text-[15px] ${planButton(p.popular)}`}>
+                      Join the waitlist
+                    </a>
+                  )}
                 </div>
               </Reveal>
             ))}
