@@ -4,12 +4,11 @@ import { HeroMockup } from "@/components/HeroMockup";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Reveal } from "@/components/Reveal";
 import { PipelineCalculator } from "@/components/PipelineCalculator";
+import { HeroMotion } from "@/components/HeroMotion";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { ScrollWords } from "@/components/ScrollWords";
+import { StepsStory } from "@/components/StepsStory";
 
-const steps = [
-  { n: 1, title: "Describe your customer", text: "Tell QuietLead who you want to reach, in plain words." },
-  { n: 2, title: "AI finds the right moment", text: "It scans companies for buying signals and researches each lead." },
-  { n: 3, title: "Approve and send", text: "Get a personal draft, approve it, send it from your own inbox." },
-];
 
 type Panel = {
   tone: "blue" | "green" | "purple" | "pink";
@@ -179,13 +178,21 @@ function planButton(popular?: boolean) {
     : "btn-primary";
 }
 
-function SectionHead({ eyebrow, title, text }: { eyebrow?: string; title: React.ReactNode; text?: string }) {
+// Section title lights up word by word while scrolling (a newline in the text = line break).
+function SectionHead({ eyebrow, title, text }: { eyebrow?: string; title: string; text?: string }) {
   return (
-    <Reveal className="mx-auto max-w-3xl text-center">
+    <div className="mx-auto max-w-3xl text-center">
       {eyebrow && <p className="text-sm font-semibold text-brand">{eyebrow}</p>}
-      <h2 className="mt-2 text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-5xl">{title}</h2>
-      {text && <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-ink-soft">{text}</p>}
-    </Reveal>
+      <ScrollWords
+        text={title}
+        className="mt-2 text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-5xl"
+      />
+      {text && (
+        <Reveal>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-ink-soft">{text}</p>
+        </Reveal>
+      )}
+    </div>
   );
 }
 
@@ -202,11 +209,13 @@ export default function Home() {
   return (
     <>
       <Nav />
+      <ScrollProgress />
+      <HeroMotion />
 
       <main id="top">
         {/* HERO */}
-        <section className="hero-bg relative overflow-hidden px-4 pt-32 pb-10 text-center text-white sm:pt-40">
-          <div className="relative mx-auto max-w-5xl">
+        <section data-hero className="hero-bg relative overflow-hidden px-4 pt-32 pb-10 text-center text-white sm:pt-40">
+          <div data-hero-copy className="relative mx-auto max-w-5xl">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 text-emerald-400" />
@@ -244,46 +253,39 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="fade-up relative mx-auto mt-16 max-w-3xl text-left" style={{ animationDelay: "300ms" }}>
-            <HeroMockup />
+          <div
+            className="fade-up relative mx-auto mt-16 max-w-3xl text-left [perspective:1600px]"
+            style={{ animationDelay: "300ms" }}
+          >
+            <div data-hero-card>
+              <HeroMockup />
+            </div>
           </div>
           <p className="relative mt-8 text-xs text-ink-faint">
             Sending from Gmail or Outlook is included in Steady and Studio. QuietLead never sends anything without your approval.
           </p>
         </section>
 
-        {/* STEPS */}
-        <section id="how" className="scroll-mt-24 px-4 py-24">
-          <SectionHead title="Describe. Discover. Send." text="In three easy steps, start filling your pipeline quietly." />
-          <div className="mx-auto mt-12 max-w-xl space-y-4">
-            {steps.map((s, i) => (
-              <Reveal key={s.n} delay={i * 90}>
-                <div className="step-card px-6 py-7 text-center">
-                  <span className="inline-block rounded-full bg-orange-700 px-3 py-1 text-xs font-semibold text-white">
-                    Step {s.n}
-                  </span>
-                  <h3 className="mt-3 text-2xl font-semibold tracking-tight">{s.title}</h3>
-                  <p className="mt-1.5 text-[15px] text-ink-soft">{s.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className="mt-10 text-center">
+        {/* STEPS: pinned scroll story */}
+        <StepsStory />
+        <div className="px-4 pb-24 text-center">
+          <Reveal>
             <a href="#waitlist" className="btn-primary h-14 rounded-2xl px-8 text-base">
               Get early access →
             </a>
             <p className="mt-4 text-sm text-ink-faint">Built for agencies, consultants and B2B teams</p>
           </Reveal>
-        </section>
+        </div>
 
         {/* FEATURE PANELS */}
         <section id="features" className="scroll-mt-24 space-y-6 px-4 pb-24">
           {panels.map((p) => (
             <Reveal key={p.title} className="mx-auto max-w-6xl">
               <div className={`panel panel-${p.tone} px-6 py-10 sm:px-12 sm:py-14`}>
-                <h2 className="text-[28px] leading-tight font-semibold tracking-tight text-[var(--panel-ink)] sm:text-[34px]">
-                  {p.title}
-                </h2>
+                <ScrollWords
+                  text={p.title}
+                  className="text-[28px] leading-tight font-semibold tracking-tight text-[var(--panel-ink)] sm:text-[34px]"
+                />
                 <p className="mt-3 max-w-3xl text-[17px] leading-relaxed text-ink-soft [&_em]:font-medium [&_em]:text-[var(--panel-ink)]">
                   {p.intro}
                 </p>
@@ -309,13 +311,7 @@ export default function Home() {
         {/* COMPARISON */}
         <section className="px-4 py-24">
           <SectionHead
-            title={
-              <>
-                Everyone&apos;s Sending More.
-                <br />
-                Why Not Send Better?
-              </>
-            }
+            title={"Everyone's Sending More.\nWhy Not Send Better?"}
             text="Volume tools fill inboxes. QuietLead helps you write to fewer people, better."
           />
           <Reveal className="mx-auto mt-14 max-w-4xl">
@@ -458,9 +454,11 @@ export default function Home() {
                   height={64}
                   className="mx-auto rounded-2xl ring-1 ring-white/30"
                 />
-                <h2 className="mx-auto mt-6 max-w-3xl text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-6xl">
-                  Your Next Customers Are Out There. Reach Them <em>Quietly</em>.
-                </h2>
+                <ScrollWords
+                  tone="light"
+                  text="Your Next Customers Are Out There. Reach Them *Quietly*."
+                  className="mx-auto mt-6 max-w-3xl text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-6xl"
+                />
                 <p className="mx-auto mt-5 max-w-lg text-lg text-white">
                   Join the waitlist and be among the first to get access.
                 </p>

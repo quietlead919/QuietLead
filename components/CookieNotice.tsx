@@ -1,30 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const KEY = "ql-cookie-notice";
+const listeners = new Set<() => void>();
+
+function seen() {
+  try {
+    return localStorage.getItem(KEY) === "seen";
+  } catch {
+    return false;
+  }
+}
+
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
 
 // Informational notice: the site sets no cookies, so there is nothing to accept or reject.
 // Closing it stores one local-storage flag (no personal data) so it doesn't come back.
 export function CookieNotice() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem(KEY)) setOpen(true);
-    } catch {
-      setOpen(true);
-    }
-  }, []);
-
-  if (!open) return null;
+  // Server render and first paint: hidden, then shown on the client if not seen yet.
+  const hidden = useSyncExternalStore(subscribe, seen, () => true);
+  if (hidden) return null;
 
   function close() {
-    setOpen(false);
     try {
       localStorage.setItem(KEY, "seen");
     } catch {}
+    listeners.forEach((l) => l());
   }
 
   return (

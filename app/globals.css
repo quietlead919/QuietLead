@@ -430,3 +430,10 @@ details[open] .faq-icon {
     display: none;
   }
 }
+
+/* Steps story: before GSAP takes over (and with reduced motion) only the first scene shows */
+[data-scene="leads"],
+[data-scene="send"] {
+  visibility: hidden;
+  opacity: 0;
+}
