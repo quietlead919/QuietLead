@@ -21,10 +21,9 @@ export function WaitlistForm({
   const h = size === "lg" ? "h-14" : "h-12";
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
   const [hint, setHint] = useState<string | null>(null);
-  const [shake, setShake] = useState(false);
 
   // Our own validation instead of the browser's grey popup: a short hint under the
-  // field and a gentle shake. The server validates again anyway.
+  // field. The server validates again anyway.
   function validate(e: FormEvent<HTMLFormElement>) {
     const input = e.currentTarget.elements.namedItem("email") as HTMLInputElement;
     const value = input.value.trim();
@@ -36,7 +35,6 @@ export function WaitlistForm({
     if (problem) {
       e.preventDefault();
       setHint(problem);
-      setShake(true);
       input.focus();
     }
   }
@@ -82,10 +80,7 @@ export function WaitlistForm({
       className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}
     >
       <div
-        onAnimationEnd={() => setShake(false)}
-        className={`pop-box flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 transition-shadow ${shake ? "shake" : ""} ${
-          hint ? "ring-2 ring-[#ffb4b4]" : ""
-        } ${
+        className={`pop-box flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
           onDark ? "bg-white" : "glass"
         }`}
       >
