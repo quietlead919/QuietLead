@@ -213,10 +213,8 @@ export function HeroMockup() {
                     onClick={() => pick(l.id)}
                     aria-pressed={active}
                     disabled={busy && !active}
-                    className={`w-full rounded-2xl border px-4 py-3.5 text-left transition-[transform,background-color,border-color,opacity] duration-200 active:scale-[0.97] focus-visible:outline-offset-2 ${
-                      active
-                        ? "border-ink bg-ink text-white"
-                        : "border-line bg-white text-ink hover:translate-x-1 hover:border-ink hover:bg-mist"
+                    className={`w-full rounded-2xl px-4 py-3.5 text-left transition-[transform,background-color,opacity] duration-200 active:scale-[0.97] focus-visible:outline-offset-2 ${
+                      active ? "bg-ink text-white" : "bg-mist text-ink hover:translate-x-1 hover:bg-haze"
                     } ${done && !active ? "opacity-60 hover:opacity-100" : ""}`}
                   >
                     <span className="flex items-center justify-between gap-2">
@@ -227,10 +225,10 @@ export function HeroMockup() {
                           done
                             ? active
                               ? "bg-white/20"
-                              : "bg-mist text-ink"
+                              : "bg-white text-ink"
                             : active
                               ? "bg-white/20"
-                              : "bg-mist text-brand"
+                              : "bg-white text-ink"
                         }`}
                       >
                         {done ? "Sent" : l.score}
@@ -259,7 +257,7 @@ export function HeroMockup() {
                 <a href="#waitlist" className={`${btnBase} bg-brand text-white hover:-translate-y-0.5 hover:bg-brand-deep`}>
                   Get early access
                 </a>
-                <button type="button" onClick={reset} className={`${btnBase} border border-line bg-white text-ink hover:border-ink`}>
+                <button type="button" onClick={reset} className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
                   Reset demo
                 </button>
               </div>
@@ -280,25 +278,35 @@ export function HeroMockup() {
               {/* Draft card: folds away when sent while a paper plane takes off */}
               <div className="relative">
                 <div
-                  className={`rounded-2xl border bg-white p-5 transition-[border-color,box-shadow] duration-200 ${
-                    editing ? "border-ink ring-1 ring-ink" : "border-line hover:border-ink"
+                  className={`rounded-2xl p-5 transition-colors duration-200 ${
+                    editing ? "bg-haze" : "bg-mist hover:bg-haze"
                   } ${leaving ? "fly-away" : ""}`}
                 >
                   <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">
                     Draft to {lead.to}
                   </p>
-                  {editing ? (
-                    <textarea
-                      value={editValue}
-                      onChange={(e) => setEditValue(e.target.value)}
-                      autoFocus
-                      rows={4}
-                      aria-label={`Edit draft to ${lead.to}`}
-                      className="mt-2.5 w-full resize-none bg-transparent text-[14px] leading-relaxed text-ink focus:outline-none focus-visible:outline-none"
-                    />
-                  ) : (
-                    <p className="mt-2.5 text-[14px] leading-relaxed text-ink">{drafts[lead.id]}</p>
-                  )}
+                  {/* All drafts share one grid cell (the others invisible), so the card is always as tall
+                      as the longest draft and the demo doesn't change height when you switch leads. */}
+                  <div className="mt-2.5 grid text-[14px] leading-relaxed text-ink">
+                    {leads.map((l) => (
+                      <p
+                        key={l.id}
+                        aria-hidden={l.id !== lead.id || editing}
+                        className={`[grid-area:1/1] ${l.id === lead.id && !editing ? "" : "invisible"}`}
+                      >
+                        {drafts[l.id]}
+                      </p>
+                    ))}
+                    {editing && (
+                      <textarea
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        autoFocus
+                        aria-label={`Edit draft to ${lead.to}`}
+                        className="h-full min-h-[6.5em] w-full resize-none bg-transparent [grid-area:1/1] focus:outline-none focus-visible:outline-none"
+                      />
+                    )}
+                  </div>
                 </div>
                 {phase === "flying" && (
                   <span className="plane-fly pointer-events-none absolute top-1/2 left-1/2 text-brand" aria-hidden="true">
@@ -360,11 +368,11 @@ export function HeroMockup() {
                     </button>
                     {!busy &&
                       (editing ? (
-                        <button type="button" onClick={saveEdit} className={`${btnBase} border border-line bg-white text-ink hover:border-ink`}>
+                        <button type="button" onClick={saveEdit} className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
                           Save
                         </button>
                       ) : (
-                        <button type="button" onClick={startEdit} className={`${btnBase} group/edit border border-line bg-white text-ink hover:border-ink`}>
+                        <button type="button" onClick={startEdit} className={`${btnBase} group/edit bg-mist text-ink hover:bg-haze`}>
                           <PencilIcon className="h-4 w-4 transition-transform duration-200 group-hover/edit:-rotate-12" />
                           Edit
                         </button>
