@@ -32,21 +32,36 @@ export function StepsStory() {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         const q = gsap.utils.selector(root);
-        // The timeline is driven by scroll until it has played once; after that it stays on
-        // the final "Sent" scene (scrolling up and down no longer rewinds it) and the
-        // Replay button plays it again on its own.
+        // The story only ever moves forward: scrolling down drives it, scrolling up never
+        // rewinds it. Once it has reached "Sent" it stays there. Only after you have scrolled
+        // back above the section and come down into it again does it start over.
         const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
         let finished = false;
+        let reached = 0;
+        let leftAbove = false;
         const st = ScrollTrigger.create({
           trigger: q("[data-pin]")[0],
           start: "top top",
           end: "+=2600",
           pin: true,
           anticipatePin: 1,
+          onLeaveBack() {
+            leftAbove = true;
+          },
+          onEnter() {
+            if (!leftAbove) return;
+            leftAbove = false;
+            finished = false;
+            reached = 0;
+            gsap.killTweensOf(tl);
+            tl.timeScale(1).progress(0);
+            setDone(false);
+          },
           onUpdate(self) {
-            if (finished) return;
-            gsap.to(tl, { progress: self.progress, duration: 0.8, ease: "power3.out", overwrite: true });
-            if (self.progress > 0.97) {
+            if (finished || self.direction < 0) return;
+            reached = Math.max(reached, self.progress);
+            gsap.to(tl, { progress: reached, duration: 0.8, ease: "power3.out", overwrite: true });
+            if (reached > 0.97) {
               finished = true;
               gsap.to(tl, { progress: 1, duration: 0.6, ease: "power2.out", overwrite: true });
               setDone(true);
