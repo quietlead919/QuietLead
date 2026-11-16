@@ -263,7 +263,7 @@ export default function Home() {
 
         {/* STEPS: pinned scroll story */}
         <StepsStory />
-        <div className="px-4 pb-24 text-center">
+        <div className="relative -mt-14 px-4 pb-24 text-center sm:-mt-20">
           <Reveal>
             <a href="#waitlist" className="btn-primary h-14 rounded-2xl px-8 text-base">
               Get early access →
