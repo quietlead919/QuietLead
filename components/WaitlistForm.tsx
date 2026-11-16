@@ -56,7 +56,7 @@ export function WaitlistForm({
   return (
     <form action={action} className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}>
       <div
-        className={`flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
+        className={`pop-box flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
           onDark ? "bg-white" : "glass"
         }`}
       >

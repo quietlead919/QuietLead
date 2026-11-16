@@ -377,31 +377,21 @@ details[open] .faq-icon {
   }
 }
 
-/* Waitlist button: springy pop on hover, squish on press, shine sweep, ripple from the press point */
-.pop-btn {
-  transition:
-    transform 0.35s cubic-bezier(0.34, 1.8, 0.5, 1),
-    background 0.2s ease;
+/* Waitlist form: the whole field + button pill pops on hover/focus and squishes on press */
+.pop-box {
+  transition: transform 0.4s cubic-bezier(0.34, 1.8, 0.5, 1);
+}
+.pop-box:hover,
+.pop-box:focus-within {
+  transform: scale(1.035);
+}
+.pop-box:has(button:active) {
+  transform: scale(0.97);
+  transition-duration: 0.12s;
 }
 .pop-btn:hover {
-  transform: scale(1.05);
   background: #003a85;
-}
-.pop-btn:active {
-  transform: scale(0.93);
-  transition-duration: 0.1s;
-}
-.pop-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
-  transform: translateX(-120%);
-  pointer-events: none;
-}
-.pop-btn:hover::before {
-  transform: translateX(120%);
-  transition: transform 0.7s ease;
+  transform: none;
 }
 .ripple {
   width: 12px;
@@ -429,12 +419,12 @@ details[open] .faq-icon {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pop-btn,
-  .pop-btn:hover,
-  .pop-btn:active {
+  .pop-box,
+  .pop-box:hover,
+  .pop-box:focus-within,
+  .pop-box:has(button:active) {
     transform: none;
   }
-  .pop-btn::before,
   .ripple,
   .burst-dot {
     display: none;
