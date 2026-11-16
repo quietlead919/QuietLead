@@ -57,16 +57,26 @@ export async function joinWaitlist(
     };
   }
 
-  // Send emails after the response so the form stays fast; failures never block a signup.
-  after(async () => {
-    try {
-      await sendMail({ to: email, ...welcomeMail(email) });
-      const owner = process.env.NOTIFY_EMAIL;
-      if (owner) await sendMail({ to: owner, replyTo: email, ...signupNotice(email, source) });
-    } catch (err) {
-      console.error("[waitlist] email failed:", err);
-    }
-  });
+  // The welcome email is sent before answering, so it can't be cut off when the serverless
+  // function ends. A failed send is logged but never blocks the signup itself.
+  try {
+    const sent = await sendMail({ to: email, ...welcomeMail(email) });
+    if (!sent) console.error("[waitlist] welcome email not sent (no mail provider or send failed)");
+  } catch (err) {
+    console.error("[waitlist] welcome email failed:", err);
+  }
+
+  // The short notice to the owner can go out after the response.
+  const owner = process.env.NOTIFY_EMAIL;
+  if (owner) {
+    after(async () => {
+      try {
+        await sendMail({ to: owner, replyTo: email, ...signupNotice(email, source) });
+      } catch (err) {
+        console.error("[waitlist] owner notice failed:", err);
+      }
+    });
+  }
 
   return {
     status: "success",
