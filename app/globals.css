@@ -349,3 +349,30 @@ details[open] .faq-icon {
     opacity: 0;
   }
 }
+
+/* Hero: white underline under "Without" that draws itself in after the headline appears */
+.draw-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+  height: 0.06em;
+  min-height: 3px;
+  border-radius: 9999px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: draw-underline 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.7s forwards;
+}
+@keyframes draw-underline {
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .draw-underline::after {
+    animation: none;
+    transform: none;
+  }
+}

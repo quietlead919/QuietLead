@@ -216,7 +216,7 @@ export default function Home() {
             <div className="fade-up" style={{ animationDelay: "80ms" }}>
               <h1 className="mt-7 text-[44px] leading-[1.05] font-medium tracking-[-0.025em] text-balance sm:text-6xl lg:text-[76px]">
                 Find Your Next Customers{" "}
-                <em className="font-semibold underline decoration-white/45 decoration-[3px] underline-offset-[10px]">
+                <em className="draw-underline relative inline-block font-semibold">
                   Without
                 </em>{" "}
                 the Noise
