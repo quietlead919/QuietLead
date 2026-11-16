@@ -46,6 +46,7 @@ export function StepsStory() {
         const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
         let reached = 0;
         let released = false;
+        let entered = false; // only true once the user has actually scrolled into the story
 
         const finish = () => {
           gsap.killTweensOf(tl);
@@ -74,11 +75,18 @@ export function StepsStory() {
           end: "+=2600",
           pin: true,
           anticipatePin: 1,
+          onEnter() {
+            entered = true;
+          },
+          onEnterBack() {
+            entered = true;
+          },
           onLeave(self) {
-            release(self, "after");
+            // Ignore a "leave" that only comes from the page starting below the story.
+            if (entered) release(self, "after");
           },
           onUpdate(self) {
-            if (released) return;
+            if (released || !entered) return;
             if (self.direction < 0) {
               release(self, "start");
               return;
