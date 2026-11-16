@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useState, type PointerEvent } from "react";
+import { useActionState, useState, type FormEvent, type PointerEvent } from "react";
 import { joinWaitlist, type WaitlistState } from "@/app/actions";
 
 const initial: WaitlistState = { status: "idle" };
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export function WaitlistForm({
   source,
@@ -19,6 +20,26 @@ export function WaitlistForm({
   const [state, action, pending] = useActionState(joinWaitlist, initial);
   const h = size === "lg" ? "h-14" : "h-12";
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [hint, setHint] = useState<string | null>(null);
+  const [shake, setShake] = useState(false);
+
+  // Our own validation instead of the browser's grey popup: a short hint under the
+  // field and a gentle shake. The server validates again anyway.
+  function validate(e: FormEvent<HTMLFormElement>) {
+    const input = e.currentTarget.elements.namedItem("email") as HTMLInputElement;
+    const value = input.value.trim();
+    const problem = !value
+      ? "Enter your work email to join."
+      : !EMAIL_RE.test(value)
+        ? "That doesn't look like an email address yet."
+        : null;
+    if (problem) {
+      e.preventDefault();
+      setHint(problem);
+      setShake(true);
+      input.focus();
+    }
+  }
 
   // Ripple that grows from the exact spot you press.
   function ripple(e: PointerEvent<HTMLButtonElement>) {
@@ -54,9 +75,17 @@ export function WaitlistForm({
   }
 
   return (
-    <form action={action} className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}>
+    <form
+      action={action}
+      onSubmit={validate}
+      noValidate
+      className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}
+    >
       <div
-        className={`pop-box flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 ${
+        onAnimationEnd={() => setShake(false)}
+        className={`pop-box flex ${h} items-center gap-2 rounded-2xl p-1.5 pl-5 transition-shadow ${shake ? "shake" : ""} ${
+          hint ? "ring-2 ring-[#ffb4b4]" : ""
+        } ${
           onDark ? "bg-white" : "glass"
         }`}
       >
@@ -70,6 +99,9 @@ export function WaitlistForm({
           required
           autoComplete="email"
           placeholder="you@company.com"
+          aria-invalid={hint ? true : undefined}
+          aria-describedby={`email-${source}-msg`}
+          onChange={() => hint && setHint(null)}
           className="min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus-visible:outline-none"
         />
         <input type="hidden" name="source" value={source} />
@@ -110,22 +142,35 @@ export function WaitlistForm({
           )}
         </button>
       </div>
-      <p
-        aria-live="polite"
-        className={`mt-3 text-sm ${center ? "" : "pl-5"} ${
-          state.status === "error"
-            ? onDark
-              ? "font-medium text-white"
-              : "text-red-600"
-            : onDark
-              ? "text-white/90"
-              : "text-ink-soft"
-        }`}
-      >
-        {state.status === "error"
-          ? state.message
-          : "One email when we launch. No spam, ever."}
-      </p>
+      {(() => {
+        const message = hint ?? (state.status === "error" ? state.message : null);
+        return (
+          <p
+            id={`email-${source}-msg`}
+            aria-live="polite"
+            className={`mt-3 text-sm ${center ? "" : "pl-5"} ${onDark ? "text-white/90" : "text-ink-soft"}`}
+          >
+            {message ? (
+              <span
+                key={message}
+                className={`pop-in inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-medium ${
+                  onDark ? "bg-white text-[#b42318]" : "bg-[#fef3f2] text-[#b42318]"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="flex h-4 w-4 items-center justify-center rounded-full bg-[#f04438] text-[10px] font-bold text-white"
+                >
+                  !
+                </span>
+                {message}
+              </span>
+            ) : (
+              "One email when we launch. No spam, ever."
+            )}
+          </p>
+        );
+      })()}
       <p className={`mt-1.5 text-xs ${center ? "" : "pl-5"} ${onDark ? "text-white/85" : "text-ink-faint"}`}>
         By joining you agree to get emails about QuietLead and confirm you are 18 or older. Unsubscribe anytime.{" "}
         <a href="/privacy" className="underline underline-offset-2">
