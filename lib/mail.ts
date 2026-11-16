@@ -3,8 +3,11 @@ import { LEGAL } from "@/lib/legal";
 import { SITE_URL } from "@/lib/site";
 import { unsubscribeUrl } from "@/lib/tokens";
 
-// Minimal Resend client (https://resend.com/docs/api-reference/emails/send-email).
-// Without RESEND_API_KEY every send is skipped, so the waitlist keeps working.
+import nodemailer from "nodemailer";
+
+// Sends through Gmail (GMAIL_USER + GMAIL_APP_PASSWORD, a Google app password) when set,
+// otherwise through Resend (RESEND_API_KEY). With neither, sends are skipped and the
+// waitlist keeps working.
 
 const DEFAULT_FROM = "QuietLead <onboarding@resend.dev>";
 
@@ -17,7 +20,32 @@ type Mail = {
   headers?: Record<string, string>;
 };
 
+let gmail: nodemailer.Transporter | null = null;
+
+async function sendViaGmail(mail: Mail, user: string, pass: string): Promise<boolean> {
+  gmail ??= nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
+  try {
+    await gmail.sendMail({
+      from: { name: "QuietLead", address: user },
+      to: mail.to,
+      subject: mail.subject,
+      html: mail.html,
+      text: mail.text,
+      replyTo: mail.replyTo || user,
+      headers: mail.headers,
+    });
+    return true;
+  } catch (err) {
+    console.error("[mail] gmail send failed:", (err as Error).message);
+    return false;
+  }
+}
+
 export async function sendMail(mail: Mail): Promise<boolean> {
+  const gUser = process.env.GMAIL_USER;
+  const gPass = process.env.GMAIL_APP_PASSWORD;
+  if (gUser && gPass) return sendViaGmail(mail, gUser, gPass.replace(/\s+/g, ""));
+
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
 
@@ -46,15 +74,17 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
 
-const sender = [LEGAL.name, LEGAL.street, LEGAL.city, LEGAL.country].filter(Boolean).join(", ");
+// Only name and city in mails; the full address stays on the imprint page.
+const sender = [LEGAL.name, LEGAL.city.replace(/^\d+\s*/, "")].filter(Boolean).join(", ");
 
+// The footer is deliberately small and light so the privacy notes don't distract.
 function layout(body: string, footer: string) {
   return `<!doctype html><html><body style="margin:0;background:#f4f7ff;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#0b1b33">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border-radius:20px;padding:32px">
 <tr><td style="font-size:18px;font-weight:600;color:#004cad;padding-bottom:20px">QuietLead</td></tr>
 <tr><td style="font-size:15px;line-height:1.6">${body}</td></tr>
-<tr><td style="padding-top:28px;font-size:12px;line-height:1.5;color:#5d6f8c">${footer}<br>${escapeHtml(sender)}</td></tr>
+<tr><td style="padding-top:32px;font-size:11px;line-height:1.5;color:#8a9ab4">${footer}<br>${escapeHtml(sender)} · <a href="${SITE_URL}/imprint" style="color:#8a9ab4">Imprint</a></td></tr>
 </table></td></tr></table></body></html>`;
 }
 
@@ -62,10 +92,11 @@ function layout(body: string, footer: string) {
 function listMail(email: string) {
   const url = unsubscribeUrl(email);
   const token = new URL(url).searchParams.get("t")!;
+  const privacy = `${SITE_URL}/privacy`;
   return {
     url,
-    htmlFooter: `You get this because you joined the QuietLead waitlist. <a href="${url}" style="color:#004cad">Unsubscribe and delete my email</a>.`,
-    textFooter: `You get this because you joined the QuietLead waitlist.\nUnsubscribe and delete your email: ${url}`,
+    htmlFooter: `We only store your email, kept in the EU, used only for QuietLead updates, never sold or shared for ads. <a href="${privacy}" style="color:#8a9ab4">Privacy</a> · <a href="${url}" style="color:#8a9ab4">Unsubscribe &amp; delete</a>`,
+    textFooter: `We only store your email, kept in the EU, used only for QuietLead updates, never sold or shared for ads.\nPrivacy: ${privacy}\nUnsubscribe & delete: ${url}`,
     headers: {
       "List-Unsubscribe": `<${SITE_URL}/api/unsubscribe?t=${token}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",

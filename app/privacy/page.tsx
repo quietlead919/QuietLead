@@ -42,8 +42,10 @@ export default function Privacy() {
         If you join the waitlist we store only your email address, which form you used and the time of signup. We do
         not store your name, IP address or anything else. We use it to send you a confirmation and one email when
         QuietLead launches, and the operator gets a short notice about the new signup. Legal basis: Art. 6(1)(b) and (a) GDPR (your
-        request and consent). The data is stored with Supabase in Frankfurt, Germany. Emails are sent through Resend
-        (USA, Standard Contractual Clauses). Every email has an unsubscribe link: one click removes and deletes your
+        request and consent). The data is stored with Supabase in Frankfurt, Germany. Emails are sent through Google
+        Gmail (Google Ireland Ltd., with possible transfers to Google LLC in the USA under the EU-US Data Privacy
+        Framework) or, as a fallback, through Resend (USA, Standard Contractual Clauses). We never sell your address or
+        share it for advertising. Every email has an unsubscribe link: one click removes and deletes your
         address. You can also use <Link href="/delete-my-data">Delete my data</Link> at any time. We keep the data
         until you unsubscribe or until we stop the waitlist.
       </p>
