@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTickSound } from "@/components/useTickSound";
 
 const WORKING_DAYS = 21;
 
@@ -82,35 +81,6 @@ export function PipelineCalculator() {
   // Results follow almost instantly (short count on jumps, no lag while dragging);
   // only the slider thumbs get the soft, trailing motion.
   const results = useSmoothed(computed, 60);
-  const sound = useTickSound();
-
-  // Only a few clicks per change: a double click when the revenue starts counting,
-  // one soft click when it lands. Nothing plays while it is mid-count.
-  const { play } = sound;
-  // While dragging, the numbers settle between pointer moves, so the start click is
-  // throttled and the landing click waits until the value has really stopped changing.
-  const moving = useRef(false);
-  const lastStart = useRef(0);
-  const landTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    const gap = computed.revenue - results.revenue;
-    const isMoving = Math.abs(gap) > Math.max(1, computed.revenue * 0.002);
-    if (isMoving && !moving.current) {
-      if (landTimer.current) clearTimeout(landTimer.current);
-      const now = performance.now();
-      if (now - lastStart.current > 400) play(gap > 0 ? "start-up" : "start-down");
-      lastStart.current = now;
-    } else if (!isMoving && moving.current) {
-      landTimer.current = setTimeout(() => play("land"), 180);
-    }
-    moving.current = isMoving;
-  }, [results.revenue, computed.revenue, play]);
-  useEffect(
-    () => () => {
-      if (landTimer.current) clearTimeout(landTimer.current);
-    },
-    [],
-  );
 
   const tiles = [
     { label: "Leads reached", value: Math.round(results.leads).toString() },
@@ -120,11 +90,7 @@ export function PipelineCalculator() {
   ];
 
   return (
-    <div
-      className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12"
-      onPointerDownCapture={sound.warm}
-      onKeyDownCapture={sound.warm}
-    >
+    <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
       <div className="space-y-7">
         {fields.map((f) => {
           const p = Math.min(1, Math.max(0, (sliders[f.key] - f.min) / (f.max - f.min)));
@@ -165,29 +131,7 @@ export function PipelineCalculator() {
 
       <div className="flex flex-col justify-between rounded-[28px] bg-brand p-7 text-white sm:p-8">
         <div>
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
-            <button
-              type="button"
-              onClick={sound.toggle}
-              aria-pressed={sound.enabled}
-              aria-label={sound.enabled ? "Turn counting sound off" : "Turn counting sound on"}
-              title={sound.enabled ? "Sound on" : "Sound off"}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor" />
-                {sound.enabled ? (
-                  <>
-                    <path d="M15.5 8.5a5 5 0 0 1 0 7" />
-                    <path d="M18.5 5.5a9 9 0 0 1 0 13" />
-                  </>
-                ) : (
-                  <path d="m16 9 6 6m0-6-6 6" />
-                )}
-              </svg>
-            </button>
-          </div>
+          <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
           <p className="mt-2 text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl" aria-live="polite">
             {euro(results.revenue)}
           </p>
