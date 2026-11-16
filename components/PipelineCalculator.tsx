@@ -70,18 +70,18 @@ export function PipelineCalculator() {
 
       <div className="flex flex-col justify-between rounded-[28px] bg-brand p-7 text-white sm:p-8">
         <div>
-          <p className="text-sm font-medium text-white/70">Estimated new revenue per month</p>
+          <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
           <p className="mt-2 text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl">{euro(revenue)}</p>
         </div>
         <dl className="mt-8 grid grid-cols-2 gap-3">
           {results.map((r) => (
             <div key={r.label} className="rounded-2xl bg-white/10 p-4">
-              <dt className="text-xs text-white/70">{r.label}</dt>
+              <dt className="text-xs text-white/85">{r.label}</dt>
               <dd className="mt-1 text-2xl font-semibold tabular-nums">{r.value}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-6 text-xs leading-relaxed text-white/60">
+        <p className="mt-6 text-xs leading-relaxed text-white/80">
           An estimate based on {WORKING_DAYS} working days and the rates you set. Real results depend on your offer,
           market and follow-up.
         </p>

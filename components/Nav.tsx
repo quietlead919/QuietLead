@@ -40,7 +40,7 @@ export function Nav() {
               <a
                 href={l.href}
                 className={`text-sm font-medium transition-colors ${
-                  solid ? "text-ink-soft hover:text-ink" : "text-white/85 hover:text-white"
+                  solid ? "text-ink-soft hover:text-ink" : "text-white hover:text-white/80"
                 }`}
               >
                 {l.label}

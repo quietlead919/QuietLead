@@ -21,7 +21,7 @@ type Panel = {
 const panels: Panel[] = [
   {
     tone: "blue",
-    title: "Describe your customer. Get leads instantly.",
+    title: "Describe your customer. Skip the busywork.",
     intro: (
       <>
         No filters, no spreadsheets. Write who you want to reach and QuietLead does the searching, <em>quietly</em>.
@@ -33,8 +33,8 @@ const panels: Panel[] = [
         text: "“Web agencies in Germany with 5 to 30 people that are hiring.” That's your whole setup. QuietLead turns it into a list of real companies and decision makers.",
       },
       {
-        title: "Signal-based timing",
-        text: "New hires, funding, outdated websites, new locations. QuietLead reaches out when a company actually needs you, not when your sequence says so.",
+        title: "Signal-based timing (Studio)",
+        text: "New hires, funding, outdated websites, new locations. QuietLead flags when a company may need you right now, not when a sequence says so.",
       },
     ],
   },
@@ -53,8 +53,8 @@ const panels: Panel[] = [
         text: "What the company does, where its problem is and the best angle to open with. Summarized in a few lines, not a wall of data.",
       },
       {
-        title: "10 to 50 leads a day",
-        text: "Enough to keep your pipeline full, small enough to treat every lead well. Quality over volume, every single day.",
+        title: "Up to 50 leads a day",
+        text: "From a few a day on Quiet to around 50 on Studio. Small enough to treat every lead well. Quality over volume.",
       },
     ],
   },
@@ -70,11 +70,11 @@ const panels: Panel[] = [
     items: [
       {
         title: "Real personalization",
-        text: "Each draft references something true and relevant about the company. Prospects notice when someone actually looked them up.",
+        text: "Each draft is built on public information about the company, so it can reference something specific instead of a generic opener. You check every detail before sending.",
       },
       {
-        title: "Your writing style",
-        text: "Give QuietLead a few of your own emails and it learns your tone, so every draft reads like you wrote it on a good day.",
+        title: "Your writing style (Steady and Studio)",
+        text: "Give QuietLead a few of your own emails and it adapts the drafts to your tone, so they read more like you.",
       },
     ],
   },
@@ -89,24 +89,24 @@ const panels: Panel[] = [
     items: [
       {
         title: "Approve every message",
-        text: "Review, edit or skip each draft. One click sends it from your own Gmail or Outlook, at a pace that keeps your domain healthy.",
+        text: "Review, edit or skip each draft. On Steady and Studio one click sends it from your own Gmail or Outlook; on Quiet you copy it into your inbox yourself.",
       },
       {
         title: "Built for Europe",
-        text: "GDPR in mind from day one, German and English outreach, low volume and human review. Made in Frankfurt.",
+        text: "Designed with GDPR in mind: low volume, relevant contacts and human review. German and English outreach. Built in Frankfurt.",
       },
     ],
   },
 ];
 
-const trust = ["You approve every message", "Sends from your own inbox", "GDPR-ready, made in Germany"];
+const trust = ["You approve every message", "Sent from your own inbox", "Built in Frankfurt, designed for GDPR"];
 
 const comparison = [
-  ["Volume", "Thousands of emails", "10 to 50 per day"],
+  ["Volume", "Often thousands of emails", "Up to 50 per day"],
   ["Personalization", "{{firstName}} templates", "Real research per lead"],
   ["Control", "Runs on autopilot", "You approve every message"],
-  ["Deliverability", "Burns your domain", "Your inbox, low volume"],
-  ["How it feels", "Spam", "“They actually looked us up.”"],
+  ["Deliverability", "High volume can hurt your domain", "Your inbox, low volume"],
+  ["How it feels", "Easy to mistake for spam", "Personal and relevant"],
 ];
 
 // The one feature everyone wants (buying-signal alerts) is Studio only.
@@ -149,7 +149,7 @@ const plans = [
 const faqs = [
   {
     q: "How is QuietLead different from Apollo, Lemlist or Instantly?",
-    a: "Those tools are built for volume. QuietLead is built for quality: fewer leads, real research and a human approving every message. You send less and get more replies.",
+    a: "Many outreach tools focus on sending as much as possible. QuietLead focuses on fewer, better-researched leads and a human approving every message. The goal is to send less and earn more replies.",
   },
   {
     q: "Does QuietLead send emails automatically?",
@@ -223,8 +223,8 @@ export default function Home() {
               </h1>
             </div>
             <div className="fade-up" style={{ animationDelay: "160ms" }}>
-              <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-white/85 sm:text-xl">
-                QuietLead is your AI sales assistant. It finds perfect-fit leads, spots the right moment and drafts
+              <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-white sm:text-xl">
+                QuietLead is your AI sales assistant. It finds well-matched leads, watches for the right moment and drafts
                 personal outreach you approve.
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function Home() {
               <WaitlistForm source="hero" onDark center />
             </div>
             <ul
-              className="fade-up mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-medium text-white/90"
+              className="fade-up mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-medium text-white"
               style={{ animationDelay: "320ms" }}
             >
               {trust.map((t) => (
@@ -248,7 +248,7 @@ export default function Home() {
             <HeroMockup />
           </div>
           <p className="relative mt-8 text-xs text-ink-faint">
-            *Works with Gmail and Outlook. QuietLead never sends anything without your approval.
+            Sending from Gmail or Outlook is included in Steady and Studio. QuietLead never sends anything without your approval.
           </p>
         </section>
 
@@ -259,7 +259,7 @@ export default function Home() {
             {steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 90}>
                 <div className="step-card px-6 py-7 text-center">
-                  <span className="inline-block rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
+                  <span className="inline-block rounded-full bg-orange-700 px-3 py-1 text-xs font-semibold text-white">
                     Step {s.n}
                   </span>
                   <h3 className="mt-3 text-2xl font-semibold tracking-tight">{s.title}</h3>
@@ -316,7 +316,7 @@ export default function Home() {
                 Why Not Send Better?
               </>
             }
-            text="Volume tools fill inboxes. QuietLead fills calendars."
+            text="Volume tools fill inboxes. QuietLead helps you write to fewer people, better."
           />
           <Reveal className="mx-auto mt-14 max-w-4xl">
             <div className="overflow-hidden rounded-[28px] border border-[#e3eaf8] bg-white">
@@ -358,7 +358,7 @@ export default function Home() {
           <SectionHead
             eyebrow="Pricing"
             title="Simple plans. Start small, grow quietly."
-            text="Every plan starts with a 7-day free trial. Cancel anytime."
+            text="Every plan starts with a 7-day free trial. Cancel before it ends and you pay nothing."
           />
           <div className="mx-auto mt-14 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
             {plans.map((p, i) => (
@@ -370,16 +370,16 @@ export default function Home() {
                 >
                   {p.popular && (
                     <span className="absolute top-6 right-6 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium">
-                      Most popular
+                      Recommended
                     </span>
                   )}
                   <h3 className="text-lg font-medium">{p.name}</h3>
-                  <p className={`mt-1 text-sm ${p.popular ? "text-white/70" : "text-ink-soft"}`}>{p.for}</p>
+                  <p className={`mt-1 text-sm ${p.popular ? "text-white/85" : "text-ink-soft"}`}>{p.for}</p>
                   <div className="mt-6 flex items-baseline gap-2">
                     <span className="text-5xl font-medium tracking-tight">€{p.price}</span>
-                    <span className={`text-sm ${p.popular ? "text-white/70" : "text-ink-soft"}`}>/ month</span>
+                    <span className={`text-sm ${p.popular ? "text-white/85" : "text-ink-soft"}`}>/ month</span>
                   </div>
-                  <p className={`mt-1 text-xs ${p.popular ? "text-white/70" : "text-ink-faint"}`}>
+                  <p className={`mt-1 text-xs ${p.popular ? "text-white/85" : "text-ink-faint"}`}>
                     {p.leads}
                   </p>
                   <ul className="mt-6 flex-1 space-y-2.5 text-[15px]">
@@ -401,8 +401,8 @@ export default function Home() {
                     )}
                     {p.missing.map((f) => (
                       <li key={f} className="flex gap-2.5">
-                        <span className={p.popular ? "text-white/35" : "text-ink-faint/60"}>✕</span>
-                        <span className={`line-through ${p.popular ? "text-white/45" : "text-ink-faint"}`}>{f}</span>
+                        <span className={p.popular ? "text-white/70" : "text-ink-faint"}>✕</span>
+                        <span className={`line-through ${p.popular ? "text-white/75" : "text-ink-faint"}`}>{f}</span>
                       </li>
                     ))}
                   </ul>
@@ -422,7 +422,7 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-ink-faint">Prices excl. VAT. Yearly billing: 2 months free.</p>
+          <p className="mt-6 text-center text-sm text-ink-faint">Prices per month, excl. VAT. VAT is shown before you pay. No setup fees, cancel anytime.</p>
         </section>
 
         {/* FAQ */}
@@ -461,7 +461,7 @@ export default function Home() {
                 <h2 className="mx-auto mt-6 max-w-3xl text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-6xl">
                   Your Next Customers Are Out There. Reach Them <em>Quietly</em>.
                 </h2>
-                <p className="mx-auto mt-5 max-w-lg text-lg text-white/85">
+                <p className="mx-auto mt-5 max-w-lg text-lg text-white">
                   Join the waitlist and be among the first to get access.
                 </p>
                 <div className="mt-9">
@@ -484,12 +484,15 @@ export default function Home() {
             <a href="/imprint" className="hover:text-ink">Imprint</a>
             <a href="/privacy" className="hover:text-ink">Privacy Policy</a>
             <a href="/terms" className="hover:text-ink">Terms of Service</a>
+            <a href="/refunds" className="hover:text-ink">Refund Policy</a>
+            <a href="/cookies" className="hover:text-ink">Cookie Policy</a>
+            <a href="/delete-my-data" className="hover:text-ink">Delete my data</a>
             <span className="text-ink-faint">© 2026 QuietLead</span>
           </div>
         </div>
         <p className="mx-auto mt-6 max-w-6xl text-center text-xs text-ink-faint sm:text-left">
           No cookies, no tracking. This site sets no cookies, so there is nothing to consent to.{" "}
-          <a href="/privacy" className="underline underline-offset-2 hover:text-ink">Cookie &amp; privacy details</a>
+          <a href="/cookies" className="underline underline-offset-2 hover:text-ink">Cookie policy</a>
         </p>
       </footer>
     </>

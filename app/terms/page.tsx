@@ -10,7 +10,7 @@ export default function Terms() {
     <LegalPage title="Terms of Service" updated={LEGAL.updated}>
       <p>
         These terms apply to the use of QuietLead, provided by {LEGAL.name || missing} ({LEGAL.city || missing},{" "}
-        {LEGAL.country}), &quot;we&quot;. QuietLead is offered to businesses only (B2B), not to consumers.
+        {LEGAL.country}), &quot;we&quot;. QuietLead is offered to businesses only (B2B), not to consumers, and you must be at least 18 years old to use it.
       </p>
 
       <h2>1. The service</h2>
@@ -24,7 +24,8 @@ export default function Terms() {
       <p>
         Plans and prices are shown on the <Link href="/#pricing">pricing section</Link>, plus VAT where applicable.
         Every plan starts with a 7-day free trial. After the trial the subscription renews monthly and is charged in
-        advance through Stripe. You can cancel at any time with effect from the end of the current billing period.
+        advance through Stripe. You can cancel at any time with effect from the end of the current billing period. Refunds are covered in our{" "}
+        <Link href="/refunds">refund policy</Link>. There are no setup fees or hidden charges.
       </p>
 
       <h2>3. Your responsibilities</h2>

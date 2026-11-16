@@ -60,7 +60,7 @@ export async function joinWaitlist(
   // Send emails after the response so the form stays fast; failures never block a signup.
   after(async () => {
     try {
-      await sendMail({ to: email, ...welcomeMail() });
+      await sendMail({ to: email, ...welcomeMail(email) });
       const owner = process.env.NOTIFY_EMAIL;
       if (owner) await sendMail({ to: owner, replyTo: email, ...signupNotice(email, source) });
     } catch (err) {

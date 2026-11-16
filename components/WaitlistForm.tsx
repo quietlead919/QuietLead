@@ -79,13 +79,19 @@ export function WaitlistForm({
               ? "font-medium text-white"
               : "text-red-600"
             : onDark
-              ? "text-white/70"
+              ? "text-white/90"
               : "text-ink-soft"
         }`}
       >
         {state.status === "error"
           ? state.message
           : "One email when we launch. No spam, ever."}
+      </p>
+      <p className={`mt-1.5 text-xs ${center ? "" : "pl-5"} ${onDark ? "text-white/85" : "text-ink-faint"}`}>
+        By joining you agree to get emails about QuietLead and confirm you are 18 or older. Unsubscribe anytime.{" "}
+        <a href="/privacy" className="underline underline-offset-2">
+          Privacy Policy
+        </a>
       </p>
     </form>
   );

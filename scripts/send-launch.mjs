@@ -7,6 +7,8 @@
 // Needs SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (and MAIL_FROM once your domain is verified).
 // Run supabase/launch.sql once before the first real send.
 
+import { createHmac } from "node:crypto";
+
 // ---- Edit the launch email here ----------------------------------------------------------
 const LAUNCH_URL = "https://quiet-lead.vercel.app";
 const SUBJECT = "QuietLead is live. Your early access is ready";
@@ -14,7 +16,7 @@ const BODY_TEXT = `Hi there,
 
 you joined the QuietLead waitlist, and today it's ready.
 
-QuietLead finds companies that need what you sell right now and drafts a personal first message for each one. You approve every message before it goes out.
+QuietLead finds companies that may need what you sell and drafts a personal first message for each one. You approve every message before it goes out.
 
 Start your 7-day free trial here:
 ${LAUNCH_URL}
@@ -37,20 +39,45 @@ function fail(msg) {
   process.exit(1);
 }
 
-const footer = `You get this because you joined the QuietLead waitlist. Reply with "unsubscribe" and we'll remove you.`;
+// Same signed unsubscribe links as lib/tokens.ts (they never expire).
+const SECRET = process.env.UNSUBSCRIBE_SECRET || SUPABASE_SERVICE_ROLE_KEY || "";
+function unsubscribeToken(email) {
+  const payload = Buffer.from(`${email.toLowerCase()}|0`).toString("base64url");
+  return `${payload}.${createHmac("sha256", SECRET).update(payload).digest("base64url")}`;
+}
+const SENDER = "Cihad Erdemligil, Bernadottenstraße 47, 60439 Frankfurt am Main, Germany";
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const html = `<!doctype html><html><body style="margin:0;background:#f4f7ff;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#0b1b33">
+const footerHtml = (url) =>
+  `You get this because you joined the QuietLead waitlist. <a href="${url}" style="color:#004cad">Unsubscribe and delete my email</a>.<br>${esc(SENDER)}`;
+const footerText = (url) =>
+  `You get this because you joined the QuietLead waitlist.\nUnsubscribe and delete your email: ${url}\n${SENDER}`;
+
+const html = (url) => `<!doctype html><html><body style="margin:0;background:#f4f7ff;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#0b1b33">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border-radius:20px;padding:32px">
 <tr><td style="font-size:18px;font-weight:600;color:#004cad;padding-bottom:20px">QuietLead</td></tr>
 <tr><td style="font-size:15px;line-height:1.6">${BODY_TEXT.split("\n\n")
   .map((p) => `<p style="margin:0 0 14px">${esc(p).replace(/\n/g, "<br>").replace(esc(LAUNCH_URL), `<a href="${LAUNCH_URL}" style="color:#004cad;font-weight:600">${esc(LAUNCH_URL)}</a>`)}</p>`)
   .join("")}</td></tr>
-<tr><td style="padding-top:28px;font-size:12px;line-height:1.5;color:#8193b0">${footer}</td></tr>
+<tr><td style="padding-top:28px;font-size:12px;line-height:1.5;color:#5d6f8c">${footerHtml(url)}</td></tr>
 </table></td></tr></table></body></html>`;
-const text = `${BODY_TEXT}\n\n${footer}`;
 
-const mail = (to) => ({ from: FROM, to: [to], subject: SUBJECT, html, text, reply_to: REPLY_TO });
+function mail(to) {
+  const token = unsubscribeToken(to);
+  const url = `${LAUNCH_URL}/unsubscribe?t=${token}`;
+  return {
+    from: FROM,
+    to: [to],
+    subject: SUBJECT,
+    html: html(url),
+    text: `${BODY_TEXT}\n\n${footerText(url)}`,
+    reply_to: REPLY_TO,
+    headers: {
+      "List-Unsubscribe": `<${LAUNCH_URL}/api/unsubscribe?t=${token}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
+  };
+}
 
 async function resend(path, body) {
   if (!RESEND_API_KEY) fail("RESEND_API_KEY is missing in .env.local");

@@ -22,8 +22,10 @@ export default function Privacy() {
 
       <h2>2. Cookies and tracking</h2>
       <p>
-        This website does not use cookies, analytics, advertising pixels or any other tracking. That is why there is
-        no cookie banner. If this ever changes, we will ask for your consent first.
+        This website does not use cookies, analytics, advertising pixels or any other tracking, and it loads no
+        third-party scripts. When you close the cookie notice we save one local-storage flag (no personal data) so it
+        doesn&apos;t show again. Details in our <Link href="/cookies">cookie policy</Link>. If this ever changes, we
+        will ask for your consent first.
       </p>
 
       <h2>3. Visiting the website</h2>
@@ -37,11 +39,13 @@ export default function Privacy() {
 
       <h2>4. Waitlist</h2>
       <p>
-        If you join the waitlist we store your email address, which form you used and the time of signup. We use it
-        to send you a confirmation and one email when QuietLead launches. Legal basis: Art. 6(1)(b) and (a) GDPR (your
+        If you join the waitlist we store only your email address, which form you used and the time of signup. We do
+        not store your name, IP address or anything else. We use it to send you a confirmation and one email when
+        QuietLead launches, and the operator gets a short notice about the new signup. Legal basis: Art. 6(1)(b) and (a) GDPR (your
         request and consent). The data is stored with Supabase in Frankfurt, Germany. Emails are sent through Resend
-        (USA, Standard Contractual Clauses). You can leave the waitlist at any time by replying to any of our emails
-        or writing to the address above; we then delete your data.
+        (USA, Standard Contractual Clauses). Every email has an unsubscribe link: one click removes and deletes your
+        address. You can also use <Link href="/delete-my-data">Delete my data</Link> at any time. We keep the data
+        until you unsubscribe or until we stop the waitlist.
       </p>
 
       <h2>5. Payments</h2>
@@ -56,7 +60,13 @@ export default function Privacy() {
         .
       </p>
 
-      <h2>6. Your rights</h2>
+      <h2>6. Children</h2>
+      <p>
+        QuietLead is a business tool for people aged 18 and over. We do not knowingly collect data from children. If
+        you believe a child has signed up, contact us and we will delete the data right away.
+      </p>
+
+      <h2>7. Your rights</h2>
       <ul>
         <li>Access to the data we hold about you (Art. 15)</li>
         <li>Correction (Art. 16) and deletion (Art. 17)</li>
@@ -68,9 +78,12 @@ export default function Privacy() {
           Information (HBDI)
         </li>
       </ul>
-      <p>To use any of these rights, write to the email address in section 1.</p>
+      <p>
+        To use any of these rights, write to the email address in section 1. You can delete your waitlist data yourself
+        on <Link href="/delete-my-data">Delete my data</Link>.
+      </p>
 
-      <h2>7. Changes</h2>
+      <h2>8. Changes</h2>
       <p>We update this policy when our product or the law changes. The date at the top shows the latest version.</p>
     </LegalPage>
   );

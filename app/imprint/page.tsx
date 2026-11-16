@@ -31,6 +31,13 @@ export default function Imprint() {
       <h2>Responsible for content</h2>
       <p>{LEGAL.name || missing}, address as above.</p>
 
+      <h2>Fonts and images</h2>
+      <p>
+        Typeface: Open Sauce One by The Open Sauce One Authors, licensed under the SIL Open Font License 1.1 and served from our
+        own domain. The QuietLead logo and the interface illustrations are our own work. The product preview uses fictional
+        companies and people.
+      </p>
+
       <h2>EU dispute resolution</h2>
       <p>
         We are not willing or obliged to take part in dispute resolution proceedings before a consumer arbitration

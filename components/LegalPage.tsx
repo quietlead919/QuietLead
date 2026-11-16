@@ -16,7 +16,7 @@ export function LegalPage({ title, updated, children }: { title: string; updated
           </Link>
         </div>
       </header>
-      <main className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+      <main id="top" className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
         <h1 className="text-4xl font-semibold tracking-tight">{title}</h1>
         <p className="mt-2 text-sm text-ink-faint">Last updated: {updated}</p>
         <div className="legal mt-10">{children}</div>
@@ -24,7 +24,10 @@ export function LegalPage({ title, updated, children }: { title: string; updated
       <footer className="border-t border-ink/5 px-4 py-8 text-center text-sm text-ink-faint">
         <Link href="/imprint" className="hover:text-ink">Imprint</Link> ·{" "}
         <Link href="/privacy" className="hover:text-ink">Privacy</Link> ·{" "}
-        <Link href="/terms" className="hover:text-ink">Terms</Link>
+        <Link href="/terms" className="hover:text-ink">Terms</Link> ·{" "}
+        <Link href="/refunds" className="hover:text-ink">Refunds</Link> ·{" "}
+        <Link href="/cookies" className="hover:text-ink">Cookies</Link> ·{" "}
+        <Link href="/delete-my-data" className="hover:text-ink">Delete my data</Link>
       </footer>
     </div>
   );

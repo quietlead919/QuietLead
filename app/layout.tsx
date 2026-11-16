@@ -5,6 +5,7 @@ import "@fontsource/open-sauce-one/600.css";
 import "@fontsource/open-sauce-one/700.css";
 import "@fontsource/open-sauce-one/500-italic.css";
 import "./globals.css";
+import { CookieNotice } from "@/components/CookieNotice";
 
 export const metadata: Metadata = {
   title: "QuietLead · Finding leads without the noise",
@@ -21,7 +22,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full overflow-x-hidden">{children}</body>
+      <body className="min-h-full overflow-x-hidden">
+        <a
+          href="#top"
+          className="sr-only z-[60] rounded-lg bg-white px-4 py-2 font-semibold text-brand focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        >
+          Skip to content
+        </a>
+        {children}
+        <CookieNotice />
+      </body>
     </html>
   );
 }

@@ -5,7 +5,7 @@
 
   --color-ink: #0b1b33;
   --color-ink-soft: #4a5b78;
-  --color-ink-faint: #8193b0;
+  --color-ink-faint: #5d6f8c;
   --color-brand: #004cad;
   --color-brand-deep: #003a85;
   --color-sky: #3b6cf6;
@@ -35,7 +35,7 @@ body {
 
 /* Big blue hero that fades into the white page */
 .hero-bg {
-  background: linear-gradient(180deg, #002a7a 0%, #004cad 32%, #2f6ae6 62%, #9cb9ff 84%, #ffffff 100%);
+  background: linear-gradient(180deg, #002a7a 0%, #004cad 34%, #1f58cf 64%, #9cb9ff 86%, #ffffff 100%);
 }
 
 /* Feature panels: quiet pastel surfaces, no borders */
