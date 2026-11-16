@@ -8,6 +8,7 @@ import { HeroMotion } from "@/components/HeroMotion";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
+import { AsciiHands } from "@/components/AsciiHands";
 
 type Panel = {
   title: string;
@@ -253,7 +254,8 @@ export default function Home() {
       <main id="top">
         {/* HERO: black, centered, big type */}
         <section data-hero className="hero-bg dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
-          <div data-hero-copy className="relative mx-auto max-w-[980px]">
+          <AsciiHands />
+          <div data-hero-copy className="relative z-10 mx-auto max-w-[980px]">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 text-[17px] font-medium text-ink-faint">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-white text-white" />
