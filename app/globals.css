@@ -1,20 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Open Sauce One", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* SF Pro on Apple devices (system font, not shipped as a webfont), Inter everywhere else */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter Variable", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
 
-  --color-ink: #0b1b33;
-  --color-ink-soft: #4a5b78;
-  --color-ink-faint: #5d6f8c;
-  --color-brand: #004cad;
-  --color-brand-deep: #003a85;
-  --color-sky: #3b6cf6;
-  --color-mist: #eaf1ff;
-  --color-haze: #dce8ff;
+  /* Monochrome palette (apple.com greys) */
+  --color-ink: #1d1d1f;
+  --color-ink-soft: #6e6e73;
+  --color-ink-faint: #86868b;
+  --color-brand: #1d1d1f;
+  --color-brand-deep: #000000;
+  --color-sky: #1d1d1f;
+  --color-mist: #f5f5f7;
+  --color-haze: #e8e8ed;
+  --color-line: #d2d2d7;
+  --color-line-dark: #424245;
 }
 
 :root {
   color-scheme: light;
+  /* Apple's signature easing */
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
 }
 
 html {
@@ -25,180 +32,165 @@ body {
   background: #fff;
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 17px;
+  letter-spacing: -0.022em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: #004cad;
+  background: #1d1d1f;
   color: #fff;
 }
 
-/* Big blue hero that fades into the white page */
+/* Logo in black/white: the blue square turns black (or white with .logo-invert), letters stay */
+.logo-mono {
+  filter: grayscale(1) contrast(12);
+}
+.logo-invert {
+  filter: grayscale(1) contrast(12) invert(1);
+}
+
+/* Black hero */
 .hero-bg {
-  background: linear-gradient(180deg, #002a7a 0%, #004cad 34%, #1f58cf 64%, #9cb9ff 86%, #ffffff 100%);
+  background: #000;
 }
 
-/* Feature panels: quiet pastel surfaces, no borders */
+/* Feature tiles: white cards with a hairline border on the light grey section */
 .panel {
-  border-radius: 40px;
-  background: var(--panel-bg);
-}
-/* ice */
-.panel-blue {
-  --panel-bg: #eef3fb;
-  --panel-ink: #17325e;
-  --panel-accent: #004cad;
-}
-/* sage */
-.panel-green {
-  --panel-bg: #edf2ec;
-  --panel-ink: #26402b;
-  --panel-accent: #4a7451;
-}
-/* lavender */
-.panel-purple {
-  --panel-bg: #f0eef8;
-  --panel-ink: #342d5c;
-  --panel-accent: #6458a8;
-}
-/* sand */
-.panel-pink {
-  --panel-bg: #f6f0e8;
-  --panel-ink: #4e3a29;
-  --panel-accent: #9a6a43;
+  border-radius: 28px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  --panel-ink: #1d1d1f;
+  --panel-accent: #1d1d1f;
 }
 
-/* Text link with a filled arrow circle that nudges on hover */
+/* Apple-style text link: "Learn more >" with a chevron that nudges on hover */
 .link-arrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--panel-ink, var(--color-brand));
+  gap: 0.25rem;
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--panel-ink, var(--color-ink));
+}
+.link-arrow:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .link-arrow .arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  background: var(--panel-accent, var(--color-brand));
-  color: #fff;
-  font-size: 14px;
-  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: inline-block;
+  transition: transform 0.3s var(--ease-apple);
 }
 .link-arrow:hover .arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 /* Step cards */
 .step-card {
   border-radius: 28px;
-  border: 1px solid #e3eaf8;
+  border: 1px solid var(--color-line);
   background: #fff;
 }
 
-/* Range slider */
-.range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, #004cad var(--fill, 50%), #dbe5f7 var(--fill, 50%));
-}
-.range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 9999px;
-  background: #004cad;
-  cursor: pointer;
-}
-.range::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 9999px;
-  background: #004cad;
-  border: none;
-  cursor: pointer;
-}
-
-/* Glass surfaces */
+/* Surfaces (formerly glass): flat white with a hairline border, no blur */
 .glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid #e3eaf8;
+  background: #fff;
+  border: 1px solid var(--color-line);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #fff;
+  border: 1px solid var(--color-line);
 }
 
-/* Buttons */
+/* Buttons: Apple pills */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  background: #004cad;
+  background: #1d1d1f;
   color: #fff;
-  font-weight: 500;
+  font-weight: 400;
   white-space: nowrap;
   transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+    background 0.3s var(--ease-apple),
+    transform 0.3s var(--ease-apple);
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  background: #003a85;
+  background: #000;
 }
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 .btn-primary:disabled {
   opacity: 0.7;
   cursor: progress;
 }
 
+/* White pill for dark sections */
+.btn-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: #fff;
+  color: #1d1d1f;
+  font-weight: 400;
+  white-space: nowrap;
+  transition:
+    background 0.3s var(--ease-apple),
+    transform 0.3s var(--ease-apple);
+}
+.btn-light:hover {
+  background: #e8e8ed;
+}
+.btn-light:active {
+  transform: scale(0.98);
+}
+
+/* Outline pill */
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  background: #eaf1ff;
+  border: 1px solid currentColor;
+  background: transparent;
   color: var(--color-ink);
-  font-weight: 500;
+  font-weight: 400;
   white-space: nowrap;
-  transition: background 0.2s ease;
+  transition:
+    background 0.3s var(--ease-apple),
+    color 0.3s var(--ease-apple);
 }
 .btn-ghost:hover {
-  background: #dce8ff;
+  background: #1d1d1f;
+  color: #fff;
 }
 
 /* In the base layer so utilities like focus:outline-none can override it */
 @layer base {
   :focus-visible {
-    outline: 2px solid #3b6cf6;
+    outline: 2px solid #1d1d1f;
     outline-offset: 3px;
+  }
+  .dark-section :focus-visible {
+    outline-color: #fff;
   }
 }
 
-/* Scroll reveal */
+/* Scroll reveal: Apple-like slow rise */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(40px);
   transition:
-    opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    opacity 1s var(--ease-apple),
+    transform 1s var(--ease-apple);
 }
 .reveal.is-visible {
   opacity: 1;
@@ -207,12 +199,12 @@ body {
 
 /* Load-in for the hero (CSS only, no JS needed) */
 .fade-up {
-  animation: fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: fade-up 1.2s var(--ease-apple) both;
 }
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -271,7 +263,7 @@ details[open] .faq-icon {
 .legal h2 {
   margin-top: 2.25rem;
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-ink);
 }
 .legal p,
@@ -390,7 +382,6 @@ details[open] .faq-icon {
   transition-duration: 0.12s;
 }
 .pop-btn:hover {
-  background: #003a85;
   transform: none;
 }
 .ripple {

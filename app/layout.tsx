@@ -1,10 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import "@fontsource/open-sauce-one/400.css";
-import "@fontsource/open-sauce-one/500.css";
-import "@fontsource/open-sauce-one/600.css";
-import "@fontsource/open-sauce-one/700.css";
-import "@fontsource/open-sauce-one/500-italic.css";
+import "@fontsource-variable/inter";
 import "./globals.css";
 import { CookieNotice } from "@/components/CookieNotice";
 
@@ -28,9 +24,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           telemetry={false}
           appearance={{
             variables: {
-              colorPrimary: "#004CAD",
-              fontFamily: "'Open Sauce One', system-ui, sans-serif",
-              borderRadius: "0.9rem",
+              colorPrimary: "#1d1d1f",
+              colorForeground: "#1d1d1f",
+              colorMutedForeground: "#6e6e73",
+              fontFamily:
+                "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif",
+              borderRadius: "0.75rem",
             },
           }}
         >

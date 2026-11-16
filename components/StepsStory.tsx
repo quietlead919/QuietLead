@@ -121,7 +121,7 @@ export function StepsStory() {
           .to(q("[data-step='1']"), { opacity: 0.35, duration: 0.3 })
           .to(q("[data-step='2']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-scene=describe]"), { autoAlpha: 0, y: -30, scale: 0.96, duration: 0.6 }, "<")
-          .to(q("[data-card]"), { backgroundColor: "rgba(234,241,255,0.92)", duration: 0.6 }, "<")
+          .to(q("[data-card]"), { backgroundColor: "#f5f5f7", duration: 0.6 }, "<")
           .to(q("[data-scene=leads]"), { autoAlpha: 1, duration: 0.4 }, "<0.3")
           .to(q("[data-row]"), { autoAlpha: 1, y: 0, stagger: 0.18, duration: 0.5 }, "<")
           .from(q("[data-bar]"), { scaleX: 0, stagger: 0.18, duration: 0.6 }, "<0.1")
@@ -132,7 +132,7 @@ export function StepsStory() {
           .to(q("[data-step='3']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-fill]"), { scaleY: 1, duration: 0.8 }, "<")
           .to(q("[data-scene=leads]"), { autoAlpha: 0, scale: 0.94, duration: 0.5 }, "<")
-          .to(q("[data-card]"), { backgroundColor: "rgba(255,255,255,0.9)", duration: 0.5 }, "<")
+          .to(q("[data-card]"), { backgroundColor: "#ffffff", duration: 0.5 }, "<")
           .fromTo(q("[data-scene=send]"), { autoAlpha: 0, scale: 1.06 }, { autoAlpha: 1, scale: 1, duration: 0.6 }, "<0.2")
           .to(q("[data-approve]"), { scale: 0.93, duration: 0.15, yoyo: true, repeat: 1 }, "+=0.3")
           .to(q("[data-draft]"), { x: 160, y: -120, rotate: 14, scale: 0.2, autoAlpha: 0, duration: 0.7, ease: "power2.in" })
@@ -151,8 +151,8 @@ export function StepsStory() {
         <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
           {/* Left: headline + steps with a progress line */}
           <div>
-            <h2 className="text-[34px] leading-[1.1] font-semibold tracking-tight sm:text-5xl">Describe. Discover. Send.</h2>
-            <p className="mt-4 max-w-md text-lg text-ink-soft">In three easy steps, start filling your pipeline quietly.</p>
+            <h2 className="text-[40px] leading-[1.05] font-medium tracking-[-0.03em] sm:text-[56px]">Describe. Discover. Send.</h2>
+            <p className="mt-5 max-w-md text-[21px] leading-snug text-ink-soft">In three easy steps, start filling your pipeline quietly.</p>
             <ol className="relative mt-10 space-y-8 pl-10">
               <span className="absolute top-2 bottom-2 left-[13px] w-0.5 rounded-full bg-haze" aria-hidden="true" />
               <span
@@ -162,11 +162,11 @@ export function StepsStory() {
               />
               {steps.map((s) => (
                 <li key={s.n} data-step={s.n} className="relative">
-                  <span className="absolute top-0.5 -left-10 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-xs font-semibold text-white">
+                  <span className="absolute top-0.5 -left-10 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-xs font-medium text-white">
                     {s.n}
                   </span>
-                  <h3 className="text-xl font-semibold tracking-tight">{s.title}</h3>
-                  <p className="mt-1 text-[15px] text-ink-soft">{s.text}</p>
+                  <h3 className="text-[21px] font-medium tracking-tight">{s.title}</h3>
+                  <p className="mt-1 text-[17px] text-ink-soft">{s.text}</p>
                 </li>
               ))}
             </ol>
@@ -187,7 +187,7 @@ export function StepsStory() {
 
               {/* Scene 1: describe */}
               <div data-scene="describe" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
-                <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">Who do you want to reach?</p>
+                <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">Who do you want to reach?</p>
                 <div className="mt-3 min-h-[96px] rounded-2xl bg-white p-4 text-[17px] leading-relaxed text-ink ring-1 ring-brand/25">
                   {PROMPT.split("").map((c, i) => (
                     <span key={i} data-char>
@@ -197,7 +197,7 @@ export function StepsStory() {
                   <span className="ml-0.5 inline-block h-5 w-0.5 translate-y-1 animate-pulse bg-brand" />
                 </div>
                 <div className="mt-5 flex justify-end">
-                  <span data-find className="inline-flex h-11 items-center rounded-xl bg-brand px-5 text-[15px] font-semibold text-white">
+                  <span data-find className="inline-flex h-11 items-center rounded-full bg-brand px-5 text-[15px] font-medium text-white">
                     Find leads →
                   </span>
                 </div>
@@ -206,14 +206,18 @@ export function StepsStory() {
               {/* Scene 2: leads appear with signals and fit scores */}
               <div data-scene="leads" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
                 <div className="flex h-10 items-center rounded-xl bg-white px-4 text-[13px] text-ink-soft ring-1 ring-ink/5">
-                  🔍&nbsp; {PROMPT}
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="mr-2 h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-3.5-3.5" />
+                  </svg>
+                  {PROMPT}
                 </div>
                 <ul className="mt-4 space-y-3">
                   {rows.map((r) => (
                     <li key={r.name} data-row className="rounded-2xl bg-white px-4 py-3.5 ring-1 ring-ink/5">
                       <div className="flex items-center justify-between gap-3">
-                        <span className="text-[15px] font-semibold text-ink">{r.name}</span>
-                        <span data-chip className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+                        <span className="text-[15px] font-medium text-ink">{r.name}</span>
+                        <span data-chip className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-ink">
                           Signal
                         </span>
                       </div>
@@ -222,7 +226,7 @@ export function StepsStory() {
                         <span className="h-1.5 w-20 overflow-hidden rounded-full bg-haze">
                           <span data-bar className="block h-full origin-left rounded-full bg-brand" style={{ width: `${r.score}%` }} />
                         </span>
-                        <span className="w-6 text-right text-[12px] font-semibold text-brand tabular-nums">{r.score}</span>
+                        <span className="w-6 text-right text-[12px] font-medium text-brand tabular-nums">{r.score}</span>
                       </div>
                     </li>
                   ))}
@@ -232,21 +236,25 @@ export function StepsStory() {
               {/* Scene 3: draft, approve, sent */}
               <div data-scene="send" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
                 <div data-draft aria-hidden="true" className="rounded-2xl bg-white p-5 ring-1 ring-ink/5">
-                  <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">Draft to Lena, Founder</p>
+                  <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">Draft to Lena, Founder</p>
                   <p className="mt-2.5 text-[15px] leading-relaxed text-ink">
                     Hi Lena, saw you&apos;re hiring two designers. Congrats on the growth. Most studios your size tell me new
                     clients still come only through referrals…
                   </p>
                   <div className="mt-4 flex gap-2.5">
-                    <span data-approve className="inline-flex h-10 items-center rounded-xl bg-brand px-4 text-[14px] font-semibold text-white">
+                    <span data-approve className="inline-flex h-10 items-center rounded-full bg-brand px-4 text-[14px] font-medium text-white">
                       Approve &amp; send
                     </span>
-                    <span className="inline-flex h-10 items-center rounded-xl bg-mist px-4 text-[14px] font-semibold text-ink">Edit</span>
+                    <span className="inline-flex h-10 items-center rounded-full bg-mist px-4 text-[14px] font-medium text-ink">Edit</span>
                   </div>
                 </div>
                 <div data-sent className="absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600">✓</span>
-                  <p className="text-lg font-semibold text-ink">Sent from your inbox</p>
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-mist text-ink">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                  </span>
+                  <p className="text-lg font-medium text-ink">Sent from your inbox</p>
                   <p className="text-[13px] text-ink-faint">Approved by you. Personal. Quiet.</p>
                   {done && (
                     <button
@@ -255,7 +263,7 @@ export function StepsStory() {
                         setSpin((n) => n + 1);
                         replayRef.current();
                       }}
-                      className="group/replay pop-in mt-3 inline-flex h-10 items-center gap-2 rounded-xl bg-mist px-4 text-[14px] font-semibold text-brand transition-[transform,background-color] duration-150 hover:bg-haze active:scale-95"
+                      className="group/replay pop-in mt-3 inline-flex h-10 items-center gap-2 rounded-full bg-mist px-4 text-[14px] font-medium text-brand transition-[transform,background-color] duration-150 hover:bg-haze active:scale-95"
                     >
                       <svg
                         key={spin}

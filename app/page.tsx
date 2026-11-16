@@ -9,9 +9,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
 
-
 type Panel = {
-  tone: "blue" | "green" | "purple" | "pink";
   title: string;
   intro: React.ReactNode;
   items: { title: string; text: string }[];
@@ -19,7 +17,6 @@ type Panel = {
 
 const panels: Panel[] = [
   {
-    tone: "blue",
     title: "Describe your customer. Skip the busywork.",
     intro: (
       <>
@@ -38,7 +35,6 @@ const panels: Panel[] = [
     ],
   },
   {
-    tone: "green",
     title: "Daily briefings our AI prepares for you.",
     intro: (
       <>
@@ -58,7 +54,6 @@ const panels: Panel[] = [
     ],
   },
   {
-    tone: "purple",
     title: "Drafts that sound like you, not a template.",
     intro: (
       <>
@@ -78,7 +73,6 @@ const panels: Panel[] = [
     ],
   },
   {
-    tone: "pink",
     title: "You stay in control. Always.",
     intro: (
       <>
@@ -173,35 +167,79 @@ const faqs = [
 const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "true";
 
 function planButton(popular?: boolean) {
-  return popular
-    ? "inline-flex items-center justify-center rounded-full bg-white font-medium text-brand transition-transform hover:-translate-y-px"
-    : "btn-primary";
+  return popular ? "btn-light" : "btn-primary";
 }
 
-// Section title lights up word by word while scrolling (a newline in the text = line break).
-function SectionHead({ eyebrow, title, text }: { eyebrow?: string; title: string; text?: string }) {
+// Apple-style section headline: big, medium weight, tight tracking. Lights up word by word
+// while scrolling (a newline in the text = line break).
+function SectionHead({
+  eyebrow,
+  title,
+  text,
+  tone = "dark",
+}: {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  tone?: "dark" | "light";
+}) {
   return (
-    <div className="mx-auto max-w-3xl text-center">
-      {eyebrow && <p className="text-sm font-semibold text-brand">{eyebrow}</p>}
+    <div className="mx-auto max-w-[820px] text-center">
+      {eyebrow && <p className={`text-[17px] font-medium ${tone === "light" ? "text-ink-faint" : "text-ink-soft"}`}>{eyebrow}</p>}
       <ScrollWords
         text={title}
-        className="mt-2 text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-5xl"
+        tone={tone}
+        className="mt-2 text-[40px] leading-[1.05] font-medium tracking-[-0.03em] text-balance sm:text-[56px]"
       />
       {text && (
         <Reveal>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-ink-soft">{text}</p>
+          <p className="mx-auto mt-5 max-w-[620px] text-[19px] leading-snug text-pretty text-ink-soft sm:text-[21px]">{text}</p>
         </Reveal>
       )}
     </div>
   );
 }
 
-function Check() {
+function Check({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-4 w-4 shrink-0">
-      <circle cx="10" cy="10" r="10" fill="currentColor" opacity="0.18" />
-      <path d="M6 10.4l2.6 2.6L14 7.6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`h-4 w-4 shrink-0 ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
     </svg>
+  );
+}
+
+function Cross({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`h-4 w-4 shrink-0 ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M7 7l10 10M17 7 7 17" />
+    </svg>
+  );
+}
+
+function Chevron() {
+  return (
+    <span className="arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="h-[0.8em] w-[0.8em]" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5l7 7-7 7" />
+      </svg>
+    </span>
   );
 }
 
@@ -213,120 +251,121 @@ export default function Home() {
       <HeroMotion />
 
       <main id="top">
-        {/* HERO */}
-        <section data-hero className="hero-bg relative overflow-hidden px-4 pt-32 pb-10 text-center text-white sm:pt-40">
-          <div data-hero-copy className="relative mx-auto max-w-5xl">
+        {/* HERO: black, centered, big type */}
+        <section data-hero className="hero-bg dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
+          <div data-hero-copy className="relative mx-auto max-w-[980px]">
             <div className="fade-up">
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
-                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 text-emerald-400" />
+              <p className="inline-flex items-center gap-2 text-[17px] font-medium text-ink-faint">
+                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-white text-white" />
                 Private beta<span className="hidden sm:inline">&nbsp;· early access opening soon</span>
               </p>
             </div>
-            <div className="fade-up" style={{ animationDelay: "80ms" }}>
-              <h1 className="mt-7 text-[44px] leading-[1.05] font-medium tracking-[-0.025em] text-balance sm:text-6xl lg:text-[76px]">
+            <div className="fade-up" style={{ animationDelay: "100ms" }}>
+              <h1 className="mt-5 text-[48px] leading-[1.02] font-medium tracking-[-0.035em] text-balance sm:text-[72px] lg:text-[88px]">
                 Find Your Next Customers{" "}
-                <em className="draw-underline relative inline-block font-semibold">
-                  Without
-                </em>{" "}
-                the Noise
+                <em className="draw-underline relative inline-block not-italic">Without</em> the Noise
               </h1>
             </div>
-            <div className="fade-up" style={{ animationDelay: "160ms" }}>
-              <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-white sm:text-xl">
+            <div className="fade-up" style={{ animationDelay: "200ms" }}>
+              <p className="mx-auto mt-7 max-w-[640px] text-[19px] leading-snug text-pretty text-[#a1a1a6] sm:text-[24px]">
                 QuietLead is your AI sales assistant. It finds well-matched leads, watches for the right moment and drafts
                 personal outreach you approve.
               </p>
             </div>
-            <div className="fade-up mt-9" style={{ animationDelay: "240ms" }}>
+            <div className="fade-up mt-10" style={{ animationDelay: "300ms" }}>
               <WaitlistForm source="hero" onDark center />
             </div>
             <ul
-              className="fade-up mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-medium text-white"
-              style={{ animationDelay: "320ms" }}
+              className="fade-up mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[14px] text-[#a1a1a6]"
+              style={{ animationDelay: "400ms" }}
             >
               {trust.map((t) => (
                 <li key={t} className="flex items-center gap-2">
-                  <Check />
+                  <Check className="text-white" />
                   {t}
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="fade-side relative mx-auto mt-16 max-w-3xl text-left" style={{ animationDelay: "350ms" }}>
+          <div className="fade-up relative mx-auto mt-20 max-w-[860px] text-left" style={{ animationDelay: "500ms" }}>
             <HeroMockup />
           </div>
-          <p className="relative mt-8 text-xs text-ink-faint">
+          <p className="relative mx-auto mt-8 max-w-xl text-[12px] text-ink-faint">
             Sending from Gmail or Outlook is included in Steady and Studio. QuietLead never sends anything without your approval.
           </p>
         </section>
 
-        {/* STEPS: pinned scroll story */}
+        {/* STEPS: pinned scroll story on white */}
         <StepsStory />
-        <div className="relative -mt-14 px-4 pb-24 text-center sm:-mt-20">
+        <div className="relative -mt-14 px-4 pb-28 text-center sm:-mt-20">
           <Reveal>
-            <a href="#waitlist" className="btn-primary h-14 rounded-2xl px-8 text-base">
-              Get early access →
+            <a href="#waitlist" className="btn-primary h-[52px] px-8 text-[17px]">
+              Get early access
             </a>
-            <p className="mt-4 text-sm text-ink-faint">Built for agencies, consultants and B2B teams</p>
+            <p className="mt-4 text-[14px] text-ink-faint">Built for agencies, consultants and B2B teams</p>
           </Reveal>
         </div>
 
-        {/* FEATURE PANELS */}
-        <section id="features" className="scroll-mt-24 space-y-6 px-4 pb-24">
-          {panels.map((p) => (
-            <Reveal key={p.title} className="mx-auto max-w-6xl">
-              <div className={`panel panel-${p.tone} px-6 py-10 sm:px-12 sm:py-14`}>
-                <ScrollWords
-                  text={p.title}
-                  className="text-[28px] leading-tight font-semibold tracking-tight text-[var(--panel-ink)] sm:text-[34px]"
-                />
-                <p className="mt-3 max-w-3xl text-[17px] leading-relaxed text-ink-soft [&_em]:font-medium [&_em]:text-[var(--panel-ink)]">
-                  {p.intro}
-                </p>
-                <div className="mt-9 grid gap-8 md:grid-cols-2 md:gap-12">
-                  {p.items.map((it) => (
-                    <div key={it.title}>
-                      <h3 className="text-xl font-semibold text-[var(--panel-ink)]">{it.title}</h3>
-                      <p className="mt-2.5 leading-relaxed text-ink-soft">{it.text}</p>
-                    </div>
-                  ))}
+        {/* FEATURES: white tiles with hairline borders on light grey */}
+        <section id="features" className="scroll-mt-12 bg-mist px-4 py-28 sm:py-36">
+          <SectionHead eyebrow="Features" title={"Everything you need.\nNothing you don't."} />
+          <div className="mx-auto mt-16 max-w-[980px] space-y-5">
+            {panels.map((p) => (
+              <Reveal key={p.title}>
+                <div className="panel px-7 py-10 sm:px-14 sm:py-14">
+                  <ScrollWords
+                    text={p.title}
+                    className="max-w-[680px] text-[30px] leading-[1.1] font-medium tracking-[-0.025em] text-ink sm:text-[40px]"
+                  />
+                  <p className="mt-4 max-w-[640px] text-[19px] leading-snug text-ink-soft [&_em]:not-italic [&_em]:text-ink">
+                    {p.intro}
+                  </p>
+                  <div className="mt-10 grid border-t border-line md:grid-cols-2">
+                    {p.items.map((it, i) => (
+                      <div
+                        key={it.title}
+                        className={`pt-7 pb-2 ${i === 0 ? "md:border-r md:border-line md:pr-10" : "border-t border-line md:border-t-0 md:pl-10"}`}
+                      >
+                        <h3 className="text-[19px] font-medium tracking-tight text-ink">{it.title}</h3>
+                        <p className="mt-2 text-[17px] leading-relaxed text-ink-soft">{it.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <a href="#waitlist" className="link-arrow mt-9">
+                    Join the waitlist
+                    <Chevron />
+                  </a>
                 </div>
-                <a href="#waitlist" className="link-arrow mt-10">
-                  Join the waitlist
-                  <span className="arrow" aria-hidden="true">
-                    →
-                  </span>
-                </a>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
+          </div>
         </section>
 
         {/* COMPARISON */}
-        <section className="px-4 py-24">
+        <section className="px-4 py-28 sm:py-36">
           <SectionHead
             title={"Everyone's Sending More.\nWhy Not Send Better?"}
             text="Volume tools fill inboxes. QuietLead helps you write to fewer people, better."
           />
-          <Reveal className="mx-auto mt-14 max-w-4xl">
-            <div className="overflow-hidden rounded-[28px] border border-[#e3eaf8] bg-white">
-              <div className="grid grid-cols-3 border-b border-ink/5 bg-mist/60 px-5 py-4 text-sm font-semibold sm:px-8">
+          <Reveal className="mx-auto mt-16 max-w-[860px]">
+            <div className="overflow-hidden rounded-[28px] border border-line bg-white">
+              <div className="grid grid-cols-3 border-b border-line bg-mist px-5 py-4 text-[14px] font-medium sm:px-8">
                 <span />
                 <span className="text-ink-faint">Volume tools</span>
-                <span className="flex items-center gap-2 text-brand">
-                  <Image src="/brand/quietlead-icon.png" alt="" width={20} height={20} className="rounded-md" />
+                <span className="flex items-center gap-2 text-ink">
+                  <Image src="/brand/quietlead-icon.png" alt="" width={20} height={20} className="logo-mono rounded-[5px]" />
                   QuietLead
                 </span>
               </div>
               {comparison.map(([label, them, us]) => (
                 <div
                   key={label}
-                  className="grid grid-cols-3 gap-3 border-b border-ink/5 px-5 py-4 text-sm last:border-0 sm:px-8 sm:text-[15px]"
+                  className="grid grid-cols-3 gap-3 border-b border-line px-5 py-5 text-[14px] last:border-0 sm:px-8 sm:text-[17px]"
                 >
-                  <span className="font-semibold">{label}</span>
+                  <span className="font-medium">{label}</span>
                   <span className="text-ink-faint">{them}</span>
-                  <span className="font-medium text-ink">{us}</span>
+                  <span className="text-ink">{us}</span>
                 </div>
               ))}
             </div>
@@ -334,78 +373,80 @@ export default function Home() {
         </section>
 
         {/* CALCULATOR */}
-        <section className="px-4 pb-24">
+        <section className="bg-mist px-4 py-28 sm:py-36">
           <SectionHead
             title="Calculate your monthly pipeline"
             text="Move the sliders to see what a quiet, steady flow of leads can mean for your business."
           />
-          <Reveal className="mx-auto mt-12 max-w-6xl">
-            <PipelineCalculator />
+          <Reveal className="mx-auto mt-16 max-w-[980px]">
+            <div className="rounded-[28px] border border-line bg-white p-6 sm:p-10">
+              <PipelineCalculator />
+            </div>
           </Reveal>
         </section>
 
         {/* PRICING */}
-        <section id="pricing" className="scroll-mt-24 px-4 py-24">
+        <section id="pricing" className="scroll-mt-12 px-4 py-28 sm:py-36">
           <SectionHead
             eyebrow="Pricing"
             title="Simple plans. Start small, grow quietly."
             text="Every plan starts with a 7-day free trial. Cancel before it ends and you pay nothing."
           />
-          <div className="mx-auto mt-14 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
+          <div className="mx-auto mt-16 grid max-w-[980px] items-stretch gap-5 md:grid-cols-3">
             {plans.map((p, i) => (
-              <Reveal key={p.name} delay={i * 90}>
+              <Reveal key={p.name} delay={i * 100}>
                 <div
-                  className={`relative flex h-full flex-col rounded-3xl p-7 ${
-                    p.popular ? "bg-brand text-white" : "glass"
+                  className={`relative flex h-full flex-col rounded-[28px] p-8 ${
+                    p.popular ? "bg-black text-white" : "border border-line bg-white"
                   }`}
                 >
                   {p.popular && (
-                    <span className="absolute top-6 right-6 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium">
+                    <span className="absolute top-7 right-7 rounded-full border border-white/25 px-2.5 py-1 text-[12px]">
                       Recommended
                     </span>
                   )}
-                  <h3 className="text-lg font-medium">{p.name}</h3>
-                  <p className={`mt-1 text-sm ${p.popular ? "text-white/85" : "text-ink-soft"}`}>{p.for}</p>
-                  <div className="mt-6 flex items-baseline gap-2">
-                    <span className="text-5xl font-medium tracking-tight">€{p.price}</span>
-                    <span className={`text-sm ${p.popular ? "text-white/85" : "text-ink-soft"}`}>/ month</span>
+                  <h3 className="text-[24px] font-medium tracking-tight">{p.name}</h3>
+                  <p className={`mt-1 text-[14px] ${p.popular ? "text-[#a1a1a6]" : "text-ink-soft"}`}>{p.for}</p>
+                  <div className="mt-8 flex items-baseline gap-2">
+                    <span className="text-[48px] font-medium tracking-[-0.03em]">€{p.price}</span>
+                    <span className={`text-[14px] ${p.popular ? "text-[#a1a1a6]" : "text-ink-soft"}`}>/ month</span>
                   </div>
-                  <p className={`mt-1 text-xs ${p.popular ? "text-white/85" : "text-ink-faint"}`}>
-                    {p.leads}
-                  </p>
-                  <ul className="mt-6 flex-1 space-y-2.5 text-[15px]">
+                  <p className={`mt-1 text-[12px] ${p.popular ? "text-[#a1a1a6]" : "text-ink-faint"}`}>{p.leads}</p>
+                  <ul
+                    className={`mt-7 flex-1 space-y-3 border-t pt-7 text-[15px] ${p.popular ? "border-line-dark" : "border-line"}`}
+                  >
                     {p.features.map((f) =>
                       f === p.highlight ? (
                         <li key={f} className="flex items-center gap-2.5">
-                          <span className="text-brand">✓</span>
-                          <span className="font-semibold text-ink">{f}</span>
-                          <span className="shrink-0 rounded-full bg-mist px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-brand">
+                          <Check />
+                          <span className="font-medium text-ink">{f}</span>
+                          <span className="shrink-0 rounded-full border border-line px-2 py-0.5 text-[11px] whitespace-nowrap text-ink-soft">
                             Only in Studio
                           </span>
                         </li>
                       ) : (
-                        <li key={f} className="flex gap-2.5">
-                          <span className={p.popular ? "text-white" : "text-brand"}>✓</span>
-                          <span className={p.popular ? "text-white/90" : "text-ink-soft"}>{f}</span>
+                        <li key={f} className="flex items-center gap-2.5">
+                          <Check />
+                          <span className={p.popular ? "text-white" : "text-ink"}>{f}</span>
                         </li>
                       ),
                     )}
                     {p.missing.map((f) => (
-                      <li key={f} className="flex gap-2.5">
-                        <span className={p.popular ? "text-white/70" : "text-ink-faint"}>✕</span>
-                        <span className={`line-through ${p.popular ? "text-white/75" : "text-ink-faint"}`}>{f}</span>
+                      <li key={f} className="flex items-center gap-2.5">
+                        <Cross className={p.popular ? "text-[#6e6e73]" : "text-ink-faint"} />
+                        <span className={`line-through ${p.popular ? "text-[#6e6e73]" : "text-ink-faint"}`}>{f}</span>
                       </li>
                     ))}
                   </ul>
                   {checkoutEnabled ? (
-                    <form action="/api/checkout" method="post" className="mt-8">
+                    <form action="/api/checkout" method="post" className="mt-9">
                       <input type="hidden" name="plan" value={p.name.toLowerCase()} />
-                      <button type="submit" className={`h-12 w-full text-[15px] ${planButton(p.popular)}`}>
+                      <button type="submit" className={`h-12 w-full text-[17px] ${planButton(p.popular)}`}>
                         Start 7-day free trial
                       </button>
                     </form>
                   ) : (
-                    <a href="#waitlist" className={`mt-8 h-12 text-[15px] ${planButton(p.popular)}`}>
+                    <a href="#waitlist" className={`mt-9 h-12 text-[17px] ${planButton(p.popular)}`}>
                       Join the waitlist
                     </a>
                   )}
@@ -413,80 +454,93 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-ink-faint">Prices per month, excl. VAT. VAT is shown before you pay. No setup fees, cancel anytime.</p>
+          <p className="mt-8 text-center text-[12px] text-ink-faint">
+            Prices per month, excl. VAT. VAT is shown before you pay. No setup fees, cancel anytime.
+          </p>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="scroll-mt-24 px-4 py-24">
+        {/* FAQ: Apple-style list with hairlines */}
+        <section id="faq" className="scroll-mt-12 bg-mist px-4 py-28 sm:py-36">
           <SectionHead title="Got Questions? We've Got Answers." />
-          <div className="mx-auto mt-12 max-w-3xl space-y-3">
+          <div className="mx-auto mt-14 max-w-[820px] border-t border-line">
             {faqs.map((f, i) => (
               <Reveal key={f.q} delay={i * 60}>
-                <details className="group rounded-2xl border border-[#e3eaf8] bg-white px-6 py-5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold">
+                <details className="group border-b border-line py-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[19px] font-medium tracking-tight sm:text-[21px]">
                     {f.q}
-                    <span className="faq-icon flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mist text-brand transition-transform duration-300">
-                      +
+                    <span className="faq-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-transform duration-500 ease-[cubic-bezier(0.28,0.11,0.32,1)]">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
                     </span>
                   </summary>
-                  <p className="mt-3 leading-relaxed text-ink-soft">{f.a}</p>
+                  <p className="mt-4 max-w-[680px] text-[17px] leading-relaxed text-ink-soft">{f.a}</p>
                 </details>
               </Reveal>
             ))}
           </div>
         </section>
 
-        {/* FINAL CTA */}
-        <section id="waitlist" className="scroll-mt-24 px-4 pt-6 pb-28">
-          <Reveal className="mx-auto max-w-6xl">
-            <div className="relative overflow-hidden rounded-[40px] bg-brand px-6 py-16 text-center text-white sm:px-16 sm:py-20">
-              
-              <div className="relative">
-                <Image
-                  src="/brand/quietlead-icon.png"
-                  alt="QuietLead logo"
-                  width={64}
-                  height={64}
-                  className="mx-auto rounded-2xl ring-1 ring-white/30"
-                />
-                <ScrollWords
-                  tone="light"
-                  text="Your Next Customers Are Out There. Reach Them *Quietly*."
-                  className="mx-auto mt-6 max-w-3xl text-[34px] leading-[1.1] font-semibold tracking-tight text-balance sm:text-6xl"
-                />
-                <p className="mx-auto mt-5 max-w-lg text-lg text-white">
-                  Join the waitlist and be among the first to get access.
-                </p>
-                <div className="mt-9">
-                  <WaitlistForm source="footer-cta" onDark center />
-                </div>
-              </div>
+        {/* FINAL CTA: full-bleed black chapter */}
+        <section id="waitlist" className="dark-section scroll-mt-12 bg-black px-4 py-32 text-center text-white sm:py-44">
+          <Reveal className="mx-auto max-w-[980px]">
+            <Image
+              src="/brand/quietlead-icon.png"
+              alt="QuietLead logo"
+              width={64}
+              height={64}
+              className="logo-invert mx-auto rounded-[16px]"
+            />
+            <ScrollWords
+              tone="light"
+              text="Your Next Customers Are Out There. Reach Them *Quietly*."
+              className="mx-auto mt-8 max-w-[820px] text-[40px] leading-[1.05] font-medium tracking-[-0.03em] text-balance sm:text-[64px]"
+            />
+            <p className="mx-auto mt-6 max-w-lg text-[19px] text-[#a1a1a6] sm:text-[21px]">
+              Join the waitlist and be among the first to get access.
+            </p>
+            <div className="mt-10">
+              <WaitlistForm source="footer-cta" onDark center />
             </div>
           </Reveal>
         </section>
       </main>
 
-      <footer className="border-t border-ink/5 px-4 py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-ink-soft sm:flex-row">
-          <div className="flex items-center gap-2.5">
-            <Image src="/brand/quietlead-icon.png" alt="" width={26} height={26} className="rounded-lg" />
-            <span className="font-semibold text-ink">QuietLead</span>
-            <span className="text-ink-faint">· Made in Frankfurt</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <a href="/imprint" className="hover:text-ink">Imprint</a>
-            <a href="/privacy" className="hover:text-ink">Privacy Policy</a>
-            <a href="/terms" className="hover:text-ink">Terms of Service</a>
-            <a href="/refunds" className="hover:text-ink">Refund Policy</a>
-            <a href="/cookies" className="hover:text-ink">Cookie Policy</a>
-            <a href="/delete-my-data" className="hover:text-ink">Delete my data</a>
-            <span className="text-ink-faint">© 2026 QuietLead</span>
+      {/* FOOTER: Apple-style small print on light grey */}
+      <footer className="bg-mist px-4 pt-10 pb-12 text-[12px] text-ink-soft">
+        <div className="mx-auto max-w-[980px]">
+          <p className="border-b border-line pb-5 leading-relaxed text-ink-faint">
+            No tracking. The only cookies are the ones the waitlist needs to work, so there is nothing to consent to.{" "}
+            <a href="/cookies" className="text-ink-soft underline underline-offset-2 hover:text-ink">
+              Cookie policy
+            </a>
+          </p>
+          <div className="flex flex-col gap-4 pt-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2">
+              <Image src="/brand/quietlead-icon.png" alt="" width={18} height={18} className="logo-mono rounded-[4px]" />
+              <span className="text-ink">QuietLead</span>
+              <span className="text-ink-faint">· Made in Frankfurt · © 2026</span>
+            </div>
+            <div className="flex flex-wrap gap-x-0 gap-y-2">
+              {[
+                ["/imprint", "Imprint"],
+                ["/privacy", "Privacy Policy"],
+                ["/terms", "Terms of Service"],
+                ["/refunds", "Refund Policy"],
+                ["/cookies", "Cookie Policy"],
+                ["/delete-my-data", "Delete my data"],
+              ].map(([href, label], i) => (
+                <a
+                  key={href}
+                  href={href}
+                  className={`px-2.5 hover:text-ink hover:underline ${i > 0 ? "border-l border-line" : "pl-0"}`}
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-        <p className="mx-auto mt-6 max-w-6xl text-center text-xs text-ink-faint sm:text-left">
-          No cookies, no tracking. This site sets no cookies, so there is nothing to consent to.{" "}
-          <a href="/cookies" className="underline underline-offset-2 hover:text-ink">Cookie policy</a>
-        </p>
       </footer>
     </>
   );

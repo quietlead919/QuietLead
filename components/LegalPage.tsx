@@ -8,8 +8,8 @@ export function LegalPage({ title, updated, children }: { title: string; updated
       <header className="border-b border-ink/5">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <Image src="/brand/quietlead-icon.png" alt="" width={28} height={28} className="rounded-lg" />
-            <span className="font-semibold text-ink">QuietLead</span>
+            <Image src="/brand/quietlead-icon.png" alt="" width={26} height={26} className="logo-mono rounded-[6px]" />
+            <span className="font-medium text-ink">QuietLead</span>
           </Link>
           <Link href="/" className="text-sm text-ink-soft hover:text-ink">
             ← Back to home
@@ -17,7 +17,7 @@ export function LegalPage({ title, updated, children }: { title: string; updated
         </div>
       </header>
       <main id="top" className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-        <h1 className="text-4xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-4xl font-medium tracking-tight">{title}</h1>
         <p className="mt-2 text-sm text-ink-faint">Last updated: {updated}</p>
         <div className="legal mt-10">{children}</div>
       </main>

@@ -90,8 +90,25 @@ function PencilIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function CheckIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
+    </svg>
+  );
+}
+
 const btnBase =
-  "inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[14px] font-semibold transition-[transform,background-color,color] duration-150 active:scale-95 disabled:pointer-events-none";
+  "inline-flex h-10 items-center gap-2 rounded-full px-5 text-[14px] font-medium transition-[transform,background-color,color] duration-150 active:scale-95 disabled:pointer-events-none";
 
 export function HeroMockup() {
   const [selected, setSelected] = useState(leads[0].id);
@@ -166,7 +183,7 @@ export function HeroMockup() {
     <div className="relative mx-auto w-full max-w-[760px] text-left">
       {/* Floating signal chip, follows the selected lead */}
       <div className="glass-strong absolute -top-5 -left-3 z-10 hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-ink sm:flex">
-        <span className="pulse-dot h-2 w-2 rounded-full bg-emerald-500 text-emerald-500" />
+        <span className="pulse-dot h-2 w-2 rounded-full bg-ink text-ink" />
         {allDone ? "Inbox zero. Nice." : `New signal: ${lead.signal}`}
       </div>
 
@@ -174,9 +191,9 @@ export function HeroMockup() {
         {/* Window bar: the dots light up on hover */}
         <div className="flex items-center justify-between border-b border-ink/5 px-6 py-4">
           <div className="flex gap-2">
-            <span className="h-3 w-3 rounded-full bg-ink/10 transition-colors group-hover/app:bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-ink/10 transition-colors delay-75 group-hover/app:bg-[#febc2e]" />
-            <span className="h-3 w-3 rounded-full bg-ink/10 transition-colors delay-150 group-hover/app:bg-[#28c840]" />
+            <span className="h-3 w-3 rounded-full bg-ink/10" />
+            <span className="h-3 w-3 rounded-full bg-ink/10" />
+            <span className="h-3 w-3 rounded-full bg-ink/10" />
           </div>
           <span className="text-xs font-medium text-ink-faint tabular-nums">
             Today · {remaining} of {leads.length} quiet leads left
@@ -201,20 +218,20 @@ export function HeroMockup() {
                     } ${done && !active ? "opacity-60" : ""}`}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      <span className="truncate text-[14px] font-semibold">{l.name}</span>
+                      <span className="truncate text-[14px] font-medium">{l.name}</span>
                       <span
                         key={done ? "done" : "score"}
-                        className={`pop-in shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                        className={`pop-in shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${
                           done
                             ? active
                               ? "bg-white/20"
-                              : "bg-emerald-100 text-emerald-700"
+                              : "bg-mist text-ink"
                             : active
                               ? "bg-white/20"
                               : "bg-mist text-brand"
                         }`}
                       >
-                        {done ? "Sent ✓" : l.score}
+                        {done ? "Sent" : l.score}
                       </span>
                     </span>
                     <span className={`mt-1 block truncate text-[12px] ${active ? "text-white/80" : "text-ink-faint"}`}>
@@ -229,10 +246,10 @@ export function HeroMockup() {
           {/* Right side */}
           {allDone ? (
             <div className="flex min-h-[360px] flex-col items-center justify-center gap-3 p-8 text-center">
-              <span className="pop-in flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600">
-                ✓
+              <span className="pop-in flex h-14 w-14 items-center justify-center rounded-full bg-mist text-ink">
+                <CheckIcon className="h-6 w-6" />
               </span>
-              <p className="text-xl font-semibold text-ink">All caught up for today</p>
+              <p className="text-xl font-medium text-ink">All caught up for today</p>
               <p className="max-w-[300px] text-[14px] text-ink-soft">
                 Three personal messages, each one approved by you. That&apos;s the whole routine.
               </p>
@@ -248,11 +265,11 @@ export function HeroMockup() {
           ) : (
             <div key={lead.id} className="fade-up space-y-6 p-6 sm:p-7">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">Briefing</p>
+                <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">Briefing</p>
                 <ul className="mt-3 space-y-2 text-[14px] text-ink-soft">
                   {lead.briefing.map((b) => (
                     <li key={b} className="flex gap-2.5">
-                      <span className="text-brand">●</span> {b}
+                      <span className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-ink" aria-hidden="true" /> {b}
                     </li>
                   ))}
                 </ul>
@@ -265,7 +282,7 @@ export function HeroMockup() {
                     editing ? "ring-2 ring-brand/40" : "ring-ink/5 hover:ring-brand/20"
                   } ${leaving ? "fly-away" : ""}`}
                 >
-                  <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">
+                  <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">
                     Draft to {lead.to}
                   </p>
                   {editing ? (
@@ -289,9 +306,11 @@ export function HeroMockup() {
                 {phase === "sent" && (
                   <p
                     role="status"
-                    className="pop-in absolute inset-0 flex items-center justify-center gap-2 text-[15px] font-semibold text-emerald-700"
+                    className="pop-in absolute inset-0 flex items-center justify-center gap-2 text-[15px] font-medium text-ink"
                   >
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100">✓</span>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-mist">
+                      <CheckIcon className="h-4 w-4" />
+                    </span>
                     Sent to {lead.to.split(",")[0]}
                   </p>
                 )}
@@ -299,8 +318,9 @@ export function HeroMockup() {
 
               <div className="flex flex-wrap items-center gap-2.5">
                 {isSent ? (
-                  <span className="inline-flex h-10 items-center gap-2 rounded-xl bg-emerald-100 px-4 text-[14px] font-semibold text-emerald-700">
-                    ✓ Sent from your inbox
+                  <span className="inline-flex h-10 items-center gap-2 rounded-full bg-mist px-5 text-[14px] font-medium text-ink">
+                    <CheckIcon className="h-4 w-4" />
+                    Sent from your inbox
                   </span>
                 ) : (
                   <>
@@ -310,7 +330,7 @@ export function HeroMockup() {
                       disabled={busy}
                       className={`${btnBase} group/send ${
                         phase === "sent"
-                          ? "pop-in bg-emerald-600 text-white"
+                          ? "pop-in bg-ink text-white"
                           : "bg-brand text-white hover:-translate-y-0.5 hover:bg-brand-deep"
                       }`}
                     >
@@ -325,7 +345,10 @@ export function HeroMockup() {
                           On its way
                         </>
                       ) : phase === "sent" ? (
-                        <>✓ Sent</>
+                        <>
+                          <CheckIcon className="h-4 w-4" />
+                          Sent
+                        </>
                       ) : (
                         <>
                           <PlaneIcon className="h-4 w-4 transition-transform duration-200 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5" />

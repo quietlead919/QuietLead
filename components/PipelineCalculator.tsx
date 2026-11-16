@@ -99,7 +99,7 @@ export function PipelineCalculator() {
             <label key={f.key} className="block">
               <span className="flex items-baseline justify-between gap-4">
                 <span className="text-[15px] font-medium text-ink">{f.label}</span>
-                <span className="text-[15px] font-semibold text-brand tabular-nums">{f.format(values[f.key])}</span>
+                <span className="text-[15px] font-medium text-brand tabular-nums">{f.format(values[f.key])}</span>
               </span>
               {/* The real range input sits invisibly on top (keyboard, screen readers, pointer);
                   the visible track and thumb follow it with a little easing. */}
@@ -113,7 +113,7 @@ export function PipelineCalculator() {
                   onChange={(e) => setValues((s) => ({ ...s, [f.key]: Number(e.target.value) }))}
                   className="peer absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                 />
-                <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-[#dbe5f7]" />
+                <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-haze" />
                 <span
                   className="absolute top-1/2 left-0 h-1.5 -translate-y-1/2 rounded-full bg-brand"
                   style={{ width: pos }}
@@ -129,10 +129,10 @@ export function PipelineCalculator() {
         })}
       </div>
 
-      <div className="flex flex-col justify-between rounded-[28px] bg-brand p-7 text-white sm:p-8">
+      <div className="flex flex-col justify-between rounded-[28px] bg-black p-7 text-white sm:p-10">
         <div>
           <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
-          <p className="mt-2 text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl" aria-live="polite">
+          <p className="mt-2 text-5xl font-medium tracking-tight tabular-nums sm:text-6xl" aria-live="polite">
             {euro(results.revenue)}
           </p>
         </div>
@@ -140,7 +140,7 @@ export function PipelineCalculator() {
           {tiles.map((r) => (
             <div key={r.label} className="rounded-2xl bg-white/10 p-4">
               <dt className="text-xs text-white/85">{r.label}</dt>
-              <dd className="mt-1 text-2xl font-semibold tabular-nums">{r.value}</dd>
+              <dd className="mt-1 text-2xl font-medium tabular-nums">{r.value}</dd>
             </div>
           ))}
         </dl>

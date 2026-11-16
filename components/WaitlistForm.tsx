@@ -16,7 +16,7 @@ export function WaitlistForm({
   center?: boolean;
 }) {
   const clerk = useClerk();
-  const h = size === "lg" ? "h-14" : "h-12";
+  const h = size === "lg" ? "h-[52px]" : "h-11";
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 
   // Ripple that grows from the exact spot you press.
@@ -34,27 +34,24 @@ export function WaitlistForm({
         disabled={!clerk.loaded}
         onPointerDown={ripple}
         onClick={() => clerk.openWaitlist({})}
-        className={`pop-btn group/cta relative inline-flex ${h} items-center justify-center gap-2 overflow-hidden rounded-2xl px-8 text-[15px] font-semibold transition-opacity disabled:opacity-70 ${
-          onDark ? "bg-white text-brand shadow-lg" : "btn-primary"
+        className={`group/cta relative ${h} overflow-hidden px-8 text-[17px] disabled:opacity-70 ${
+          onDark ? "btn-light" : "btn-primary"
         }`}
       >
         {ripples.map((p) => (
           <span
             key={p.id}
             aria-hidden="true"
-            className={`ripple pointer-events-none absolute rounded-full ${onDark ? "bg-brand/20" : "bg-white/40"}`}
+            className={`ripple pointer-events-none absolute rounded-full ${onDark ? "bg-black/10" : "bg-white/25"}`}
             style={{ left: p.x, top: p.y }}
           />
         ))}
         Get early access
-        <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover/cta:translate-x-1">
-          →
-        </span>
       </button>
-      <p className={`mt-3 text-sm ${onDark ? "text-white/90" : "text-ink-soft"}`}>
+      <p className={`mt-4 text-[14px] ${onDark ? "text-[#a1a1a6]" : "text-ink-soft"}`}>
         One email when we launch. No spam, ever.
       </p>
-      <p className={`mt-1.5 text-xs ${onDark ? "text-white/85" : "text-ink-faint"}`}>
+      <p className={`mt-1.5 max-w-sm text-[12px] leading-relaxed text-ink-faint ${center ? "mx-auto" : ""}`}>
         By joining you agree to get emails about QuietLead and confirm you are 18 or older. Unsubscribe anytime.{" "}
         <a href="/privacy" className="underline underline-offset-2">
           Privacy Policy

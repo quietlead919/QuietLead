@@ -24,11 +24,11 @@ export function ScrollProgress() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px]">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-12 z-[60] h-px">
       <div
         ref={bar}
         data-progress
-        className="h-full origin-left bg-gradient-to-r from-sky to-brand"
+        className="h-full origin-left bg-ink-faint"
         style={{ transform: "scaleX(0)" }}
       />
     </div>

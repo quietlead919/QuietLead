@@ -38,18 +38,18 @@ export function CookieNotice() {
     <div
       role="region"
       aria-label="Cookie notice"
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-xl items-center gap-4 rounded-2xl bg-ink px-5 py-3.5 text-sm text-white sm:bottom-5"
+      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-xl items-center gap-4 rounded-[18px] border border-white/10 bg-[rgba(22,22,23,0.9)] px-5 py-3.5 text-[14px] text-white backdrop-blur-xl sm:bottom-5"
     >
       <p className="flex-1">
         No tracking. Only cookies needed for the waitlist to work.{" "}
-        <Link href="/cookies" className="font-semibold underline underline-offset-2">
+        <Link href="/cookies" className="font-medium underline underline-offset-2">
           Cookie policy
         </Link>
       </p>
       <button
         type="button"
         onClick={close}
-        className="h-9 shrink-0 rounded-lg bg-white px-4 font-semibold text-ink hover:bg-mist"
+        className="h-8 shrink-0 rounded-full bg-white px-4 text-[13px] text-ink hover:bg-haze"
       >
         Got it
       </button>
