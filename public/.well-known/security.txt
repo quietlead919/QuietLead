@@ -1,0 +1,5 @@
+# Found a security issue in QuietLead? Please report it privately, not in a public issue.
+Contact: https://github.com/quietlead919/QuietLead/security/advisories/new
+Expires: 2027-11-16T00:00:00.000Z
+Preferred-Languages: en, de
+Canonical: https://quiet-lead.vercel.app/.well-known/security.txt

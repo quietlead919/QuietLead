@@ -480,12 +480,17 @@ export default function Home() {
             <span className="font-semibold text-ink">QuietLead</span>
             <span className="text-ink-faint">· Made in Frankfurt</span>
           </div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-ink">Imprint</a>
-            <a href="#" className="hover:text-ink">Privacy</a>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="/imprint" className="hover:text-ink">Imprint</a>
+            <a href="/privacy" className="hover:text-ink">Privacy Policy</a>
+            <a href="/terms" className="hover:text-ink">Terms of Service</a>
             <span className="text-ink-faint">© 2026 QuietLead</span>
           </div>
         </div>
+        <p className="mx-auto mt-6 max-w-6xl text-center text-xs text-ink-faint sm:text-left">
+          No cookies, no tracking. This site sets no cookies, so there is nothing to consent to.{" "}
+          <a href="/privacy" className="underline underline-offset-2 hover:text-ink">Cookie &amp; privacy details</a>
+        </p>
       </footer>
     </>
   );

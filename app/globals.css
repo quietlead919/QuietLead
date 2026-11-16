@@ -266,3 +266,26 @@ details[open] .faq-icon {
     transition: none;
   }
 }
+
+/* Legal pages */
+.legal h2 {
+  margin-top: 2.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.legal p,
+.legal li {
+  margin-top: 0.75rem;
+  line-height: 1.7;
+  color: var(--color-ink-soft);
+}
+.legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.legal a {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
