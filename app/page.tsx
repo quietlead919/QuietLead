@@ -253,13 +253,8 @@ export default function Home() {
             </ul>
           </div>
 
-          <div
-            className="fade-up relative mx-auto mt-16 max-w-3xl text-left [perspective:1600px]"
-            style={{ animationDelay: "300ms" }}
-          >
-            <div data-hero-card>
-              <HeroMockup />
-            </div>
+          <div className="fade-side relative mx-auto mt-16 max-w-3xl text-left" style={{ animationDelay: "350ms" }}>
+            <HeroMockup />
           </div>
           <p className="relative mt-8 text-xs text-ink-faint">
             Sending from Gmail or Outlook is included in Steady and Studio. QuietLead never sends anything without your approval.

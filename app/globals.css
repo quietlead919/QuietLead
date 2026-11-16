@@ -437,3 +437,23 @@ details[open] .faq-icon {
   visibility: hidden;
   opacity: 0;
 }
+
+/* Hero demo card: small fade-in from the side on load */
+.fade-side {
+  animation: fade-side 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes fade-side {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade-side {
+    animation: none;
+  }
+}

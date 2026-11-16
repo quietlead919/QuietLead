@@ -2,8 +2,7 @@
 
 import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
 
-// Cinematic hero on scroll: the copy drifts up and fades, the product card starts tilted
-// in 3D and straightens up as it comes into view. Renders nothing itself.
+// Hero on scroll: the copy drifts up and fades as you scroll past it. Renders nothing itself.
 export function HeroMotion() {
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -17,18 +16,6 @@ export function HeroMotion() {
         ease: "none",
         scrollTrigger: { trigger: hero, start: "top top", end: "60% top", scrub: 0.5 },
       });
-
-      gsap.fromTo(
-        "[data-hero-card]",
-        { rotateX: 22, scale: 0.9, y: 40, transformOrigin: "50% 0%" },
-        {
-          rotateX: 0,
-          scale: 1,
-          y: 0,
-          ease: "none",
-          scrollTrigger: { trigger: "[data-hero-card]", start: "top 95%", end: "top 30%", scrub: 0.6 },
-        },
-      );
     });
   });
 
