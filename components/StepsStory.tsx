@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
+import { useRef, useState } from "react";
+import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 // "Describe. Discover. Send." as a pinned scroll story: the section sticks while a single
 // product card morphs through the three steps (typing a request -> leads appear ->
@@ -23,23 +23,40 @@ const rows = [
 
 export function StepsStory() {
   const root = useRef<HTMLElement>(null);
+  const replayRef = useRef<() => void>(() => {});
+  const [done, setDone] = useState(false);
+  const [spin, setSpin] = useState(0);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         const q = gsap.utils.selector(root);
-        const tl = gsap.timeline({
-          defaults: { ease: "power2.inOut" },
-          scrollTrigger: {
-            trigger: q("[data-pin]")[0],
-            start: "top top",
-            end: "+=2600",
-            pin: true,
-            scrub: 0.8,
-            anticipatePin: 1,
+        // The timeline is driven by scroll until it has played once; after that it stays on
+        // the final "Sent" scene (scrolling up and down no longer rewinds it) and the
+        // Replay button plays it again on its own.
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+        let finished = false;
+        const st = ScrollTrigger.create({
+          trigger: q("[data-pin]")[0],
+          start: "top top",
+          end: "+=2600",
+          pin: true,
+          anticipatePin: 1,
+          onUpdate(self) {
+            if (finished) return;
+            gsap.to(tl, { progress: self.progress, duration: 0.8, ease: "power3.out", overwrite: true });
+            if (self.progress > 0.97) {
+              finished = true;
+              gsap.to(tl, { progress: 1, duration: 0.6, ease: "power2.out", overwrite: true });
+              setDone(true);
+            }
           },
         });
+        replayRef.current = () => {
+          gsap.killTweensOf(tl);
+          tl.timeScale(1.5).restart();
+        };
 
         // Starting states (the static markup shows every scene).
         gsap.set(q("[data-scene=leads], [data-scene=send]"), { autoAlpha: 0 });
@@ -78,6 +95,8 @@ export function StepsStory() {
           .to(q("[data-draft]"), { x: 160, y: -120, rotate: 14, scale: 0.2, autoAlpha: 0, duration: 0.7, ease: "power2.in" })
           .fromTo(q("[data-sent]"), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "<0.4")
           .to({}, { duration: 0.4 }); // short hold before unpinning
+
+        return () => st.kill();
       });
     },
     { scope: root },
@@ -111,7 +130,7 @@ export function StepsStory() {
           </div>
 
           {/* Right: one card that morphs through the three scenes */}
-          <div className="[perspective:1400px]" aria-hidden="true">
+          <div className="[perspective:1400px]">
             <div
               data-card
               className="glass-strong relative mx-auto h-[380px] w-full max-w-[520px] overflow-hidden rounded-[32px] sm:h-[420px]"
@@ -124,7 +143,7 @@ export function StepsStory() {
               </div>
 
               {/* Scene 1: describe */}
-              <div data-scene="describe" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
+              <div data-scene="describe" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
                 <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">Who do you want to reach?</p>
                 <div className="mt-3 min-h-[96px] rounded-2xl bg-white p-4 text-[17px] leading-relaxed text-ink ring-1 ring-brand/25">
                   {PROMPT.split("").map((c, i) => (
@@ -142,7 +161,7 @@ export function StepsStory() {
               </div>
 
               {/* Scene 2: leads appear with signals and fit scores */}
-              <div data-scene="leads" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
+              <div data-scene="leads" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
                 <div className="flex h-10 items-center rounded-xl bg-white px-4 text-[13px] text-ink-soft ring-1 ring-ink/5">
                   🔍&nbsp; {PROMPT}
                 </div>
@@ -169,7 +188,7 @@ export function StepsStory() {
 
               {/* Scene 3: draft, approve, sent */}
               <div data-scene="send" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
-                <div data-draft className="rounded-2xl bg-white p-5 ring-1 ring-ink/5">
+                <div data-draft aria-hidden="true" className="rounded-2xl bg-white p-5 ring-1 ring-ink/5">
                   <p className="text-[11px] font-semibold tracking-[0.08em] text-ink-faint uppercase">Draft to Lena, Founder</p>
                   <p className="mt-2.5 text-[15px] leading-relaxed text-ink">
                     Hi Lena, saw you&apos;re hiring two designers. Congrats on the growth. Most studios your size tell me new
@@ -186,6 +205,32 @@ export function StepsStory() {
                   <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-600">✓</span>
                   <p className="text-lg font-semibold text-ink">Sent from your inbox</p>
                   <p className="text-[13px] text-ink-faint">Approved by you. Personal. Quiet.</p>
+                  {done && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSpin((n) => n + 1);
+                        replayRef.current();
+                      }}
+                      className="group/replay pop-in mt-3 inline-flex h-10 items-center gap-2 rounded-xl bg-mist px-4 text-[14px] font-semibold text-brand transition-[transform,background-color] duration-150 hover:bg-haze active:scale-95"
+                    >
+                      <svg
+                        key={spin}
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className={`h-4 w-4 transition-transform duration-500 group-hover/replay:-rotate-180 ${spin ? "replay-spin" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 12a9 9 0 1 0 3-6.7" />
+                        <path d="M3 4v5h5" />
+                      </svg>
+                      Replay
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

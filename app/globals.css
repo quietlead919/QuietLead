@@ -457,3 +457,21 @@ details[open] .faq-icon {
     animation: none;
   }
 }
+
+/* Steps story: replay icon spins once backwards when clicked */
+.replay-spin {
+  animation: replay-spin 0.7s cubic-bezier(0.45, 0, 0.2, 1);
+}
+@keyframes replay-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .replay-spin {
+    animation: none;
+  }
+}
