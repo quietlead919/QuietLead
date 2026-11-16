@@ -42,6 +42,17 @@ body {
   background: #1d1d1f;
   color: #fff;
 }
+/* On black sections a black highlight would be invisible: invert it there,
+   but keep it dark inside the white cards that sit on those sections. */
+.dark-section ::selection {
+  background: #fff;
+  color: #000;
+}
+.dark-section .glass-strong ::selection,
+.dark-section .glass ::selection {
+  background: #1d1d1f;
+  color: #fff;
+}
 
 /* Logo in black/white: the blue square turns black (or white with .logo-invert), letters stay */
 .logo-mono {
@@ -181,6 +192,10 @@ body {
   }
   .dark-section :focus-visible {
     outline-color: #fff;
+  }
+  .dark-section .glass-strong :focus-visible,
+  .dark-section .glass :focus-visible {
+    outline-color: #1d1d1f;
   }
 }
 
