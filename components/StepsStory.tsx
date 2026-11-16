@@ -32,40 +32,55 @@ export function StepsStory() {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         const q = gsap.utils.selector(root);
-        // The story only ever moves forward: scrolling down drives it, scrolling up never
-        // rewinds it. Once it has reached "Sent" it stays there. Only after you have scrolled
-        // back above the section and come down into it again does it start over.
+        // The pinned scroll story plays only once, forwards, while scrolling down.
+        // - Scrolling down drives it; it never rewinds.
+        // - As soon as you scroll up inside it, or once you scroll past its end, the pin is
+        //   released (without a visible jump) so the page scrolls freely in both directions.
+        //   If it wasn't finished yet it plays the rest on its own.
+        // - From then on the card just shows "Sent" with the Replay button.
         const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
-        let finished = false;
         let reached = 0;
-        let leftAbove = false;
+        let released = false;
+
+        const finish = () => {
+          gsap.killTweensOf(tl);
+          const rest = (1 - tl.progress()) * tl.duration();
+          gsap.to(tl, { progress: 1, duration: Math.min(1.6, Math.max(0.4, rest / 3)), ease: "power2.out" });
+          setDone(true);
+        };
+
+        // Remove the pin spacer and move the scroll position by the same amount,
+        // so the section stays exactly where it is on screen.
+        const release = (st: ScrollTrigger, to: "start" | "after") => {
+          if (released) return;
+          released = true;
+          const y = window.scrollY;
+          const distance = st.end - st.start;
+          const start = st.start;
+          st.kill();
+          ScrollTrigger.refresh();
+          window.scrollTo({ top: to === "start" ? start : Math.max(start, y - distance), behavior: "instant" });
+          finish();
+        };
+
         const st = ScrollTrigger.create({
           trigger: q("[data-pin]")[0],
           start: "top top",
           end: "+=2600",
           pin: true,
           anticipatePin: 1,
-          onLeaveBack() {
-            leftAbove = true;
-          },
-          onEnter() {
-            if (!leftAbove) return;
-            leftAbove = false;
-            finished = false;
-            reached = 0;
-            gsap.killTweensOf(tl);
-            tl.timeScale(1).progress(0);
-            setDone(false);
+          onLeave(self) {
+            release(self, "after");
           },
           onUpdate(self) {
-            if (finished || self.direction < 0) return;
+            if (released) return;
+            if (self.direction < 0) {
+              release(self, "start");
+              return;
+            }
             reached = Math.max(reached, self.progress);
             gsap.to(tl, { progress: reached, duration: 0.8, ease: "power3.out", overwrite: true });
-            if (reached > 0.97) {
-              finished = true;
-              gsap.to(tl, { progress: 1, duration: 0.6, ease: "power2.out", overwrite: true });
-              setDone(true);
-            }
+            if (reached > 0.97) setDone(true);
           },
         });
         replayRef.current = () => {
