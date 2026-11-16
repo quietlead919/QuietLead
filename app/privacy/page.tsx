@@ -22,10 +22,12 @@ export default function Privacy() {
 
       <h2>2. Cookies and tracking</h2>
       <p>
-        This website does not use cookies, analytics, advertising pixels or any other tracking, and it loads no
-        third-party scripts. When you close the cookie notice we save one local-storage flag (no personal data) so it
-        doesn&apos;t show again. Details in our <Link href="/cookies">cookie policy</Link>. If this ever changes, we
-        will ask for your consent first.
+        This website uses no analytics, advertising pixels or any other tracking. The only cookies are strictly
+        necessary ones set by our sign-up provider Clerk (see section 4) to keep the waitlist and sign-in secure and
+        working, so no consent is needed for them (§ 25(2) TDDDG). When you close the cookie notice we save one
+        local-storage flag (no personal data) so it doesn&apos;t show again. Details in our{" "}
+        <Link href="/cookies">cookie policy</Link>. If we ever add optional cookies, we will ask for your consent
+        first.
       </p>
 
       <h2>3. Visiting the website</h2>
@@ -39,15 +41,20 @@ export default function Privacy() {
 
       <h2>4. Waitlist</h2>
       <p>
-        If you join the waitlist we store only your email address, which form you used and the time of signup. We do
-        not store your name, IP address or anything else. We use it to send you a confirmation and one email when
-        QuietLead launches, and the operator gets a short notice about the new signup. Legal basis: Art. 6(1)(b) and (a) GDPR (your
-        request and consent). The data is stored with Supabase in Frankfurt, Germany. Emails are sent through Google
-        Gmail (Google Ireland Ltd., with possible transfers to Google LLC in the USA under the EU-US Data Privacy
-        Framework) or, as a fallback, through Resend (USA, Standard Contractual Clauses). We never sell your address or
-        share it for advertising. Every email has an unsubscribe link: one click removes and deletes your
-        address. You can also use <Link href="/delete-my-data">Delete my data</Link> at any time. We keep the data
-        until you unsubscribe or until we stop the waitlist.
+        The waitlist and sign-in run on Clerk (Clerk, Inc., USA), which acts as our processor. If you join the
+        waitlist, Clerk stores your email address and the time of signup. To protect the form against bots and abuse,
+        Clerk and its bot check Cloudflare Turnstile (Cloudflare, Inc., USA) also process technical data such as your
+        IP address and browser details, and Clerk sets strictly necessary cookies. We use your address to let you
+        know when your spot is ready and to send you an invitation when QuietLead launches. Legal basis: Art. 6(1)(b)
+        and (a) GDPR (your request and consent) and, for the bot protection, Art. 6(1)(f) GDPR (legitimate interest in
+        a secure sign-up). Data transfers to the USA are covered by the EU-US Data Privacy Framework and/or Standard
+        Contractual Clauses. We never sell your address or share it for advertising. You can ask us to delete your
+        entry at any time by writing to the email address in section 1. We keep the data until you ask us to delete
+        it or until we stop the waitlist. See{" "}
+        <a href="https://clerk.com/legal/privacy" rel="noopener noreferrer">
+          clerk.com/legal/privacy
+        </a>
+        .
       </p>
 
       <h2>5. Payments</h2>
@@ -81,8 +88,7 @@ export default function Privacy() {
         </li>
       </ul>
       <p>
-        To use any of these rights, write to the email address in section 1. You can delete your waitlist data yourself
-        on <Link href="/delete-my-data">Delete my data</Link>.
+        To use any of these rights, including deleting your waitlist entry, write to the email address in section 1.
       </p>
 
       <h2>8. Changes</h2>

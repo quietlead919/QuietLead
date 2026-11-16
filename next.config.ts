@@ -10,14 +10,19 @@ const isDev = process.env.NODE_ENV !== "production";
 // - form-action includes Stripe because /api/checkout answers the pricing form with a redirect
 //   to checkout.stripe.com, and browsers check form redirects against form-action.
 // - vercel.live is the Vercel preview toolbar (only injected on preview deployments).
+// - Clerk (waitlist modal): its Frontend API is *.clerk.accounts.dev for development keys and
+//   clerk.<site domain> for a production instance; Cloudflare Turnstile is its bot check and
+//   img.clerk.com serves avatars/logos. Clerk also starts a blob: worker.
+const clerkFapi = `https://*.clerk.accounts.dev https://clerk.${new URL(SITE_URL).hostname.replace(/^www\./, "")} https://cdn.protect.clerk.com`;
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://vercel.live`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://vercel.live ${clerkFapi} https://challenges.cloudflare.com`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://img.clerk.com",
   "font-src 'self' data:",
-  `connect-src 'self'${isDev ? " ws: wss:" : ""} https://vercel.live wss://ws-us3.pusher.com`,
-  "frame-src https://vercel.live",
+  `connect-src 'self'${isDev ? " ws: wss:" : ""} https://vercel.live wss://ws-us3.pusher.com ${clerkFapi} https://*.protect.clerk.com:*`,
+  "worker-src 'self' blob:",
+  "frame-src https://vercel.live https://challenges.cloudflare.com",
   "frame-ancestors 'none'",
   "form-action 'self' https://checkout.stripe.com",
   "base-uri 'self'",

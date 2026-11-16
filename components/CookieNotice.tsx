@@ -19,7 +19,8 @@ function subscribe(cb: () => void) {
   return () => listeners.delete(cb);
 }
 
-// Informational notice: the site sets no cookies, so there is nothing to accept or reject.
+// Informational notice: the only cookies are Clerk's strictly necessary ones, so there is
+// nothing to accept or reject.
 // Closing it stores one local-storage flag (no personal data) so it doesn't come back.
 export function CookieNotice() {
   // Server render and first paint: hidden, then shown on the client if not seen yet.
@@ -40,7 +41,7 @@ export function CookieNotice() {
       className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-xl items-center gap-4 rounded-2xl bg-ink px-5 py-3.5 text-sm text-white sm:bottom-5"
     >
       <p className="flex-1">
-        We use no cookies and no tracking.{" "}
+        No tracking. Only cookies needed for the waitlist to work.{" "}
         <Link href="/cookies" className="font-semibold underline underline-offset-2">
           Cookie policy
         </Link>
