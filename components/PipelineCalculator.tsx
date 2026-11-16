@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTickSound } from "@/components/useTickSound";
 
 const WORKING_DAYS = 21;
 
@@ -79,6 +80,14 @@ export function PipelineCalculator() {
   const sliders = useSmoothed(values, 110);
   const computed = useMemo(() => compute(values), [values]);
   const results = useSmoothed(computed, 220);
+  const sound = useTickSound();
+
+  // Tick while the revenue is still counting toward its new value.
+  const { tick } = sound;
+  useEffect(() => {
+    const gap = computed.revenue - results.revenue;
+    if (Math.abs(gap) > Math.max(1, computed.revenue * 0.002)) tick(gap > 0 ? 1 : -1);
+  }, [results.revenue, computed.revenue, tick]);
 
   const tiles = [
     { label: "Leads reached", value: Math.round(results.leads).toString() },
@@ -129,7 +138,29 @@ export function PipelineCalculator() {
 
       <div className="flex flex-col justify-between rounded-[28px] bg-brand p-7 text-white sm:p-8">
         <div>
-          <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
+            <button
+              type="button"
+              onClick={sound.toggle}
+              aria-pressed={sound.enabled}
+              aria-label={sound.enabled ? "Turn counting sound off" : "Turn counting sound on"}
+              title={sound.enabled ? "Sound on" : "Sound off"}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor" />
+                {sound.enabled ? (
+                  <>
+                    <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+                    <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+                  </>
+                ) : (
+                  <path d="m16 9 6 6m0-6-6 6" />
+                )}
+              </svg>
+            </button>
+          </div>
           <p className="mt-2 text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl" aria-live="polite">
             {euro(results.revenue)}
           </p>
