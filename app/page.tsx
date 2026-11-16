@@ -109,28 +109,40 @@ const comparison = [
   ["How it feels", "Spam", "“They actually looked us up.”"],
 ];
 
+// The one feature everyone wants (buying-signal alerts) is Studio only.
 const plans = [
   {
     name: "Quiet",
-    price: 49,
-    leads: "150 leads / month",
-    for: "Freelancers and consultants",
-    features: ["Lead briefings and drafts", "Send from Gmail or Outlook", "Reply tracking", "Email support"],
+    price: "18.99",
+    leads: "50 leads / month",
+    for: "Try it out, one lead at a time",
+    features: ["Lead briefings", "AI-written first drafts", "Copy and send yourself", "Email support"],
+    missing: ["Send from Gmail or Outlook", "Buying-signal alerts"],
   },
   {
     name: "Steady",
-    price: 149,
-    leads: "500 leads / month",
-    for: "Small agencies",
-    features: ["Everything in Quiet", "Buying-signal alerts", "Custom writing style", "Follow-up drafts"],
+    price: "49.99",
+    leads: "300 leads / month",
+    for: "Freelancers and small agencies",
+    features: [
+      "Everything in Quiet",
+      "Send from Gmail or Outlook",
+      "Your own writing style",
+      "Follow-up drafts",
+      "Reply tracking",
+      "CRM export",
+    ],
+    missing: ["Buying-signal alerts"],
     popular: true,
   },
   {
     name: "Studio",
-    price: 349,
-    leads: "1,500 leads / month",
-    for: "Growing teams",
-    features: ["Everything in Steady", "3 team seats", "Multiple ICPs", "CRM export"],
+    price: "129.99",
+    leads: "1,000 leads / month",
+    for: "Teams that want it all",
+    features: ["Everything in Steady", "Buying-signal alerts", "3 team seats", "Multiple ideal customer profiles", "Priority support"],
+    highlight: "Buying-signal alerts",
+    missing: [] as string[],
   },
 ];
 
@@ -148,8 +160,8 @@ const faqs = [
     a: "Rules like GDPR and the German UWG apply to B2B outreach. QuietLead is designed with this in mind: low volume, relevant contacts and human review. You remain responsible for your outreach, so check your setup with a legal advisor.",
   },
   {
-    q: "What does the founding member offer include?",
-    a: "The first 50 customers get 50% off their plan for as long as they stay subscribed. Join the waitlist to secure a spot.",
+    q: "Which plan should I pick?",
+    a: "Quiet lets you try QuietLead with a handful of leads. Steady covers almost everything a freelancer or small agency needs. Studio adds buying-signal alerts, so you hear the moment a company is ready to buy.",
   },
   {
     q: "When does QuietLead launch?",
@@ -198,7 +210,7 @@ export default function Home() {
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 text-emerald-400" />
-                Private beta · 50 founding spots<span className="hidden sm:inline">&nbsp;at 50% off for life</span>
+                Private beta<span className="hidden sm:inline">&nbsp;· early access opening soon</span>
               </p>
             </div>
             <div className="fade-up" style={{ animationDelay: "80ms" }}>
@@ -345,8 +357,8 @@ export default function Home() {
         <section id="pricing" className="scroll-mt-24 px-4 py-24">
           <SectionHead
             eyebrow="Pricing"
-            title="Simple plans. Founding price for life."
-            text="The first 50 customers get 50% off, forever. Every plan starts with a 7-day free trial."
+            title="Simple plans. Start small, grow quietly."
+            text="Every plan starts with a 7-day free trial. Cancel anytime."
           />
           <div className="mx-auto mt-14 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
             {plans.map((p, i) => (
@@ -364,20 +376,33 @@ export default function Home() {
                   <h3 className="text-lg font-medium">{p.name}</h3>
                   <p className={`mt-1 text-sm ${p.popular ? "text-white/70" : "text-ink-soft"}`}>{p.for}</p>
                   <div className="mt-6 flex items-baseline gap-2">
-                    <span className="text-5xl font-medium tracking-tight">€{(p.price / 2).toFixed(p.price % 2 ? 2 : 0)}</span>
-                    <span className={`text-sm line-through ${p.popular ? "text-white/50" : "text-ink-faint"}`}>
-                      €{p.price}
-                    </span>
+                    <span className="text-5xl font-medium tracking-tight">€{p.price}</span>
                     <span className={`text-sm ${p.popular ? "text-white/70" : "text-ink-soft"}`}>/ month</span>
                   </div>
                   <p className={`mt-1 text-xs ${p.popular ? "text-white/70" : "text-ink-faint"}`}>
-                    Founding price · {p.leads}
+                    {p.leads}
                   </p>
                   <ul className="mt-6 flex-1 space-y-2.5 text-[15px]">
-                    {p.features.map((f) => (
+                    {p.features.map((f) =>
+                      f === p.highlight ? (
+                        <li key={f} className="flex items-center gap-2.5">
+                          <span className="text-brand">✓</span>
+                          <span className="font-semibold text-ink">{f}</span>
+                          <span className="shrink-0 rounded-full bg-mist px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-brand">
+                            Only in Studio
+                          </span>
+                        </li>
+                      ) : (
+                        <li key={f} className="flex gap-2.5">
+                          <span className={p.popular ? "text-white" : "text-brand"}>✓</span>
+                          <span className={p.popular ? "text-white/90" : "text-ink-soft"}>{f}</span>
+                        </li>
+                      ),
+                    )}
+                    {p.missing.map((f) => (
                       <li key={f} className="flex gap-2.5">
-                        <span className={p.popular ? "text-white" : "text-brand"}>✓</span>
-                        <span className={p.popular ? "text-white/90" : "text-ink-soft"}>{f}</span>
+                        <span className={p.popular ? "text-white/35" : "text-ink-faint/60"}>✕</span>
+                        <span className={`line-through ${p.popular ? "text-white/45" : "text-ink-faint"}`}>{f}</span>
                       </li>
                     ))}
                   </ul>
@@ -437,7 +462,7 @@ export default function Home() {
                   Your Next Customers Are Out There. Reach Them <em>Quietly</em>.
                 </h2>
                 <p className="mx-auto mt-5 max-w-lg text-lg text-white/85">
-                  Join the waitlist and lock in 50% off for life as a founding member.
+                  Join the waitlist and be among the first to get access.
                 </p>
                 <div className="mt-9">
                   <WaitlistForm source="footer-cta" onDark center />

@@ -9,7 +9,6 @@ export const PLANS = {
 
 export type PlanId = keyof typeof PLANS;
 
-export const FOUNDING_COUPON = "FOUNDING50";
 export const TRIAL_DAYS = 7;
 
 export function isPlanId(value: unknown): value is PlanId {

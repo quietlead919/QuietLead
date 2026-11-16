@@ -85,7 +85,7 @@ export function WaitlistForm({
       >
         {state.status === "error"
           ? state.message
-          : "Founding members get 50% off, for life. No spam, ever."}
+          : "One email when we launch. No spam, ever."}
       </p>
     </form>
   );

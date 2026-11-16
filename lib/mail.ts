@@ -46,13 +46,13 @@ export function welcomeMail() {
     subject: "You're on the QuietLead waitlist",
     html: layout(`<p style="margin:0 0 14px">Hi there,</p>
 <p style="margin:0 0 14px">thanks for joining the QuietLead waitlist. You're in.</p>
-<p style="margin:0 0 14px">We'll send you <strong>one email when QuietLead is ready</strong>, with your founding-member access at 50% off for life. Nothing else in between.</p>
+<p style="margin:0 0 14px">We'll send you <strong>one email when QuietLead is ready</strong>, with your early access. Nothing else in between.</p>
 <p style="margin:0">Quietly yours,<br>The QuietLead team</p>`),
     text: `Hi there,
 
 thanks for joining the QuietLead waitlist. You're in.
 
-We'll send you one email when QuietLead is ready, with your founding-member access at 50% off for life. Nothing else in between.
+We'll send you one email when QuietLead is ready, with your early access. Nothing else in between.
 
 Quietly yours,
 The QuietLead team

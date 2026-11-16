@@ -1,5 +1,5 @@
 import type Stripe from "stripe";
-import { FOUNDING_COUPON, PLANS, TRIAL_DAYS, getStripe, isPlanId } from "@/lib/stripe";
+import { PLANS, TRIAL_DAYS, getStripe, isPlanId } from "@/lib/stripe";
 
 // Pricing buttons POST a plain form here; we answer with a redirect to Stripe Checkout.
 export async function POST(request: Request) {
@@ -34,14 +34,7 @@ export async function POST(request: Request) {
     cancel_url: `${origin}/?checkout=canceled#pricing`,
   };
 
-  let session: Stripe.Checkout.Session;
-  try {
-    // Founding members get 50% off for life while the coupon has redemptions left.
-    session = await stripe.checkout.sessions.create({ ...params, discounts: [{ coupon: FOUNDING_COUPON }] });
-  } catch (err) {
-    console.warn("[checkout] founding coupon not applied:", (err as Error).message);
-    session = await stripe.checkout.sessions.create(params);
-  }
+  const session = await stripe.checkout.sessions.create(params);
 
   if (!session.url) return back("error");
   return Response.redirect(session.url, 303);

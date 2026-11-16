@@ -9,14 +9,14 @@
 
 // ---- Edit the launch email here ----------------------------------------------------------
 const LAUNCH_URL = "https://quiet-lead.vercel.app";
-const SUBJECT = "QuietLead is live. Your founding spot is ready";
+const SUBJECT = "QuietLead is live. Your early access is ready";
 const BODY_TEXT = `Hi there,
 
 you joined the QuietLead waitlist, and today it's ready.
 
 QuietLead finds companies that need what you sell right now and drafts a personal first message for each one. You approve every message before it goes out.
 
-As a founding member you get 50% off, for life:
+Start your 7-day free trial here:
 ${LAUNCH_URL}
 
 Thanks for waiting quietly.

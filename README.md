@@ -45,12 +45,12 @@ Each address is marked with `launch_sent_at`, so running it again never mails an
 ## Subscriptions (Stripe, test mode)
 
 1. Put `STRIPE_SECRET_KEY` (sk_test_...) in `.env.local`.
-2. Create products, monthly prices and the `FOUNDING50` coupon (50% off forever, max 50):
+2. Create or update the products and monthly prices (Quiet €18.99, Steady €49.99, Studio €129.99):
    `node --env-file=.env.local scripts/stripe-setup.mjs`
 3. Set `NEXT_PUBLIC_CHECKOUT_ENABLED=true` to turn the pricing buttons into "Start 7-day free trial".
 4. Test with card `4242 4242 4242 4242`, any future date, any CVC.
 
-Flow: pricing button posts to `/api/checkout`, which redirects to Stripe Checkout (7-day trial, founding coupon). After paying, Stripe sends the customer to `/checkout/success` and calls `/api/stripe/webhook`. The webhook needs `STRIPE_WEBHOOK_SECRET`; with `SUPABASE_SERVICE_ROLE_KEY` set it mirrors subscriptions into the table from `supabase/subscriptions.sql`.
+Flow: pricing button posts to `/api/checkout`, which redirects to Stripe Checkout (7-day trial). After paying, Stripe sends the customer to `/checkout/success` and calls `/api/stripe/webhook`. The webhook needs `STRIPE_WEBHOOK_SECRET`; with `SUPABASE_SERVICE_ROLE_KEY` set it mirrors subscriptions into the table from `supabase/subscriptions.sql`.
 
 Keep `NEXT_PUBLIC_CHECKOUT_ENABLED=false` in production until the product is live.
 
