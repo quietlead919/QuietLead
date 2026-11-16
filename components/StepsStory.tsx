@@ -31,6 +31,11 @@ export function StepsStory() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
+        // A reload starts at the top (unless a #section link was opened), so the story
+        // plays fresh again instead of the browser restoring a position below it.
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        if (!window.location.hash) window.scrollTo({ top: 0, behavior: "instant" });
+
         const q = gsap.utils.selector(root);
         // The pinned scroll story plays only once, forwards, while scrolling down.
         // - Scrolling down drives it; it never rewinds.
