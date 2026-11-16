@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, type PointerEvent } from "react";
 import { joinWaitlist, type WaitlistState } from "@/app/actions";
 
 const initial: WaitlistState = { status: "idle" };
@@ -18,17 +18,35 @@ export function WaitlistForm({
 }) {
   const [state, action, pending] = useActionState(joinWaitlist, initial);
   const h = size === "lg" ? "h-14" : "h-12";
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+
+  // Ripple that grows from the exact spot you press.
+  function ripple(e: PointerEvent<HTMLButtonElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const id = e.timeStamp;
+    setRipples((list) => [...list, { id, x: e.clientX - r.left, y: e.clientY - r.top }]);
+    setTimeout(() => setRipples((list) => list.filter((p) => p.id !== id)), 650);
+  }
 
   if (state.status === "success") {
     return (
       <p
         role="status"
-        className={`flex ${h} w-full max-w-md items-center gap-3 rounded-2xl px-5 text-[15px] font-medium text-brand ${
+        className={`pop-in flex ${h} w-full max-w-md items-center gap-3 rounded-2xl px-5 text-[15px] font-medium text-brand ${
           onDark ? "bg-white" : "glass"
         } ${center ? "mx-auto" : ""}`}
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs text-white">
+        <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-xs text-white">
           ✓
+          {/* little burst around the check */}
+          {Array.from({ length: 8 }, (_, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className="burst-dot absolute h-1.5 w-1.5 rounded-full bg-brand"
+              style={{ ["--a" as string]: `${i * 45}deg` }}
+            />
+          ))}
         </span>
         {state.message}
       </p>
@@ -66,9 +84,30 @@ export function WaitlistForm({
         <button
           type="submit"
           disabled={pending}
-          className="btn-primary h-full rounded-xl px-5 text-[15px]"
+          onPointerDown={ripple}
+          className="btn-primary pop-btn group/cta relative h-full overflow-hidden rounded-xl px-5 text-[15px]"
         >
-          {pending ? "Joining…" : "Get early access →"}
+          {ripples.map((p) => (
+            <span
+              key={p.id}
+              aria-hidden="true"
+              className="ripple pointer-events-none absolute rounded-full bg-white/40"
+              style={{ left: p.x, top: p.y }}
+            />
+          ))}
+          {pending ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              Joining…
+            </>
+          ) : (
+            <>
+              Get early access
+              <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover/cta:translate-x-1">
+                →
+              </span>
+            </>
+          )}
         </button>
       </div>
       <p
