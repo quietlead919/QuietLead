@@ -289,3 +289,63 @@ details[open] .faq-icon {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Hero demo: approve & send */
+.fly-away {
+  animation: fly-away 0.65s cubic-bezier(0.55, 0, 0.75, 0.2) forwards;
+  transform-origin: 70% 30%;
+}
+@keyframes fly-away {
+  0% {
+    transform: none;
+    opacity: 1;
+  }
+  25% {
+    transform: scale(0.94) rotate(-1.5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(70%, -70%) scale(0.15) rotate(18deg);
+    opacity: 0;
+  }
+}
+.plane-fly {
+  animation: plane-fly 0.8s cubic-bezier(0.3, 0, 0.6, 1) forwards;
+}
+@keyframes plane-fly {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(240px, -200px) rotate(-8deg) scale(0.7);
+    opacity: 0;
+  }
+}
+.pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+@keyframes pop-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fly-away,
+  .plane-fly,
+  .pop-in {
+    animation: none;
+  }
+  .fly-away {
+    opacity: 0;
+  }
+}
