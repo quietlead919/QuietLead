@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { LEGAL } from "@/lib/legal";
-import { deletionMail, sendMail } from "@/lib/mail";
+import { canSendMail, deletionMail, sendMail } from "@/lib/mail";
 import { SITE_URL } from "@/lib/site";
 import { deleteWaitlistEntry, supabaseAdmin } from "@/lib/supabase-admin";
 import { makeToken, readToken } from "@/lib/tokens";
@@ -21,7 +21,7 @@ export async function requestDeletion(_prev: DeleteState, formData: FormData): P
   }
 
   const fallback = `Automatic deletion isn't available right now. Please email ${LEGAL.email} and we'll delete your data within 30 days.`;
-  if (!supabaseAdmin() || !process.env.RESEND_API_KEY) return { status: "error", message: fallback };
+  if (!supabaseAdmin() || !canSendMail()) return { status: "error", message: fallback };
 
   const link = `${SITE_URL}/unsubscribe?t=${makeToken(email, DAY)}`;
   const ok = await sendMail({ to: email, ...deletionMail(link) });

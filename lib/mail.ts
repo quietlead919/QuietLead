@@ -41,6 +41,11 @@ async function sendViaGmail(mail: Mail, user: string, pass: string): Promise<boo
   }
 }
 
+// True when at least one email provider is configured.
+export function canSendMail() {
+  return Boolean((process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) || process.env.RESEND_API_KEY);
+}
+
 export async function sendMail(mail: Mail): Promise<boolean> {
   const gUser = process.env.GMAIL_USER;
   const gPass = process.env.GMAIL_APP_PASSWORD;
