@@ -1,7 +1,38 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { setSound, soundOn, subscribeSound } from "@/lib/sfx";
+
+// Speaker toggle for the UI sounds (state lives in local storage, see lib/sfx).
+function SoundToggle({ light }: { light: boolean }) {
+  const on = useSyncExternalStore(subscribeSound, soundOn, () => true);
+  return (
+    <button
+      type="button"
+      data-sfx="none"
+      onClick={() => setSound(!on)}
+      aria-pressed={on}
+      aria-label={on ? "Turn sound off" : "Turn sound on"}
+      title={on ? "Sound on" : "Sound off"}
+      className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300 ${
+        light ? "text-ink/70 hover:bg-black/5 hover:text-ink" : "text-white/70 hover:bg-white/10 hover:text-white"
+      }`}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M11 5 6 9H3v6h3l5 4z" />
+        {on ? (
+          <>
+            <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+            <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+          </>
+        ) : (
+          <path d="m16 9 5 6m0-6-5 6" />
+        )}
+      </svg>
+    </button>
+  );
+}
 
 const links = [
   { href: "#how", label: "How it works" },
@@ -65,14 +96,18 @@ export function Nav() {
             </li>
           ))}
         </ul>
-        <a
-          href="#waitlist"
-          className={`inline-flex h-7 items-center rounded-full px-3.5 text-[12px] tracking-normal transition-colors duration-300 ${
-            light ? "bg-ink text-white hover:bg-black" : "bg-white text-ink hover:bg-haze"
-          }`}
-        >
-          Join waitlist
-        </a>
+        <div className="flex items-center gap-2">
+          <SoundToggle light={light} />
+          <a
+            href="#waitlist"
+            data-sfx="click"
+            className={`inline-flex h-7 items-center rounded-full px-3.5 text-[12px] tracking-normal transition-colors duration-300 ${
+              light ? "bg-ink text-white hover:bg-black" : "bg-white text-ink hover:bg-haze"
+            }`}
+          >
+            Join waitlist
+          </a>
+        </div>
       </nav>
     </header>
   );

@@ -4,6 +4,7 @@
 // All company and person names are fictional demo data. Nothing is actually sent.
 
 import { useEffect, useRef, useState } from "react";
+import { play } from "@/lib/sfx";
 
 type Lead = {
   id: string;
@@ -157,10 +158,14 @@ export function HeroMockup() {
     const at = (ms: number, fn: () => void) => timers.current.push(setTimeout(fn, reduce ? 0 : ms));
 
     setPhase("sending");
-    at(450, () => setPhase("flying"));
+    at(450, () => {
+      setPhase("flying");
+      play("send");
+    });
     at(1100, () => {
       setSent(nextSent);
       setPhase("sent");
+      play("success");
     });
     at(1900, () => {
       setPhase("idle");
@@ -211,6 +216,7 @@ export function HeroMockup() {
                   <button
                     type="button"
                     onClick={() => pick(l.id)}
+                    data-sfx="select"
                     aria-pressed={active}
                     disabled={busy && !active}
                     className={`w-full rounded-2xl px-4 py-3.5 text-left transition-[transform,background-color,opacity] duration-200 active:scale-[0.97] focus-visible:outline-offset-2 ${
@@ -337,6 +343,7 @@ export function HeroMockup() {
                     <button
                       type="button"
                       onClick={approve}
+                      data-sfx="click"
                       disabled={busy}
                       className={`${btnBase} group/send ${
                         phase === "sent"
@@ -368,11 +375,11 @@ export function HeroMockup() {
                     </button>
                     {!busy &&
                       (editing ? (
-                        <button type="button" onClick={saveEdit} className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
+                        <button type="button" onClick={saveEdit} data-sfx="edit" className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
                           Save
                         </button>
                       ) : (
-                        <button type="button" onClick={startEdit} className={`${btnBase} group/edit bg-mist text-ink hover:bg-haze`}>
+                        <button type="button" onClick={startEdit} data-sfx="edit" className={`${btnBase} group/edit bg-mist text-ink hover:bg-haze`}>
                           <PencilIcon className="h-4 w-4 transition-transform duration-200 group-hover/edit:-rotate-12" />
                           Edit
                         </button>

@@ -2,6 +2,7 @@
 
 import { useState, type PointerEvent } from "react";
 import { useClerk } from "@clerk/nextjs";
+import { play } from "@/lib/sfx";
 
 // Opens Clerk's waitlist in a modal. Clerk stores the entries; you approve and invite
 // people from the Clerk dashboard (Waitlist).
@@ -31,6 +32,8 @@ export function WaitlistForm({
     <div className={`w-full max-w-md ${center ? "mx-auto text-center" : ""}`}>
       <button
         type="button"
+        data-sfx="click"
+        onPointerUp={() => setTimeout(() => play("whoosh"), 120)}
         disabled={!clerk.loaded}
         onPointerDown={ripple}
         onClick={() => clerk.openWaitlist({})}

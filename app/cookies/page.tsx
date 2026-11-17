@@ -28,9 +28,10 @@ export default function Cookies() {
           .
         </li>
         <li>
-          <strong className="text-ink">Local storage:</strong> one entry, <code>ql-cookie-notice</code>, saved only when you
-          close the cookie notice, so it doesn&apos;t appear again. It contains no personal data and never leaves your
-          browser. This is strictly necessary for a function you asked for (§ 25(2) TDDDG).
+          <strong className="text-ink">Local storage:</strong> up to two entries. <code>ql-cookie-notice</code> is saved
+          when you close the cookie notice, so it doesn&apos;t appear again. <code>ql-sound</code> is saved when you turn
+          the site&apos;s interface sounds on or off. Neither contains personal data and both never leave your browser.
+          They are strictly necessary for functions you asked for (§ 25(2) TDDDG).
         </li>
       </ul>
 

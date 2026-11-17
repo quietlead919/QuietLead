@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "@fontsource-variable/inter";
 import "./globals.css";
 import { CookieNotice } from "@/components/CookieNotice";
+import { SoundLayer } from "@/components/SoundLayer";
 
 export const metadata: Metadata = {
   title: "QuietLead · Finding leads without the noise",
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           {children}
           <CookieNotice />
+          <SoundLayer />
         </ClerkProvider>
       </body>
     </html>

@@ -9,6 +9,17 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
 import { AsciiHands } from "@/components/AsciiHands";
+import { Marquee } from "@/components/Marquee";
+
+const marquee = [
+  "Up to 50 leads a day",
+  "You approve every message",
+  "Sent from your own inbox",
+  "Real research on every lead",
+  "Buying-signal alerts",
+  "Designed for GDPR",
+  "Built in Frankfurt",
+];
 
 type Panel = {
   title: string;
@@ -298,11 +309,16 @@ export default function Home() {
           </p>
         </section>
 
+        {/* Endless marquee band */}
+        <section aria-label="Why QuietLead" className="dark-section border-t border-line-dark bg-black py-7 text-[26px] font-medium tracking-[-0.02em] text-[#86868b] sm:py-9 sm:text-[40px]">
+          <Marquee items={marquee} />
+        </section>
+
         {/* STEPS: pinned scroll story on white */}
         <StepsStory />
         <div className="relative -mt-14 px-4 pb-28 text-center sm:-mt-20">
           <Reveal>
-            <a href="#waitlist" className="btn-primary h-[52px] px-8 text-[17px]">
+            <a href="#waitlist" data-sfx="click" className="btn-primary h-[52px] px-8 text-[17px]">
               Get early access
             </a>
             <p className="mt-4 text-[14px] text-ink-faint">Built for agencies, consultants and B2B teams</p>
@@ -443,12 +459,12 @@ export default function Home() {
                   {checkoutEnabled ? (
                     <form action="/api/checkout" method="post" className="mt-9">
                       <input type="hidden" name="plan" value={p.name.toLowerCase()} />
-                      <button type="submit" className={`h-12 w-full text-[17px] ${planButton(p.popular)}`}>
+                      <button type="submit" data-sfx="click" className={`h-12 w-full text-[17px] ${planButton(p.popular)}`}>
                         Start 7-day free trial
                       </button>
                     </form>
                   ) : (
-                    <a href="#waitlist" className={`mt-9 h-12 text-[17px] ${planButton(p.popular)}`}>
+                    <a href="#waitlist" data-sfx="click" className={`mt-9 h-12 text-[17px] ${planButton(p.popular)}`}>
                       Join the waitlist
                     </a>
                   )}
@@ -468,7 +484,7 @@ export default function Home() {
             {faqs.map((f, i) => (
               <Reveal key={f.q} delay={i * 60}>
                 <details className="group border-b border-line py-6">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[19px] font-medium tracking-tight sm:text-[21px]">
+                  <summary data-sfx="toggle" className="flex cursor-pointer list-none items-center justify-between gap-6 text-[19px] font-medium tracking-tight sm:text-[21px]">
                     {f.q}
                     <span className="faq-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-transform duration-500 ease-[cubic-bezier(0.28,0.11,0.32,1)]">
                       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

@@ -2,229 +2,270 @@
 
 import { useEffect, useRef } from "react";
 
-// Two pointing hands drawn as white ASCII characters on the black hero, one on each side,
-// pointing at the headline. They stay in place, float gently, flicker a little and turn
-// toward the mouse on a spring (with a small overshoot). Rendered on one canvas; paused when
-// the hero is off screen; static with prefers-reduced-motion. Small and faint on phones.
+// Two procedural hands drawn as ASCII on the black hero: a reaching hand on the left and a
+// pointing hand on the right. Each hand is a set of tapered capsules (arm, palm, finger
+// joints, thumb) combined into one smooth signed-distance field. Every frame the field is
+// sampled on a 5x8px character grid; distance and light pick the glyph. Motion: the wrists
+// sway and bob, the hands slowly roll around their long axis and the fingers flex. Glyphs
+// shimmer a few times a second. Runs on every animation frame (60/120 Hz), pauses off
+// screen, and draws one still frame with prefers-reduced-motion.
 
-const SRC = "/brand/hand-point.png";
-const RAMP = " .:-=+*xsV$WM#@";
-const MAX_TURN = 0.2; // radians the hands may turn toward the mouse
-const BASE_TURN = 0.1; // resting tilt: left points slightly down, right slightly up
+const CW = 5; // character cell width (px)
+const CH = 8; // character cell height (px)
+const FONT = 'bold 8px ui-monospace, Menlo, "SF Mono", Consolas, monospace';
+const RAMP = " .,:;-=+*xs$VWM#@"; // dark -> bright (white on black)
 
-type Grid = { cols: number; rows: number; idx: Uint8Array };
+type Finger = { off: number; len: number[]; r: number; fan: number };
+type Spec = {
+  handAngle: number; // direction the hand points
+  armAngle: number; // direction from the wrist toward the elbow
+  curlSide: 1 | -1;
+  curls: number[][]; // per finger, per joint
+  thumbCurl: number[];
+  fingers: Finger[];
+};
 
-// Turns the image into a grid of ramp indices (0 = empty). Finds the hand's bounding box
-// first so stray specks and white margins are ignored.
-function buildGrid(img: HTMLImageElement, cols: number): Grid {
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
-  const c = document.createElement("canvas");
-  c.width = w;
-  c.height = h;
-  const g = c.getContext("2d", { willReadFrequently: true })!;
-  g.drawImage(img, 0, 0);
-  const data = g.getImageData(0, 0, w, h).data;
-  const colCount = new Uint32Array(w);
-  const rowCount = new Uint32Array(h);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const i = (y * w + x) * 4;
-      if (data[i] + data[i + 1] + data[i + 2] < 384) {
-        colCount[x]++;
-        rowCount[y]++;
-      }
+const FINGERS: Finger[] = [
+  { off: -21, len: [40, 25, 18], r: 7.5, fan: -0.14 },
+  { off: -7, len: [45, 29, 19], r: 8, fan: -0.02 },
+  { off: 7, len: [41, 26, 18], r: 7.2, fan: 0.1 },
+  { off: 20, len: [32, 20, 15], r: 6.2, fan: 0.24 },
+];
+
+// Left: open, softly reaching hand.
+const REACH: Spec = {
+  handAngle: 0.55,
+  armAngle: Math.PI + 0.42,
+  curlSide: 1,
+  curls: [
+    [0.08, 0.14, 0.1],
+    [0.2, 0.28, 0.22],
+    [0.34, 0.42, 0.32],
+    [0.48, 0.52, 0.38],
+  ],
+  thumbCurl: [0.12, 0.1],
+  fingers: FINGERS,
+};
+
+// Right: pointing hand, index straight, other fingers curled in.
+const POINT: Spec = {
+  handAngle: Math.PI + 0.3,
+  armAngle: 0.6,
+  curlSide: -1,
+  curls: [
+    [0.02, 0.04, 0.02],
+    [0.85, 0.8, 0.6],
+    [0.95, 0.85, 0.62],
+    [1.05, 0.9, 0.62],
+  ],
+  thumbCurl: [0.4, 0.32],
+  fingers: FINGERS,
+};
+
+type Capsule = { ax: number; ay: number; ar: number; bx: number; by: number; br: number; x0: number; x1: number; y0: number; y1: number };
+
+function capsule(a: number[], b: number[]): Capsule {
+  const pad = Math.max(a[2], b[2]) + 6;
+  return {
+    ax: a[0], ay: a[1], ar: a[2], bx: b[0], by: b[1], br: b[2],
+    x0: Math.min(a[0], b[0]) - pad, x1: Math.max(a[0], b[0]) + pad,
+    y0: Math.min(a[1], b[1]) - pad, y1: Math.max(a[1], b[1]) + pad,
+  };
+}
+
+// Builds the hand for one frame as capsules in screen space.
+function buildHand(spec: Spec, wx: number, wy: number, s: number, roll: number, t: number): Capsule[] {
+  const cr = Math.cos(roll);
+  const thick = 0.5 + 0.5 * Math.abs(cr);
+  const hx = Math.cos(spec.handAngle);
+  const hy = Math.sin(spec.handAngle);
+  const px = -hy * spec.curlSide;
+  const py = hx * spec.curlSide;
+  const at = (a: number, b: number) => [wx + (hx * a + px * b) * s, wy + (hy * a + py * b) * s];
+  const ax = Math.cos(spec.armAngle);
+  const ay = Math.sin(spec.armAngle);
+  const arm = (k: number, r: number) => [wx + ax * k * s, wy + ay * k * s, r * s];
+
+  const chains: number[][][] = [
+    [arm(560, 25), arm(300, 28), arm(130, 24), arm(45, 19), [wx, wy, 16.5 * s]],
+    [[wx, wy, 16.5 * s], [...at(18, 1), 22 * s], [...at(46, 2), 30 * thick * s], [...at(96, 0), 27 * thick * s]],
+  ];
+
+  spec.fingers.forEach((f, i) => {
+    const base = at(96, f.off * cr);
+    const chain = [[base[0], base[1], f.r * s]];
+    let ang = f.fan;
+    let x = base[0];
+    let y = base[1];
+    f.len.forEach((len, j) => {
+      const flex = 1 + 0.14 * Math.sin(0.8 * t + roll + 0.9 * i);
+      ang += spec.curls[i][j] * flex;
+      const dx = hx * Math.cos(ang) + px * Math.sin(ang) * cr;
+      const dy = hy * Math.cos(ang) + py * Math.sin(ang) * cr;
+      x += dx * len * s;
+      y += dy * len * s;
+      chain.push([x, y, f.r * (1 - 0.13 * (j + 1)) * s]);
+    });
+    chains.push(chain);
+  });
+
+  const tb = at(34, -24 * cr);
+  const thumb = [[tb[0], tb[1], 11.5 * s]];
+  let ta = -0.55;
+  let tx = tb[0];
+  let ty = tb[1];
+  [38, 30].forEach((len, j) => {
+    ta += spec.thumbCurl[j];
+    const dx = hx * Math.cos(ta) - px * Math.sin(ta) * cr;
+    const dy = hy * Math.cos(ta) - py * Math.sin(ta) * cr;
+    tx += dx * len * s;
+    ty += dy * len * s;
+    thumb.push([tx, ty, (10 - 2.2 * j) * s]);
+  });
+  chains.push(thumb);
+
+  const caps: Capsule[] = [];
+  for (const c of chains) for (let i = 1; i < c.length; i++) caps.push(capsule(c[i - 1], c[i]));
+  return caps;
+}
+
+function sdCapsule(c: Capsule, x: number, y: number) {
+  const ex = c.bx - c.ax;
+  const ey = c.by - c.ay;
+  const l2 = ex * ex + ey * ey || 1;
+  const h = Math.min(1, Math.max(0, ((x - c.ax) * ex + (y - c.ay) * ey) / l2));
+  const dx = x - (c.ax + ex * h);
+  const dy = y - (c.ay + ey * h);
+  return Math.sqrt(dx * dx + dy * dy) - (c.ar + (c.br - c.ar) * h);
+}
+
+// Smooth union of all capsules (k = blend radius in px).
+function field(caps: Capsule[], x: number, y: number, k: number) {
+  let d = Infinity;
+  for (const c of caps) {
+    if (x < c.x0 || x > c.x1 || y < c.y0 || y > c.y1) continue;
+    const e = sdCapsule(c, x, y);
+    if (d === Infinity) d = e;
+    else {
+      const hk = Math.max(k - Math.abs(d - e), 0) / k;
+      d = Math.min(d, e) - hk * hk * k * 0.25;
     }
   }
-  const minHits = 3;
-  let x0 = 0, x1 = w - 1, y0 = 0, y1 = h - 1;
-  while (x0 < w && colCount[x0] < minHits) x0++;
-  while (x1 > x0 && colCount[x1] < minHits) x1--;
-  while (y0 < h && rowCount[y0] < minHits) y0++;
-  while (y1 > y0 && rowCount[y1] < minHits) y1--;
-  const bw = x1 - x0 + 1;
-  const bh = y1 - y0 + 1;
-
-  // A monospace cell is about 0.6 as wide as it is tall.
-  const rows = Math.max(1, Math.round(cols * (bh / bw) * 0.6));
-  const s = document.createElement("canvas");
-  s.width = cols;
-  s.height = rows;
-  const sg = s.getContext("2d", { willReadFrequently: true })!;
-  sg.fillStyle = "#fff";
-  sg.fillRect(0, 0, cols, rows);
-  sg.imageSmoothingEnabled = true;
-  sg.imageSmoothingQuality = "high";
-  sg.drawImage(img, x0, y0, bw, bh, 0, 0, cols, rows);
-  const px = sg.getImageData(0, 0, cols, rows).data;
-  const idx = new Uint8Array(cols * rows);
-  for (let i = 0; i < cols * rows; i++) {
-    const dark = 1 - (px[i * 4] + px[i * 4 + 1] + px[i * 4 + 2]) / 765;
-    if (dark < 0.14) continue;
-    idx[i] = Math.min(RAMP.length - 1, 1 + Math.floor(Math.pow(dark, 0.9) * (RAMP.length - 1)));
-  }
-  return { cols, rows, idx };
+  return d;
 }
 
-function mirror(g: Grid): Grid {
-  const idx = new Uint8Array(g.idx.length);
-  for (let r = 0; r < g.rows; r++)
-    for (let c = 0; c < g.cols; c++) idx[r * g.cols + c] = g.idx[r * g.cols + (g.cols - 1 - c)];
-  return { ...g, idx };
+function hash(a: number, b: number) {
+  const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
+  return s - Math.floor(s);
 }
-
-type Hand = {
-  grid: Grid;
-  side: "left" | "right";
-  angle: number;
-  vel: number;
-  phase: number;
-  flick: Int8Array;
-  life: Uint8Array;
-};
 
 export function AsciiHands() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const img = new Image();
-    img.src = SRC;
-
-    let hands: Hand[] = [];
     let width = 0;
     let height = 0;
-    let dpr = 1;
-    let mobile = false;
     let anchorY = 0;
-    let handW = 0;
-    let mouse: { x: number; y: number } | null = null;
+    let mobile = false;
     let raf = 0;
     let running = false;
-    let last = 0;
-    let lastDraw = 0;
 
     const layout = () => {
       const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = rect.width;
       height = rect.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = FONT;
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "#f5f5f7";
       mobile = width < 768;
       const h1 = canvas.parentElement?.querySelector("h1");
-      anchorY = h1 ? h1.getBoundingClientRect().top - rect.top + h1.getBoundingClientRect().height / 2 : height * 0.4;
-      handW = mobile ? width * 0.62 : Math.min(560, Math.max(260, width * 0.3));
-      if (img.complete && img.naturalWidth) {
-        // Fixed character size (about 6.5px wide), so the glyphs stay readable as ASCII.
-        const cols = Math.max(36, Math.min(86, Math.round(handW / 6.5)));
-        const right = buildGrid(img, cols);
-        const make = (grid: Grid, side: Hand["side"], phase: number): Hand => ({
-          grid,
-          side,
-          angle: BASE_TURN,
-          vel: 0,
-          phase,
-          flick: new Int8Array(grid.idx.length),
-          life: new Uint8Array(grid.idx.length),
-        });
-        hands = [make(mirror(right), "left", 0), make(right, "right", 2.1)];
-      }
+      anchorY = h1 ? h1.getBoundingClientRect().top - rect.top + h1.getBoundingClientRect().height * 0.55 : height * 0.4;
     };
 
-    // The wrist sits just outside the edge; left a bit above the headline, right a bit below.
-    const pivot = (hand: Hand) => {
-      const offset = mobile ? (hand.side === "left" ? -150 : 150) : hand.side === "left" ? -40 : 60;
-      const overhang = handW * 0.06;
-      return { x: hand.side === "left" ? -overhang : width + overhang, y: anchorY + offset };
-    };
+    const hands = [
+      { spec: REACH, dir: 1, phase: 0, side: 0.11, dy: -10 },
+      { spec: POINT, dir: -1, phase: 1.7, side: 0.89, dy: 30 },
+    ];
 
-    const draw = (t: number, dt: number) => {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const draw = (ms: number) => {
+      const t = ms / 1000;
       ctx.clearRect(0, 0, width, height);
-      const s = Math.min(3, dt / 16.67);
+      const s = mobile ? Math.max(0.5, width / 760) : Math.min(1.25, Math.max(0.75, width / 1250));
+      const tick = Math.floor(t * 6); // glyph shimmer rate
+      const sway = 0.5 + 0.5 * Math.sin(0.6 * t);
+      const baseAlpha = mobile ? 0.35 : 1;
 
       for (const hand of hands) {
-        const { grid } = hand;
-        const cw = handW / grid.cols;
-        const ch = cw / 0.6;
-        const p = pivot(hand);
+        const wx = width * (mobile ? (hand.dir > 0 ? 0.08 : 0.92) : hand.side) + hand.dir * sway * 30 * s;
+        const wy = anchorY + hand.dy * s + (mobile ? hand.dir * -150 : 0) + 4 * Math.sin(0.45 * t + hand.phase);
+        const roll = hand.dir * t * 0.5 + hand.phase;
+        const caps = buildHand(hand.spec, wx, wy, s, roll, t);
+        const light = 0.35 + 0.5 * Math.max(-0.5, Math.min(1, Math.sin(roll)));
+        const k = 5 * s;
 
-        // Target: turn toward the mouse (within limits), otherwise rest.
-        let target = BASE_TURN;
-        if (mouse && !mobile && !reduce) {
-          const aim = Math.atan2(mouse.y - p.y, mouse.x - p.x);
-          const tip = hand.side === "left" ? 0 : Math.PI;
-          let d = aim - tip - BASE_TURN;
-          d = Math.atan2(Math.sin(d), Math.cos(d));
-          target = BASE_TURN + Math.max(-MAX_TURN, Math.min(MAX_TURN, d * 0.5));
+        // Only scan the cells around this hand.
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+        for (const c of caps) {
+          x0 = Math.min(x0, c.x0); x1 = Math.max(x1, c.x1);
+          y0 = Math.min(y0, c.y0); y1 = Math.max(y1, c.y1);
         }
-        // Spring with light damping: a small overshoot, the "ping".
-        hand.vel += ((target - hand.angle) * 0.045 - hand.vel * 0.12) * s;
-        hand.angle += hand.vel * s;
+        const c0 = Math.max(0, Math.floor(x0 / CW));
+        const c1 = Math.min(Math.ceil(width / CW), Math.ceil(x1 / CW));
+        const r0 = Math.max(0, Math.floor(y0 / CH));
+        const r1 = Math.min(Math.ceil(height / CH), Math.ceil(y1 / CH));
 
-        const floatY = reduce ? 0 : Math.sin(t * 0.0008 + hand.phase) * (mobile ? 4 : 8);
-        const sway = reduce ? 0 : Math.sin(t * 0.0006 + hand.phase) * 0.015;
-
-        // Flicker: a few cells shift density for a few frames.
-        if (!reduce) {
-          const n = Math.ceil(grid.idx.length * 0.012);
-          for (let k = 0; k < n; k++) {
-            const i = (Math.random() * grid.idx.length) | 0;
-            if (!grid.idx[i]) continue;
-            hand.flick[i] = Math.random() < 0.5 ? -2 : 2;
-            hand.life[i] = 3 + ((Math.random() * 6) | 0);
-          }
-        }
-
-        ctx.save();
-        ctx.translate(p.x, p.y + floatY);
-        ctx.rotate(hand.angle + sway);
-        ctx.font = `${ch.toFixed(2)}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "#fff";
-        ctx.globalAlpha = mobile ? 0.18 : 0.7;
-        const x0 = hand.side === "left" ? 0 : -handW;
-        const y0 = -(grid.rows * ch) / 2;
-        for (let r = 0; r < grid.rows; r++) {
-          for (let c = 0; c < grid.cols; c++) {
-            const i = r * grid.cols + c;
-            const base = grid.idx[i];
-            if (!base) continue;
-            let v = base;
-            if (hand.life[i]) {
-              v = Math.max(1, Math.min(RAMP.length - 1, base + hand.flick[i]));
-              hand.life[i]--;
+        for (let col = c0; col < c1; col++) {
+          const x = col * CW + CW / 2;
+          for (let row = r0; row < r1; row++) {
+            const y = row * CH + CH / 2;
+            const d = field(caps, x, y, k);
+            const n = hash(col, row + tick * 0.37);
+            if (d > 3) {
+              // Sparse dust around the hand.
+              if (d < 60 && hash(col * 3.1, row * 1.7 + tick * 0.11) < 0.0025) {
+                ctx.globalAlpha = 0.3 * baseAlpha;
+                ctx.fillText(n > 0.5 ? "." : ",", col * CW, row * CH);
+              }
+              continue;
             }
-            ctx.fillText(RAMP[v], x0 + c * cw, y0 + r * ch + ch / 2);
+            if (d > 0) {
+              // Soft, broken outline.
+              if (n > 0.55 - 0.15 * d) continue;
+              ctx.globalAlpha = 0.45 * baseAlpha;
+              ctx.fillText(RAMP[1 + Math.floor(n * 3)], col * CW, row * CH);
+              continue;
+            }
+            // Inside: lit from the upper left. Compare with the field a little toward the light.
+            const toward = field(caps, x - 6 * s, y - 8 * s, k);
+            let b = 0.5 - 0.6 * Math.max(-1, Math.min(1, (toward - d) / 10));
+            b = b * (0.8 + 0.4 * light) + 0.12 * Math.min(1, -d / 18);
+            b *= 0.9 + 0.2 * n;
+            const i = Math.max(1, Math.min(RAMP.length - 1, Math.round(b * (RAMP.length - 1))));
+            ctx.globalAlpha = (0.55 + 0.45 * Math.min(1, b)) * baseAlpha;
+            ctx.fillText(RAMP[i], col * CW, row * CH);
           }
         }
-        ctx.restore();
       }
+      ctx.globalAlpha = 1;
     };
 
-    const frame = (t: number) => {
+    const frame = (ms: number) => {
       if (!running) return;
-      const dt = last ? t - last : 16.67;
-      last = t;
-      // ~40 fps is plenty for this look and keeps the main thread calm.
-      if (t - lastDraw >= 24) {
-        draw(t, t - lastDraw || dt);
-        lastDraw = t;
-      }
+      draw(ms);
       raf = requestAnimationFrame(frame);
     };
-
     const start = () => {
       if (running || reduce) return;
       running = true;
-      last = 0;
-      lastDraw = 0;
       raf = requestAnimationFrame(frame);
     };
     const stop = () => {
@@ -232,37 +273,18 @@ export function AsciiHands() {
       cancelAnimationFrame(raf);
     };
 
-    const onMove = (e: PointerEvent) => {
-      const r = canvas.getBoundingClientRect();
-      mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
-    };
-    const onLeave = () => {
-      mouse = null;
-    };
-
     const ro = new ResizeObserver(() => {
       layout();
-      if (reduce) draw(0, 16.67);
+      if (reduce) draw(0);
     });
     const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
-
-    img.onload = () => {
-      layout();
-      if (reduce) draw(0, 16.67);
-      ro.observe(canvas);
-      io.observe(canvas);
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    document.documentElement.addEventListener("pointerleave", onLeave);
+    ro.observe(canvas);
+    io.observe(canvas);
 
     return () => {
       stop();
       ro.disconnect();
       io.disconnect();
-      window.removeEventListener("pointermove", onMove);
-      document.documentElement.removeEventListener("pointerleave", onLeave);
-      img.onload = null;
     };
   }, []);
 
