@@ -4,11 +4,10 @@
 // browsers only allow audio after a user gesture anyway. Viewers can switch sound off; the
 // choice is kept in local storage ("ql-sound").
 
-export type Sfx = "hover" | "click" | "select" | "whoosh" | "send" | "success" | "edit" | "toggle";
+export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "edit" | "toggle";
 
-const NAMES: Sfx[] = ["hover", "click", "select", "whoosh", "send", "success", "edit", "toggle"];
+const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "edit", "toggle"];
 const VOLUME: Record<Sfx, number> = {
-  hover: 0.22,
   click: 0.4,
   select: 0.45,
   whoosh: 0.4,
@@ -23,7 +22,6 @@ let ctx: AudioContext | null = null;
 let loading: Promise<void> | null = null;
 const buffers = new Map<Sfx, AudioBuffer>();
 const listeners = new Set<() => void>();
-let lastHover = 0;
 
 export function soundOn() {
   try {
@@ -71,11 +69,6 @@ export function unlockSound() {
 
 export function play(name: Sfx) {
   if (!ctx || !soundOn()) return;
-  if (name === "hover") {
-    const now = performance.now();
-    if (now - lastHover < 70) return;
-    lastHover = now;
-  }
   const buffer = buffers.get(name);
   if (!buffer) return;
   const src = ctx.createBufferSource();
