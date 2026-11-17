@@ -44,14 +44,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             options: {
               // Hides the orange "Development mode" strip (only shown while on Clerk's dev instance).
               unsafe_disableDevelopmentModeWarnings: true,
+              // Our own entrance animation runs on the glass card (see .ql-cardbox in globals.css).
+              animations: false,
             },
             variables: {
-              colorPrimary: "#1d1d1f",
-              colorForeground: "#1d1d1f",
-              colorMutedForeground: "#6e6e73",
-              colorBackground: "#ffffff",
-              colorInput: "#f5f5f7",
-              colorInputForeground: "#1d1d1f",
+              colorPrimary: "#ffffff",
+              colorPrimaryForeground: "#000000",
+              colorForeground: "#f5f5f7",
+              colorMutedForeground: "#a1a1a6",
+              colorBackground: "#1c1c1e",
+              colorNeutral: "#ffffff",
+              colorInput: "#2c2c2e",
+              colorInputForeground: "#ffffff",
               fontFamily:
                 "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif",
               fontSize: "15px",
@@ -80,6 +84,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Skip to content
           </a>
+          {/* SVG lens for the liquid-glass waitlist card (used via backdrop-filter in Chromium). */}
+          <svg aria-hidden="true" width="0" height="0" style={{ position: "absolute" }}>
+            <filter id="ql-glass" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="4" result="noise" />
+              <feGaussianBlur in="noise" stdDeviation="2" result="soft" />
+              <feDisplacementMap in="SourceGraphic" in2="soft" scale="38" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </svg>
           {children}
           <CookieNotice />
           <SoundLayer />

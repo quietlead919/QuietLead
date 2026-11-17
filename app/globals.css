@@ -500,133 +500,209 @@ details[open] .faq-icon {
   }
 }
 
-/* ---------- Clerk waitlist modal, Apple look (classes set via appearance.elements) ---------- */
+/* ---------- Clerk waitlist modal: clear liquid glass, black/grey/white ---------- */
+/* No opacity/transform animation on the backdrop or modal wrapper: that would make them a
+   "backdrop root" and the glass card would no longer see the page behind it. */
 .ql-backdrop {
   background: rgba(0, 0, 0, 0.55) !important;
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  animation: ql-fade 0.35s var(--ease-apple) both;
+  animation: ql-dim 0.35s var(--ease-apple) both;
 }
-.ql-modal {
-  animation: ql-rise 0.55s var(--ease-apple) both;
-}
+/* The glass: almost clear, slight blur, strong saturation, bent light (Chromium) */
 .ql-cardbox {
-  border-radius: 28px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45) !important;
+  position: relative;
+  animation: ql-rise 0.6s cubic-bezier(0.2, 1.2, 0.35, 1) both;
+  border-radius: 32px !important;
   overflow: hidden;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.07)),
+    rgba(18, 18, 20, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 1px 0 0 rgba(255, 255, 255, 0.12),
+    inset -1px 0 0 rgba(255, 255, 255, 0.12),
+    0 40px 100px rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
 }
-.ql-card {
-  border-radius: 28px 28px 0 0 !important;
+/* Real refraction only where SVG backdrop filters work (Chromium); Safari keeps the blur above */
+@supports not (-webkit-touch-callout: none) {
+  .ql-cardbox {
+    backdrop-filter: url(#ql-glass) blur(10px) saturate(180%);
+  }
+}
+/* Specular highlight sweeping the top edge */
+.ql-cardbox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(120% 60% at 20% -10%, rgba(255, 255, 255, 0.22), transparent 55%);
+  z-index: 0;
+}
+.ql-card,
+.ql-footer {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
+}
+.ql-card {
   padding: 36px 32px 28px !important;
 }
 .ql-title {
+  color: #fff !important;
   font-size: 24px !important;
   font-weight: 500 !important;
   letter-spacing: -0.025em !important;
 }
 .ql-subtitle {
+  color: #a1a1a6 !important;
   font-size: 15px !important;
-  color: #6e6e73 !important;
   line-height: 1.45 !important;
 }
 .ql-label {
+  color: #f5f5f7 !important;
   font-size: 13px !important;
   font-weight: 500 !important;
-  color: #1d1d1f !important;
 }
 .ql-input {
   height: 46px !important;
   border-radius: 14px !important;
-  background: #f5f5f7 !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
   font-size: 16px !important;
   transition:
     background 0.3s var(--ease-apple),
-    border-color 0.3s var(--ease-apple) !important;
+    border-color 0.3s var(--ease-apple),
+    box-shadow 0.3s var(--ease-apple) !important;
+}
+.ql-input::placeholder {
+  color: #86868b !important;
 }
 .ql-input:hover {
-  background: #ededf0 !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
 }
 .ql-input:focus,
 .ql-input:focus-visible {
-  background: #fff !important;
-  border-color: #1d1d1f !important;
-  box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.08) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1) !important;
   outline: none !important;
 }
 .ql-button {
   height: 48px !important;
   border-radius: 9999px !important;
-  background: #1d1d1f !important;
+  color: #000 !important;
+  background: #fff !important;
   background-image: none !important;
-  box-shadow: none !important;
   border: 0 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
   font-size: 16px !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em !important;
   text-transform: none !important;
   transition:
     background 0.3s var(--ease-apple),
-    transform 0.3s var(--ease-apple) !important;
+    transform 0.45s cubic-bezier(0.34, 1.8, 0.5, 1) !important;
 }
 .ql-button::after {
   display: none !important;
 }
 .ql-button:hover {
-  background: #000 !important;
+  background: #e8e8ed !important;
 }
 .ql-button:active {
-  transform: scale(0.98);
+  transform: scale(0.95) !important;
+  transition-duration: 0.1s !important;
 }
+/* Live loader: three bouncing dots instead of Clerk's spinner */
 .ql-spinner {
-  color: #fff !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: 30px !important;
+  height: 10px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #000 !important;
+  --d: radial-gradient(circle closest-side, currentColor 92%, transparent);
+  background:
+    var(--d) 0% 50%,
+    var(--d) 50% 50%,
+    var(--d) 100% 50% !important;
+  background-size: 7px 7px !important;
+  background-repeat: no-repeat !important;
+  animation: ql-dots 0.9s infinite linear !important;
+}
+@keyframes ql-dots {
+  0% { background-position: 0% 50%, 50% 50%, 100% 50%; }
+  16% { background-position: 0% 0%, 50% 50%, 100% 50%; }
+  33% { background-position: 0% 100%, 50% 0%, 100% 50%; }
+  50% { background-position: 0% 50%, 50% 100%, 100% 0%; }
+  66% { background-position: 0% 50%, 50% 50%, 100% 100%; }
+  83%, 100% { background-position: 0% 50%, 50% 50%, 100% 50%; }
 }
 .ql-footer {
-  background: #f5f5f7 !important;
-  border-top: 1px solid #e8e8ed !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.ql-footer *:not(a) {
+  color: #86868b !important;
 }
 .ql-footer-action {
   font-size: 14px !important;
 }
 .ql-footer-link {
-  color: #1d1d1f !important;
+  color: #fff !important;
   font-weight: 500 !important;
 }
-@keyframes ql-fade {
-  from { opacity: 0; }
+.ql-modal button[aria-label="Close modal"],
+.ql-modal .cl-modalCloseButton {
+  color: #a1a1a6 !important;
+}
+@keyframes ql-dim {
+  from { background-color: rgba(0, 0, 0, 0); }
 }
 @keyframes ql-rise {
-  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  from { opacity: 0; transform: translateY(28px) scale(0.94); }
 }
 
-/* Pixel loader: 3x3 dots lighting up in a wave (used while Clerk loads) */
-.pixel-loader {
-  display: inline-grid;
-  grid-template-columns: repeat(3, 4px);
-  gap: 2px;
+/* Springy press pop for the main pill buttons */
+.btn-primary,
+.btn-light {
+  transition:
+    background 0.3s var(--ease-apple),
+    transform 0.45s cubic-bezier(0.34, 1.8, 0.5, 1) !important;
 }
-.pixel-loader span {
-  width: 4px;
-  height: 4px;
-  border-radius: 1px;
+.btn-primary:active,
+.btn-light:active {
+  transform: scale(0.94) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Dots loader (live loader in buttons) */
+.dots-loader {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+.dots-loader span {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
   background: currentColor;
-  opacity: 0.15;
-  animation: pixel 0.9s steps(1) infinite;
-  animation-delay: calc(var(--i) * 0.1s);
+  animation: dots-bounce 0.9s infinite var(--ease-apple);
 }
-@keyframes pixel {
-  0%, 100% { opacity: 0.15; }
-  30% { opacity: 1; }
-  60% { opacity: 0.45; }
+.dots-loader span:nth-child(2) { animation-delay: 0.12s; }
+.dots-loader span:nth-child(3) { animation-delay: 0.24s; }
+@keyframes dots-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ql-spinner, .dots-loader span { animation: none !important; }
+  .ql-backdrop, .ql-cardbox { animation: none !important; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ql-backdrop, .ql-modal { animation: none; }
-  .pixel-loader span { animation: none; opacity: 0.6; }
-}
