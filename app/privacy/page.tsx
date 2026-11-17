@@ -15,7 +15,7 @@ export default function Privacy() {
 
       <h2>1. Who is responsible</h2>
       <p>
-        {LEGAL.name || missing}, {LEGAL.street || missing}, {LEGAL.city || missing}, {LEGAL.country}. Email:{" "}
+        {LEGAL.name || missing}, {LEGAL.city || missing}. Email:{" "}
         {LEGAL.email ? <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a> : missing}. See also our{" "}
         <Link href="/imprint">imprint</Link>.
       </p>

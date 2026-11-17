@@ -24,13 +24,36 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ClerkProvider
           telemetry={false}
           appearance={{
+            options: {
+              // Hides the orange "Development mode" strip (only shown while on Clerk's dev instance).
+              unsafe_disableDevelopmentModeWarnings: true,
+            },
             variables: {
               colorPrimary: "#1d1d1f",
               colorForeground: "#1d1d1f",
               colorMutedForeground: "#6e6e73",
+              colorBackground: "#ffffff",
+              colorInput: "#f5f5f7",
+              colorInputForeground: "#1d1d1f",
               fontFamily:
                 "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif",
-              borderRadius: "0.75rem",
+              fontSize: "15px",
+              borderRadius: "14px",
+            },
+            elements: {
+              modalBackdrop: "ql-backdrop",
+              modalContent: "ql-modal",
+              cardBox: "ql-cardbox",
+              card: "ql-card",
+              headerTitle: "ql-title",
+              headerSubtitle: "ql-subtitle",
+              formFieldLabel: "ql-label",
+              formFieldInput: "ql-input",
+              formButtonPrimary: "ql-button",
+              spinner: "ql-spinner",
+              footer: "ql-footer",
+              footerAction: "ql-footer-action",
+              footerActionLink: "ql-footer-link",
             },
           }}
         >

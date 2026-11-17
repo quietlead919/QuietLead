@@ -11,11 +11,7 @@ export default function Imprint() {
       <p>
         {LEGAL.name || missing}
         <br />
-        {LEGAL.street || missing}
-        <br />
         {LEGAL.city || missing}
-        <br />
-        {LEGAL.country}
       </p>
 
       <h2>Contact</h2>
@@ -29,12 +25,12 @@ export default function Imprint() {
       )}
 
       <h2>Responsible for content</h2>
-      <p>{LEGAL.name || missing}, address as above.</p>
+      <p>{LEGAL.name || missing}, {LEGAL.city || missing}.</p>
 
       <h2>Fonts and images</h2>
       <p>
-        Typeface: Open Sauce One by The Open Sauce One Authors, licensed under the SIL Open Font License 1.1 and served from our
-        own domain. The QuietLead logo and the interface illustrations are our own work. The product preview uses fictional
+        Typeface: Inter by Rasmus Andersson, licensed under the SIL Open Font License 1.1 and served from our own domain
+        (Apple devices show their built-in system font). The QuietLead logo and the interface illustrations are our own work. The product preview uses fictional
         companies and people.
       </p>
 

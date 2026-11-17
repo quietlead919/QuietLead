@@ -9,8 +9,7 @@ export default function Terms() {
   return (
     <LegalPage title="Terms of Service" updated={LEGAL.updated}>
       <p>
-        These terms apply to the use of QuietLead, provided by {LEGAL.name || missing} ({LEGAL.city || missing},{" "}
-        {LEGAL.country}), &quot;we&quot;. QuietLead is offered to businesses only (B2B), not to consumers, and you must be at least 18 years old to use it.
+        These terms apply to the use of QuietLead, provided by {LEGAL.name || missing} ({LEGAL.city || missing}), &quot;we&quot;. QuietLead is offered to businesses only (B2B), not to consumers, and you must be at least 18 years old to use it.
       </p>
 
       <h2>1. The service</h2>

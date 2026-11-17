@@ -499,3 +499,134 @@ details[open] .faq-icon {
     animation: none;
   }
 }
+
+/* ---------- Clerk waitlist modal, Apple look (classes set via appearance.elements) ---------- */
+.ql-backdrop {
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  animation: ql-fade 0.35s var(--ease-apple) both;
+}
+.ql-modal {
+  animation: ql-rise 0.55s var(--ease-apple) both;
+}
+.ql-cardbox {
+  border-radius: 28px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden;
+}
+.ql-card {
+  border-radius: 28px 28px 0 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 36px 32px 28px !important;
+}
+.ql-title {
+  font-size: 24px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.025em !important;
+}
+.ql-subtitle {
+  font-size: 15px !important;
+  color: #6e6e73 !important;
+  line-height: 1.45 !important;
+}
+.ql-label {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #1d1d1f !important;
+}
+.ql-input {
+  height: 46px !important;
+  border-radius: 14px !important;
+  background: #f5f5f7 !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  font-size: 16px !important;
+  transition:
+    background 0.3s var(--ease-apple),
+    border-color 0.3s var(--ease-apple) !important;
+}
+.ql-input:hover {
+  background: #ededf0 !important;
+}
+.ql-input:focus,
+.ql-input:focus-visible {
+  background: #fff !important;
+  border-color: #1d1d1f !important;
+  box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.08) !important;
+  outline: none !important;
+}
+.ql-button {
+  height: 48px !important;
+  border-radius: 9999px !important;
+  background: #1d1d1f !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  transition:
+    background 0.3s var(--ease-apple),
+    transform 0.3s var(--ease-apple) !important;
+}
+.ql-button::after {
+  display: none !important;
+}
+.ql-button:hover {
+  background: #000 !important;
+}
+.ql-button:active {
+  transform: scale(0.98);
+}
+.ql-spinner {
+  color: #fff !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+.ql-footer {
+  background: #f5f5f7 !important;
+  border-top: 1px solid #e8e8ed !important;
+}
+.ql-footer-action {
+  font-size: 14px !important;
+}
+.ql-footer-link {
+  color: #1d1d1f !important;
+  font-weight: 500 !important;
+}
+@keyframes ql-fade {
+  from { opacity: 0; }
+}
+@keyframes ql-rise {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+}
+
+/* Pixel loader: 3x3 dots lighting up in a wave (used while Clerk loads) */
+.pixel-loader {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 4px);
+  gap: 2px;
+}
+.pixel-loader span {
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.15;
+  animation: pixel 0.9s steps(1) infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+@keyframes pixel {
+  0%, 100% { opacity: 0.15; }
+  30% { opacity: 1; }
+  60% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ql-backdrop, .ql-modal { animation: none; }
+  .pixel-loader span { animation: none; opacity: 0.6; }
+}
