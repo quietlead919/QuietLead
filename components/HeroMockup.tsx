@@ -372,11 +372,11 @@ export function HeroMockup() {
                     </button>
                     {!busy &&
                       (editing ? (
-                        <button type="button" onClick={saveEdit} data-sfx="edit" className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
+                        <button type="button" onClick={saveEdit} className={`${btnBase} bg-mist text-ink hover:bg-haze`}>
                           Save
                         </button>
                       ) : (
-                        <button type="button" onClick={startEdit} data-sfx="edit" className={`${btnBase} group/edit bg-mist text-ink hover:bg-haze`}>
+                        <button type="button" onClick={startEdit} className={`${btnBase} group/edit bg-mist text-ink hover:bg-haze`}>
                           <PencilIcon className="h-4 w-4 transition-transform duration-200 group-hover/edit:-rotate-12" />
                           Edit
                         </button>

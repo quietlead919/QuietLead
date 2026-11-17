@@ -4,9 +4,9 @@
 // browsers only allow audio after a user gesture anyway. Viewers can switch sound off; the
 // choice is kept in local storage ("ql-sound").
 
-export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "edit" | "toggle" | "slider";
+export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "toggle" | "slider";
 
-const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "edit", "toggle", "slider"];
+const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "toggle", "slider"];
 const VOLUME: Record<Sfx, number> = {
   slider: 0.9,
   click: 0.4,
@@ -14,7 +14,6 @@ const VOLUME: Record<Sfx, number> = {
   whoosh: 0.4,
   send: 0.45,
   success: 0.4,
-  edit: 0.4,
   toggle: 0.35,
 };
 const KEY = "ql-sound";
