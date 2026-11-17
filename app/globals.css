@@ -80,30 +80,17 @@ body {
   }
 }
 
-/* Hero: graphite gradient + soft top glow + animated film grain */
+/* Hero: solid black with an animated film grain */
 .hero-bg {
-  background:
-    radial-gradient(110% 70% at 50% -10%, #2c2c2e 0%, #161617 42%, #050505 72%, #000 100%);
+  background: #000;
   isolation: isolate;
 }
-.hero-bg::before,
+/* Film grain */
 .hero-bg::after {
   content: "";
   position: absolute;
   pointer-events: none;
   z-index: -1;
-}
-/* Soft graphite glow from the top (no color) */
-.hero-bg::before {
-  left: 50%;
-  top: -40vh;
-  width: min(1400px, 140vw);
-  aspect-ratio: 1;
-  translate: -50% 0;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.07), transparent 70%);
-}
-/* Film grain */
-.hero-bg::after {
   inset: -50%;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity: 0.09;
@@ -119,7 +106,6 @@ body {
   100% { transform: translate(0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg::before,
   .hero-bg::after {
     animation: none;
   }

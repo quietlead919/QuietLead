@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { play } from "@/lib/sfx";
 
 const WORKING_DAYS = 21;
 
@@ -110,7 +111,10 @@ export function PipelineCalculator() {
                   max={f.max}
                   step={f.step}
                   value={values[f.key]}
-                  onChange={(e) => setValues((s) => ({ ...s, [f.key]: Number(e.target.value) }))}
+                  onChange={(e) => {
+                    setValues((s) => ({ ...s, [f.key]: Number(e.target.value) }));
+                    play("slider");
+                  }}
                   className="peer absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                 />
                 <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-haze" />

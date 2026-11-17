@@ -4,10 +4,11 @@
 // browsers only allow audio after a user gesture anyway. Viewers can switch sound off; the
 // choice is kept in local storage ("ql-sound").
 
-export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "edit" | "toggle";
+export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "edit" | "toggle" | "slider";
 
-const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "edit", "toggle"];
+const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "edit", "toggle", "slider"];
 const VOLUME: Record<Sfx, number> = {
+  slider: 0.28,
   click: 0.4,
   select: 0.45,
   whoosh: 0.4,
@@ -67,8 +68,16 @@ export function unlockSound() {
   }
 }
 
+let lastSlider = 0;
+
 export function play(name: Sfx) {
   if (!ctx || !soundOn()) return;
+  // Slider ticks: at most one every 45ms, so fast drags feel smooth instead of rattling.
+  if (name === "slider") {
+    const now = performance.now();
+    if (now - lastSlider < 45) return;
+    lastSlider = now;
+  }
   const buffer = buffers.get(name);
   if (!buffer) return;
   const src = ctx.createBufferSource();

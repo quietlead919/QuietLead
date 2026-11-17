@@ -158,10 +158,7 @@ export function HeroMockup() {
     const at = (ms: number, fn: () => void) => timers.current.push(setTimeout(fn, reduce ? 0 : ms));
 
     setPhase("sending");
-    at(450, () => {
-      setPhase("flying");
-      play("send");
-    });
+    at(450, () => setPhase("flying"));
     at(1100, () => {
       setSent(nextSent);
       setPhase("sent");

@@ -43,9 +43,13 @@ export function StepsStory() {
         // back to its start, so it holds again and plays as you scroll.
         const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
         let forward = true;
-        // Sounds only when the story plays forwards, not when you scroll back up.
-        const sfx = (name: Parameters<typeof play>[0]) => () => {
-          if (forward) play(name);
+        // Each sound plays once per pass, only while playing forwards. Scrolling back and
+        // forth doesn't repeat it; back at the very start (or Replay) arms them again.
+        const played = new Set<string>();
+        const sfx = (name: Parameters<typeof play>[0], key: string = name) => () => {
+          if (!forward || played.has(key)) return;
+          played.add(key);
+          play(name);
         };
 
         const st = ScrollTrigger.create({
@@ -58,10 +62,12 @@ export function StepsStory() {
           scrub: 0.8,
           onUpdate(self) {
             forward = self.direction > 0;
+            if (self.progress < 0.01) played.clear();
             setDone(self.progress > 0.97);
           },
         });
         replayRef.current = () => {
+          played.clear();
           window.scrollTo({ top: st.start, behavior: "smooth" });
         };
 
@@ -82,7 +88,7 @@ export function StepsStory() {
           .to(q("[data-fill]"), { scaleY: 0.5, duration: 0.6 }, "<")
 
           // Step 2: the prompt morphs into a slim search bar, leads slide in
-          .call(sfx("whoosh"))
+          .call(sfx("whoosh", "to-leads"))
           .to(q("[data-step='1']"), { opacity: 0.35, duration: 0.3 })
           .to(q("[data-step='2']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-scene=describe]"), { autoAlpha: 0, y: -30, scale: 0.96, duration: 0.6 }, "<")
@@ -93,7 +99,7 @@ export function StepsStory() {
           .from(q("[data-chip]"), { scale: 0, stagger: 0.18, duration: 0.3, ease: "back.out(2)" }, "<0.2")
 
           // Step 3: the top lead grows into a draft, gets approved, flies out
-          .call(sfx("whoosh"), undefined, "+=0.3")
+          .call(sfx("whoosh", "to-send"), undefined, "+=0.3")
           .to(q("[data-step='2']"), { opacity: 0.35, duration: 0.3 }, "<")
           .to(q("[data-step='3']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-fill]"), { scaleY: 1, duration: 0.8 }, "<")

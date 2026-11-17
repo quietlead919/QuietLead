@@ -310,7 +310,7 @@ export default function Home() {
         </section>
 
         {/* Endless marquee band */}
-        <section aria-label="Why QuietLead" className="dark-section border-t border-line-dark bg-black py-7 text-[26px] font-medium tracking-[-0.02em] text-[#86868b] sm:py-9 sm:text-[40px]">
+        <section aria-label="Why QuietLead" className="dark-section border-t border-line-dark bg-black py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
           <Marquee items={marquee} />
         </section>
 
