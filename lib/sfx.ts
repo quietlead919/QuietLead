@@ -8,7 +8,7 @@ export type Sfx = "click" | "select" | "whoosh" | "send" | "success" | "edit" | 
 
 const NAMES: Sfx[] = ["click", "select", "whoosh", "send", "success", "edit", "toggle", "slider"];
 const VOLUME: Record<Sfx, number> = {
-  slider: 0.28,
+  slider: 0.9,
   click: 0.4,
   select: 0.45,
   whoosh: 0.4,
