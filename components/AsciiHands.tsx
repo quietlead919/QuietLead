@@ -65,7 +65,7 @@ const POINT: Spec = {
 type Capsule = { ax: number; ay: number; ar: number; bx: number; by: number; br: number; x0: number; x1: number; y0: number; y1: number };
 
 function capsule(a: number[], b: number[]): Capsule {
-  const pad = Math.max(a[2], b[2]) + 6;
+  const pad = Math.max(a[2], b[2]) + 12;
   return {
     ax: a[0], ay: a[1], ar: a[2], bx: b[0], by: b[1], br: b[2],
     x0: Math.min(a[0], b[0]) - pad, x1: Math.max(a[0], b[0]) + pad,
@@ -73,8 +73,14 @@ function capsule(a: number[], b: number[]): Capsule {
   };
 }
 
+// Thickness boost on top of the base scale: arms and palms a lot, fingers a little.
+const ARM_THICK = 1.35;
+const FINGER_THICK = 1.15;
+
 // Builds the hand for one frame as capsules in screen space.
 function buildHand(spec: Spec, wx: number, wy: number, s: number, roll: number, t: number): Capsule[] {
+  const sa = s * ARM_THICK; // radius scale for arm and palm
+  const sf = s * FINGER_THICK; // radius scale for fingers and thumb
   const cr = Math.cos(roll);
   const thick = 0.5 + 0.5 * Math.abs(cr);
   const hx = Math.cos(spec.handAngle);
@@ -84,16 +90,16 @@ function buildHand(spec: Spec, wx: number, wy: number, s: number, roll: number, 
   const at = (a: number, b: number) => [wx + (hx * a + px * b) * s, wy + (hy * a + py * b) * s];
   const ax = Math.cos(spec.armAngle);
   const ay = Math.sin(spec.armAngle);
-  const arm = (k: number, r: number) => [wx + ax * k * s, wy + ay * k * s, r * s];
+  const arm = (k: number, r: number) => [wx + ax * k * s, wy + ay * k * s, r * sa];
 
   const chains: number[][][] = [
-    [arm(560, 25), arm(300, 28), arm(130, 24), arm(45, 19), [wx, wy, 16.5 * s]],
-    [[wx, wy, 16.5 * s], [...at(18, 1), 22 * s], [...at(46, 2), 30 * thick * s], [...at(96, 0), 27 * thick * s]],
+    [arm(620, 26), arm(300, 28), arm(130, 24), arm(45, 19), [wx, wy, 16.5 * sa]],
+    [[wx, wy, 16.5 * sa], [...at(18, 1), 22 * sa], [...at(46, 2), 30 * thick * sa], [...at(96, 0), 27 * thick * sa]],
   ];
 
   spec.fingers.forEach((f, i) => {
     const base = at(96, f.off * cr);
-    const chain = [[base[0], base[1], f.r * s]];
+    const chain = [[base[0], base[1], f.r * sf]];
     let ang = f.fan;
     let x = base[0];
     let y = base[1];
@@ -104,13 +110,13 @@ function buildHand(spec: Spec, wx: number, wy: number, s: number, roll: number, 
       const dy = hy * Math.cos(ang) + py * Math.sin(ang) * cr;
       x += dx * len * s;
       y += dy * len * s;
-      chain.push([x, y, f.r * (1 - 0.13 * (j + 1)) * s]);
+      chain.push([x, y, f.r * (1 - 0.13 * (j + 1)) * sf]);
     });
     chains.push(chain);
   });
 
   const tb = at(34, -24 * cr);
-  const thumb = [[tb[0], tb[1], 11.5 * s]];
+  const thumb = [[tb[0], tb[1], 11.5 * sf]];
   let ta = -0.55;
   let tx = tb[0];
   let ty = tb[1];
@@ -120,7 +126,7 @@ function buildHand(spec: Spec, wx: number, wy: number, s: number, roll: number, 
     const dy = hy * Math.cos(ta) - py * Math.sin(ta) * cr;
     tx += dx * len * s;
     ty += dy * len * s;
-    thumb.push([tx, ty, (10 - 2.2 * j) * s]);
+    thumb.push([tx, ty, (10 - 2.2 * j) * sf]);
   });
   chains.push(thumb);
 
@@ -185,24 +191,25 @@ export function AsciiHands() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.font = FONT;
       ctx.textBaseline = "top";
-      ctx.fillStyle = "#f5f5f7";
+      ctx.fillStyle = "#ffffff";
       mobile = width < 768;
       const h1 = canvas.parentElement?.querySelector("h1");
       anchorY = h1 ? h1.getBoundingClientRect().top - rect.top + h1.getBoundingClientRect().height * 0.55 : height * 0.4;
     };
 
     const hands = [
-      { spec: REACH, dir: 1, phase: 0, side: 0.11, dy: -10 },
-      { spec: POINT, dir: -1, phase: 1.7, side: 0.89, dy: 30 },
+      { spec: REACH, dir: 1, phase: 0, side: 0.1, dy: -20 },
+      { spec: POINT, dir: -1, phase: 1.7, side: 0.93, dy: 50 },
     ];
 
     const draw = (ms: number) => {
       const t = ms / 1000;
       ctx.clearRect(0, 0, width, height);
-      const s = mobile ? Math.max(0.5, width / 760) : Math.min(1.25, Math.max(0.75, width / 1250));
+      // Same idea as the reference: the hands scale with the viewport width.
+      const s = mobile ? Math.max(0.55, width / 700) : Math.min(2, Math.max(0.85, width / 1000));
       const tick = Math.floor(t * 6); // glyph shimmer rate
       const sway = 0.5 + 0.5 * Math.sin(0.6 * t);
-      const baseAlpha = mobile ? 0.35 : 1;
+      const baseAlpha = mobile ? 0.4 : 1;
 
       for (const hand of hands) {
         const wx = width * (mobile ? (hand.dir > 0 ? 0.08 : 0.92) : hand.side) + hand.dir * sway * 30 * s;
@@ -240,17 +247,17 @@ export function AsciiHands() {
             if (d > 0) {
               // Soft, broken outline.
               if (n > 0.55 - 0.15 * d) continue;
-              ctx.globalAlpha = 0.45 * baseAlpha;
+              ctx.globalAlpha = 0.6 * baseAlpha;
               ctx.fillText(RAMP[1 + Math.floor(n * 3)], col * CW, row * CH);
               continue;
             }
             // Inside: lit from the upper left. Compare with the field a little toward the light.
             const toward = field(caps, x - 6 * s, y - 8 * s, k);
             let b = 0.5 - 0.6 * Math.max(-1, Math.min(1, (toward - d) / 10));
-            b = b * (0.8 + 0.4 * light) + 0.12 * Math.min(1, -d / 18);
+            b = b * (0.8 + 0.4 * light) + 0.12 * Math.min(1, -d / 18) + 0.12;
             b *= 0.9 + 0.2 * n;
             const i = Math.max(1, Math.min(RAMP.length - 1, Math.round(b * (RAMP.length - 1))));
-            ctx.globalAlpha = (0.55 + 0.45 * Math.min(1, b)) * baseAlpha;
+            ctx.globalAlpha = Math.min(1, 0.72 + 0.35 * b) * baseAlpha;
             ctx.fillText(RAMP[i], col * CW, row * CH);
           }
         }
@@ -273,9 +280,11 @@ export function AsciiHands() {
       cancelAnimationFrame(raf);
     };
 
+    // Draw a frame right away on every resize, so the hands are there even before (or
+    // without) the animation loop.
     const ro = new ResizeObserver(() => {
       layout();
-      if (reduce) draw(0);
+      draw(performance.now());
     });
     const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
     ro.observe(canvas);
