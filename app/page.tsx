@@ -10,6 +10,7 @@ import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
 import { AsciiHands } from "@/components/AsciiHands";
 import { Marquee } from "@/components/Marquee";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const marquee = [
   "Up to 50 leads a day",
@@ -255,9 +256,50 @@ function Chevron() {
   );
 }
 
+// "<" written as the JSON escape < (backslash built from its char code), so the data
+// can never close the surrounding script tag.
+const LT_ESCAPE = String.fromCharCode(92) + "u003c";
+
+// Structured data for Google: the product, its price range and the FAQ.
+function jsonLd() {
+  const prices = plans.map((p) => Number(p.price));
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: SITE_NAME,
+      url: SITE_URL,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: SITE_DESCRIPTION,
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "EUR",
+        lowPrice: Math.min(...prices).toFixed(2),
+        highPrice: Math.max(...prices).toFixed(2),
+        offerCount: plans.length,
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ];
+}
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Static data from this file only, escaped so it cannot close the script tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()).replaceAll("<", LT_ESCAPE) }}
+      />
       <Nav />
       <ScrollProgress />
       <HeroMotion />

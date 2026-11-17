@@ -3,7 +3,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { getStripe } from "@/lib/stripe";
 
-export const metadata = { title: "Welcome to QuietLead" };
+export const metadata = { title: "Welcome to QuietLead", robots: { index: false } };
 
 // Render the whole page per request before sending it (no streaming):
 // it is tiny and depends on a live Stripe session.

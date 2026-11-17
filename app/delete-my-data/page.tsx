@@ -4,7 +4,7 @@ import { DeleteDataForm } from "@/components/DeleteDataForm";
 import { LegalPage } from "@/components/LegalPage";
 import { LEGAL } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Delete my data · QuietLead" };
+export const metadata: Metadata = { title: "Delete my data · QuietLead", robots: { index: false } };
 
 export default function DeleteMyData() {
   return (

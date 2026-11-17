@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
 import { LEGAL, missing } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Imprint · QuietLead" };
+export const metadata: Metadata = { title: "Imprint · QuietLead", alternates: { canonical: "/imprint" } };
 
 export default function Imprint() {
   return (

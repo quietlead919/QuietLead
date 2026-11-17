@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
 import { LEGAL } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Cookie Policy · QuietLead" };
+export const metadata: Metadata = { title: "Cookie Policy · QuietLead", alternates: { canonical: "/cookies" } };
 
 export default function Cookies() {
   return (

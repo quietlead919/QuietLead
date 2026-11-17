@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
 import { LEGAL, missing } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Terms of Service · QuietLead" };
+export const metadata: Metadata = { title: "Terms of Service · QuietLead", alternates: { canonical: "/terms" } };
 
 export default function Terms() {
   return (

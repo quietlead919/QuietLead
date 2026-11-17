@@ -4,17 +4,34 @@ import "@fontsource-variable/inter";
 import "./globals.css";
 import { CookieNotice } from "@/components/CookieNotice";
 import { SoundLayer } from "@/components/SoundLayer";
+import { INDEXABLE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "QuietLead · Finding leads without the noise",
-  description:
-    "QuietLead is an AI tool for B2B lead generation. It finds the right prospects, spots buying signals and drafts personal outreach you approve. Quietly.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
+  robots: INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
   openGraph: {
-    title: "QuietLead · Finding leads without the noise",
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "/",
+    title: SITE_TITLE,
     description:
       "AI that finds, qualifies and drafts personal outreach to your next customers. You approve every message.",
-    images: ["/brand/quietlead-icon.png"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description:
+      "AI that finds, qualifies and drafts personal outreach to your next customers. You approve every message.",
+  },
+  // Optional: Google Search Console HTML-tag verification (DNS verification needs no code).
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
