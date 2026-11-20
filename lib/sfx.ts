@@ -23,7 +23,17 @@ let loading: Promise<void> | null = null;
 const buffers = new Map<Sfx, AudioBuffer>();
 const listeners = new Set<() => void>();
 
+// Shown inside another page (e.g. the FrameWerk portfolio window): stay silent.
+function embedded() {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 export function soundOn() {
+  if (typeof window !== "undefined" && embedded()) return false;
   try {
     return localStorage.getItem(KEY) !== "off";
   } catch {
@@ -47,7 +57,7 @@ export function subscribeSound(cb: () => void) {
 
 // Call from a user gesture: creates/resumes the audio context and loads the sounds once.
 export function unlockSound() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || embedded()) return;
   if (!ctx) {
     const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return;
