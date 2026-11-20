@@ -13,7 +13,15 @@ const isDev = process.env.NODE_ENV !== "production";
 // - Clerk (waitlist modal): its Frontend API is *.clerk.accounts.dev for development keys and
 //   clerk.<site domain> for a production instance; Cloudflare Turnstile is its bot check and
 //   img.clerk.com serves avatars/logos. Clerk also starts a blob: worker.
-const clerkFapi = `https://*.clerk.accounts.dev https://clerk.${new URL(SITE_URL).hostname.replace(/^www\./, "")} https://cdn.protect.clerk.com`;
+// frame-ancestors: only the FrameWerk portfolio may show this site inside its project window.
+// Add the portfolio's live domain via FRAME_ANCESTORS (space separated) once it is online.
+const frameAncestors = [
+  "'self'",
+  "http://localhost:5240",
+  "http://127.0.0.1:5240",
+  ...(process.env.FRAME_ANCESTORS ?? "").split(/\s+/).filter(Boolean),
+].join(" ");
+const clerkFapi =`https://*.clerk.accounts.dev https://clerk.${new URL(SITE_URL).hostname.replace(/^www\./, "")} https://cdn.protect.clerk.com`;
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://vercel.live ${clerkFapi} https://challenges.cloudflare.com`,
@@ -23,7 +31,7 @@ const csp = [
   `connect-src 'self'${isDev ? " ws: wss:" : ""} https://vercel.live wss://ws-us3.pusher.com ${clerkFapi} https://*.protect.clerk.com:*`,
   "worker-src 'self' blob:",
   "frame-src https://vercel.live https://challenges.cloudflare.com",
-  "frame-ancestors 'none'",
+  `frame-ancestors ${frameAncestors}`,
   "form-action 'self' https://checkout.stripe.com",
   "base-uri 'self'",
   "object-src 'none'",
@@ -32,7 +40,8 @@ const csp = [
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
-  { key: "X-Frame-Options", value: "DENY" },
+  // No X-Frame-Options: it cannot allow single origins, and CSP frame-ancestors above
+  // already blocks every other site from framing this one.
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
