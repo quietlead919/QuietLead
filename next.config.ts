@@ -17,8 +17,9 @@ const isDev = process.env.NODE_ENV !== "production";
 // Add the portfolio's live domain via FRAME_ANCESTORS (space separated) once it is online.
 const frameAncestors = [
   "'self'",
-  "http://localhost:5240",
-  "http://127.0.0.1:5240",
+  // Local previews of the portfolio on any port (dev servers pick different ports)
+  "http://localhost:*",
+  "http://127.0.0.1:*",
   ...(process.env.FRAME_ANCESTORS ?? "").split(/\s+/).filter(Boolean),
 ].join(" ");
 const clerkFapi =`https://*.clerk.accounts.dev https://clerk.${new URL(SITE_URL).hostname.replace(/^www\./, "")} https://cdn.protect.clerk.com`;
