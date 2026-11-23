@@ -11,6 +11,7 @@ import { StepsStory } from "@/components/StepsStory";
 import { GlassLights } from "@/components/GlassLights";
 import { ChromeLogo } from "@/components/ChromeLogo";
 import { CtaArcs } from "@/components/CtaArcs";
+import { FlowLights } from "@/components/FlowLights";
 import { Marquee } from "@/components/Marquee";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -357,6 +358,9 @@ export default function Home() {
 
         {/* Endless marquee band */}
         <div className="after-hero">
+          <div className="after-hero-bg" aria-hidden="true">
+            <FlowLights />
+          </div>
         <section aria-label="Why QuietLead" className="dark-section py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
           <Marquee items={marquee} />
         </section>
