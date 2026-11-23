@@ -356,12 +356,14 @@ export default function Home() {
         </section>
 
         {/* Endless marquee band */}
-        <section aria-label="Why QuietLead" className="dark-section border-t border-line-dark bg-black py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
+        <div className="after-hero">
+        <section aria-label="Why QuietLead" className="dark-section py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
           <Marquee items={marquee} />
         </section>
 
         {/* STEPS: pinned scroll story on white */}
         <StepsStory />
+        </div>
         <div className="relative -mt-14 px-4 pb-28 text-center sm:-mt-20">
           <Reveal>
             <a href="#waitlist" className="btn-primary h-[52px] px-8 text-[17px]">
@@ -375,9 +377,9 @@ export default function Home() {
         <section id="features" className="scroll-mt-12 px-4 py-24 sm:py-32">
           <SectionHead eyebrow="Features" title={"Everything you need.\nNothing you don't."} />
           <div className="mx-auto mt-12 grid max-w-[900px] gap-4">
-            {panels.map((p) => (
+            {panels.map((p, i) => (
               <Reveal key={p.title}>
-                <div className="panel relative overflow-hidden rounded-[24px] px-6 py-7 sm:px-9 sm:py-9">
+                <div className={`panel panel-v${i % 4} relative overflow-hidden rounded-[24px] px-6 py-7 sm:px-9 sm:py-9`}>
                   <span className="live-bars absolute top-7 right-6 sm:top-9 sm:right-9" aria-hidden="true">
                     <span />
                     <span />
@@ -416,7 +418,7 @@ export default function Home() {
             text="Volume tools fill inboxes. QuietLead helps you write to fewer people, better."
           />
           <Reveal className="mx-auto mt-16 max-w-[860px]">
-            <div className="glass overflow-hidden rounded-[28px]">
+            <div className="glass-plain overflow-hidden rounded-[28px]">
               <div className="grid grid-cols-3 border-b border-line bg-mist px-5 py-4 text-[14px] font-medium sm:px-8">
                 <span />
                 <span className="text-ink-faint">Volume tools</span>

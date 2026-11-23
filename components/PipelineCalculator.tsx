@@ -129,7 +129,7 @@ export function PipelineCalculator() {
         })}
       </div>
 
-      <div className="flex flex-col justify-between glass-accent rounded-[28px] p-7 text-white sm:p-10">
+      <div className="ios-glass flex flex-col justify-between rounded-[28px] p-7 text-white sm:p-10">
         <div>
           <p className="text-sm font-medium text-white/85">Estimated new revenue per month</p>
           <p className="mt-2 text-5xl font-medium tracking-tight tabular-nums sm:text-6xl" aria-live="polite">
