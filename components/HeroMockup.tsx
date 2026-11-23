@@ -217,7 +217,7 @@ export function HeroMockup() {
                     aria-pressed={active}
                     disabled={busy && !active}
                     className={`w-full rounded-2xl px-4 py-3.5 text-left transition-[transform,background-color,opacity] duration-200 active:scale-[0.97] focus-visible:outline-offset-2 ${
-                      active ? "bg-ink text-white" : "bg-mist text-ink hover:translate-x-1 hover:bg-haze"
+                      active ? "bg-brand text-white shadow-[0_0_24px_rgba(59,123,255,0.35)]" : "bg-mist text-ink hover:translate-x-1 hover:bg-haze"
                     } ${done && !active ? "opacity-60 hover:opacity-100" : ""}`}
                   >
                     <span className="flex items-center justify-between gap-2">
@@ -228,10 +228,10 @@ export function HeroMockup() {
                           done
                             ? active
                               ? "bg-white/20"
-                              : "bg-white text-ink"
+                              : "bg-white/10 text-ink"
                             : active
                               ? "bg-white/20"
-                              : "bg-white text-ink"
+                              : "bg-white/10 text-ink"
                         }`}
                       >
                         {done ? "Sent" : l.score}
@@ -344,7 +344,7 @@ export function HeroMockup() {
                       disabled={busy}
                       className={`${btnBase} group/send ${
                         phase === "sent"
-                          ? "pop-in bg-ink text-white"
+                          ? "pop-in bg-brand text-white"
                           : "bg-brand text-white hover:-translate-y-0.5 hover:bg-brand-deep"
                       }`}
                     >

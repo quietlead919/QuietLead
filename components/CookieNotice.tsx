@@ -49,7 +49,7 @@ export function CookieNotice() {
       <button
         type="button"
         onClick={close}
-        className="h-8 shrink-0 rounded-full bg-white px-4 text-[13px] text-ink hover:bg-haze"
+        className="h-8 shrink-0 rounded-full bg-white px-4 text-[13px] text-black hover:bg-[#e8e8ed]"
       >
         Got it
       </button>

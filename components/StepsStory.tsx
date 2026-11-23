@@ -92,7 +92,7 @@ export function StepsStory() {
           .to(q("[data-step='1']"), { opacity: 0.35, duration: 0.3 })
           .to(q("[data-step='2']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-scene=describe]"), { autoAlpha: 0, y: -30, scale: 0.96, duration: 0.6 }, "<")
-          .to(q("[data-card]"), { backgroundColor: "#f5f5f7", duration: 0.6 }, "<")
+          .to(q("[data-card]"), { backgroundColor: "rgba(59,123,255,0.1)", duration: 0.6 }, "<")
           .to(q("[data-scene=leads]"), { autoAlpha: 1, duration: 0.4 }, "<0.3")
           .to(q("[data-row]"), { autoAlpha: 1, y: 0, stagger: 0.18, duration: 0.5 }, "<")
           .from(q("[data-bar]"), { scaleX: 0, stagger: 0.18, duration: 0.6 }, "<0.1")
@@ -104,7 +104,7 @@ export function StepsStory() {
           .to(q("[data-step='3']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-fill]"), { scaleY: 1, duration: 0.8 }, "<")
           .to(q("[data-scene=leads]"), { autoAlpha: 0, scale: 0.94, duration: 0.5 }, "<")
-          .to(q("[data-card]"), { backgroundColor: "#ffffff", duration: 0.5 }, "<")
+          .to(q("[data-card]"), { backgroundColor: "rgba(255,255,255,0.05)", duration: 0.5 }, "<")
           .fromTo(q("[data-scene=send]"), { autoAlpha: 0, scale: 1.06 }, { autoAlpha: 1, scale: 1, duration: 0.6 }, "<0.2")
           .to(q("[data-approve]"), { scale: 0.93, duration: 0.15, yoyo: true, repeat: 1 }, "+=0.3")
           .call(sfx("send"))
@@ -162,7 +162,7 @@ export function StepsStory() {
               {/* Scene 1: describe */}
               <div data-scene="describe" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
                 <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">Who do you want to reach?</p>
-                <div className="mt-3 min-h-[96px] rounded-2xl bg-white p-4 text-[17px] leading-relaxed text-ink ring-1 ring-brand/25">
+                <div className="mt-3 min-h-[96px] rounded-2xl bg-white/[0.06] p-4 text-[17px] leading-relaxed text-ink ring-1 ring-brand/25">
                   {PROMPT.split("").map((c, i) => (
                     <span key={i} data-char>
                       {c}
@@ -179,7 +179,7 @@ export function StepsStory() {
 
               {/* Scene 2: leads appear with signals and fit scores */}
               <div data-scene="leads" aria-hidden="true" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
-                <div className="flex h-10 items-center rounded-xl bg-white px-4 text-[13px] text-ink-soft ring-1 ring-ink/5">
+                <div className="flex h-10 items-center rounded-xl bg-white/[0.06] px-4 text-[13px] text-ink-soft ring-1 ring-ink/5">
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="mr-2 h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                     <circle cx="11" cy="11" r="7" />
                     <path d="m20 20-3.5-3.5" />
@@ -188,7 +188,7 @@ export function StepsStory() {
                 </div>
                 <ul className="mt-4 space-y-3">
                   {rows.map((r) => (
-                    <li key={r.name} data-row className="rounded-2xl bg-white px-4 py-3.5 ring-1 ring-ink/5">
+                    <li key={r.name} data-row className="rounded-2xl bg-white/[0.06] px-4 py-3.5 ring-1 ring-ink/5">
                       <div className="flex items-center justify-between gap-3">
                         <span className="text-[15px] font-medium text-ink">{r.name}</span>
                         <span data-chip className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-ink">
@@ -209,7 +209,7 @@ export function StepsStory() {
 
               {/* Scene 3: draft, approve, sent */}
               <div data-scene="send" className="absolute inset-x-0 top-[60px] bottom-0 p-6 sm:p-8">
-                <div data-draft aria-hidden="true" className="rounded-2xl bg-white p-5 ring-1 ring-ink/5">
+                <div data-draft aria-hidden="true" className="rounded-2xl bg-white/[0.06] p-5 ring-1 ring-ink/5">
                   <p className="text-[11px] font-medium tracking-[0.08em] text-ink-faint uppercase">Draft to Lena, Founder</p>
                   <p className="mt-2.5 text-[15px] leading-relaxed text-ink">
                     Hi Lena, saw you&apos;re hiring two designers. Congrats on the growth. Most studios your size tell me new

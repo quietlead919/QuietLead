@@ -4,7 +4,7 @@ import Link from "next/link";
 // Shared shell for the legal pages: simple header, readable column, small footer.
 export function LegalPage({ title, updated, children }: { title: string; updated: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <header className="border-b border-ink/5">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">

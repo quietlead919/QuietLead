@@ -8,7 +8,9 @@ import { HeroMotion } from "@/components/HeroMotion";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
-import { AsciiHands } from "@/components/AsciiHands";
+import { GlassLights } from "@/components/GlassLights";
+import { ChromeLogo } from "@/components/ChromeLogo";
+import { CtaArcs } from "@/components/CtaArcs";
 import { Marquee } from "@/components/Marquee";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -307,8 +309,10 @@ export default function Home() {
       <main id="top">
         {/* HERO: black, centered, big type */}
         <section data-hero className="hero-bg dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
-          <AsciiHands />
-          <div data-hero-copy className="relative z-10 mx-auto max-w-[980px]">
+          <div className="hero-glass" aria-hidden="true">
+            <GlassLights />
+          </div>
+          <div data-hero-copy className="hero-veil relative z-10 mx-auto max-w-[980px]">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 text-[17px] font-medium text-ink-faint">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-white text-white" />
@@ -409,7 +413,7 @@ export default function Home() {
             text="Volume tools fill inboxes. QuietLead helps you write to fewer people, better."
           />
           <Reveal className="mx-auto mt-16 max-w-[860px]">
-            <div className="overflow-hidden rounded-[28px] border border-line bg-white">
+            <div className="glass overflow-hidden rounded-[28px]">
               <div className="grid grid-cols-3 border-b border-line bg-mist px-5 py-4 text-[14px] font-medium sm:px-8">
                 <span />
                 <span className="text-ink-faint">Volume tools</span>
@@ -439,7 +443,7 @@ export default function Home() {
             text="Move the sliders to see what a quiet, steady flow of leads can mean for your business."
           />
           <Reveal className="mx-auto mt-16 max-w-[980px]">
-            <div className="rounded-[28px] border border-line bg-white p-6 sm:p-10">
+            <div className="glass rounded-[28px] p-6 sm:p-10">
               <PipelineCalculator />
             </div>
           </Reveal>
@@ -457,7 +461,7 @@ export default function Home() {
               <Reveal key={p.name} delay={i * 100}>
                 <div
                   className={`relative flex h-full flex-col rounded-[28px] p-8 ${
-                    p.popular ? "bg-black text-white" : "border border-line bg-white"
+                    p.popular ? "glass-accent text-white" : "glass"
                   }`}
                 >
                   {p.popular && (
@@ -542,15 +546,12 @@ export default function Home() {
         </section>
 
         {/* FINAL CTA: full-bleed black chapter */}
-        <section id="waitlist" className="dark-section scroll-mt-12 bg-black px-4 py-32 text-center text-white sm:py-44">
+        <section id="waitlist" className="dark-section cta-glow scroll-mt-12 px-4 py-32 text-center text-white sm:py-44">
+          <CtaArcs />
           <Reveal className="mx-auto max-w-[980px]">
-            <Image
-              src="/brand/quietlead-icon.png"
-              alt="QuietLead logo"
-              width={64}
-              height={64}
-              className="logo-invert mx-auto rounded-[16px]"
-            />
+            <div role="img" aria-label="QuietLead logo" className="flex justify-center">
+              <ChromeLogo size={112} />
+            </div>
             <ScrollWords
               tone="light"
               text="Your Next Customers Are Out There. Reach Them *Quietly*."
@@ -567,7 +568,7 @@ export default function Home() {
       </main>
 
       {/* FOOTER: Apple-style small print on light grey */}
-      <footer className="bg-mist px-4 pt-10 pb-12 text-[12px] text-ink-soft">
+      <footer className="border-t border-line bg-black px-4 pt-10 pb-12 text-[12px] text-ink-soft">
         <div className="mx-auto max-w-[980px]">
           <p className="border-b border-line pb-5 leading-relaxed text-ink-faint">
             No tracking. The only cookies are the ones the waitlist needs to work, so there is nothing to consent to.{" "}
