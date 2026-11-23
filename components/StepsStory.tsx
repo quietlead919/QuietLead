@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { play } from "@/lib/sfx";
 
 // "Describe. Discover. Send." as a pinned scroll story: the section sticks while a single
 // product card morphs through the three steps (typing a request -> leads appear ->
@@ -42,15 +41,6 @@ export function StepsStory() {
         // card plays along with your scroll (backwards when you scroll up). Replay takes you
         // back to its start, so it holds again and plays as you scroll.
         const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
-        let forward = true;
-        // Each sound plays once per pass, only while playing forwards. Scrolling back and
-        // forth doesn't repeat it; back at the very start (or Replay) arms them again.
-        const played = new Set<string>();
-        const sfx = (name: Parameters<typeof play>[0], key: string = name) => () => {
-          if (!forward || played.has(key)) return;
-          played.add(key);
-          play(name);
-        };
 
         const st = ScrollTrigger.create({
           trigger: q("[data-pin]")[0],
@@ -61,13 +51,10 @@ export function StepsStory() {
           animation: tl,
           scrub: 0.8,
           onUpdate(self) {
-            forward = self.direction > 0;
-            if (self.progress < 0.01) played.clear();
             setDone(self.progress > 0.97);
           },
         });
         replayRef.current = () => {
-          played.clear();
           window.scrollTo({ top: st.start, behavior: "smooth" });
         };
 
@@ -88,7 +75,6 @@ export function StepsStory() {
           .to(q("[data-fill]"), { scaleY: 0.5, duration: 0.6 }, "<")
 
           // Step 2: the prompt morphs into a slim search bar, leads slide in
-          .call(sfx("whoosh", "to-leads"))
           .to(q("[data-step='1']"), { opacity: 0.35, duration: 0.3 })
           .to(q("[data-step='2']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-scene=describe]"), { autoAlpha: 0, y: -30, scale: 0.96, duration: 0.6 }, "<")
@@ -99,17 +85,14 @@ export function StepsStory() {
           .from(q("[data-chip]"), { scale: 0, stagger: 0.18, duration: 0.3, ease: "back.out(2)" }, "<0.2")
 
           // Step 3: the top lead grows into a draft, gets approved, flies out
-          .call(sfx("whoosh", "to-send"), undefined, "+=0.3")
-          .to(q("[data-step='2']"), { opacity: 0.35, duration: 0.3 }, "<")
+          .to(q("[data-step='2']"), { opacity: 0.35, duration: 0.3 }, "+=0.3")
           .to(q("[data-step='3']"), { opacity: 1, duration: 0.3 }, "<")
           .to(q("[data-fill]"), { scaleY: 1, duration: 0.8 }, "<")
           .to(q("[data-scene=leads]"), { autoAlpha: 0, scale: 0.94, duration: 0.5 }, "<")
           .to(q("[data-card]"), { backgroundColor: "rgba(255,255,255,0.05)", duration: 0.5 }, "<")
           .fromTo(q("[data-scene=send]"), { autoAlpha: 0, scale: 1.06 }, { autoAlpha: 1, scale: 1, duration: 0.6 }, "<0.2")
           .to(q("[data-approve]"), { scale: 0.93, duration: 0.15, yoyo: true, repeat: 1 }, "+=0.3")
-          .call(sfx("send"))
           .to(q("[data-draft]"), { x: 160, y: -120, rotate: 14, scale: 0.2, autoAlpha: 0, duration: 0.7, ease: "power2.in" })
-          .call(sfx("success"), undefined, "<0.4")
           .fromTo(q("[data-sent]"), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, "<0.4")
           .to({}, { duration: 0.4 }); // short hold before unpinning
 
@@ -233,7 +216,6 @@ export function StepsStory() {
                   {done && (
                     <button
                       type="button"
-                      data-sfx="whoosh"
                       onClick={() => {
                         setSpin((n) => n + 1);
                         replayRef.current();

@@ -4,7 +4,6 @@
 // All company and person names are fictional demo data. Nothing is actually sent.
 
 import { useEffect, useRef, useState } from "react";
-import { play } from "@/lib/sfx";
 
 type Lead = {
   id: string;
@@ -162,7 +161,6 @@ export function HeroMockup() {
     at(1100, () => {
       setSent(nextSent);
       setPhase("sent");
-      play("success");
     });
     at(1900, () => {
       setPhase("idle");
@@ -213,7 +211,6 @@ export function HeroMockup() {
                   <button
                     type="button"
                     onClick={() => pick(l.id)}
-                    data-sfx="select"
                     aria-pressed={active}
                     disabled={busy && !active}
                     className={`w-full rounded-2xl px-4 py-3.5 text-left transition-[transform,background-color,opacity] duration-200 active:scale-[0.97] focus-visible:outline-offset-2 ${
@@ -340,7 +337,6 @@ export function HeroMockup() {
                     <button
                       type="button"
                       onClick={approve}
-                      data-sfx="click"
                       disabled={busy}
                       className={`${btnBase} group/send ${
                         phase === "sent"

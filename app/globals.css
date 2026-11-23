@@ -605,9 +605,6 @@ details[open] .faq-icon {
     background 0.3s var(--ease-apple),
     transform 0.45s cubic-bezier(0.34, 1.8, 0.5, 1) !important;
 }
-.ql-button::after {
-  display: none !important;
-}
 .ql-button:hover {
   background: #e8e8ed !important;
 }
@@ -776,38 +773,55 @@ details[open] .faq-icon {
     0 30px 80px rgba(0, 0, 0, 0.5);
 }
 
-/* Liquid glass buttons, clear style: light comes from the rim, glows blue on hover */
+/* Liquid glass buttons, clear style: light comes from the rim only (no drop shadows).
+   Hover: a blue glass layer fades in on top, never jumps. */
 .btn-primary,
 .btn-light {
+  position: relative;
+  isolation: isolate;
   color: #fff !important;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)) !important;
   backdrop-filter: blur(14px) saturate(180%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 10px 30px rgba(0, 0, 0, 0.35) !important;
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
 }
 .btn-light {
   background: linear-gradient(180deg, rgba(110, 160, 255, 0.42), rgba(59, 123, 255, 0.16)) !important;
   box-shadow:
     inset 0 1px 0 rgba(200, 222, 255, 0.65),
     inset 0 -1px 0 rgba(120, 170, 255, 0.15),
-    inset 0 0 0 1px rgba(140, 185, 255, 0.3),
-    0 0 28px rgba(59, 123, 255, 0.28),
-    0 10px 30px rgba(0, 0, 0, 0.35) !important;
+    inset 0 0 0 1px rgba(140, 185, 255, 0.3) !important;
+}
+.btn-primary::after,
+.btn-light::after,
+.ql-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(150, 190, 255, 0.42), rgba(59, 123, 255, 0.2));
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-apple);
+}
+.btn-primary:hover::after,
+.btn-light:hover::after,
+.ql-button:hover::after {
+  opacity: 1;
 }
 .btn-primary:hover,
 .btn-light:hover {
-  background: linear-gradient(180deg, rgba(140, 185, 255, 0.4), rgba(59, 123, 255, 0.18)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(220, 235, 255, 0.75),
-    inset 0 0 0 1px rgba(150, 190, 255, 0.4),
-    0 0 40px rgba(59, 123, 255, 0.45),
-    0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)) !important;
+}
+.btn-light:hover {
+  background: linear-gradient(180deg, rgba(110, 160, 255, 0.42), rgba(59, 123, 255, 0.16)) !important;
 }
 .btn-ghost {
   color: #f5f5f7;
+  transition: background 0.45s var(--ease-apple), color 0.45s var(--ease-apple);
 }
 .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.1);
@@ -890,17 +904,18 @@ details[open] .faq-icon {
   .cta-arcs { width: 62vw; opacity: 0.7; }
 }
 
-/* Waitlist modal in the new look: blue glass button, blue focus */
+/* Waitlist modal in the new look: blue glass button (no glow), blue focus */
 .ql-button {
+  position: relative;
+  isolation: isolate;
   color: #fff !important;
   background: linear-gradient(180deg, rgba(110, 160, 255, 0.55), rgba(59, 123, 255, 0.3)) !important;
   box-shadow:
     inset 0 1px 0 rgba(210, 228, 255, 0.7),
-    inset 0 0 0 1px rgba(140, 185, 255, 0.35),
-    0 0 30px rgba(59, 123, 255, 0.35) !important;
+    inset 0 0 0 1px rgba(140, 185, 255, 0.35) !important;
 }
 .ql-button:hover {
-  background: linear-gradient(180deg, rgba(140, 185, 255, 0.65), rgba(59, 123, 255, 0.4)) !important;
+  background: linear-gradient(180deg, rgba(110, 160, 255, 0.55), rgba(59, 123, 255, 0.3)) !important;
 }
 .ql-spinner {
   color: #fff !important;

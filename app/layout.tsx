@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import "@fontsource-variable/inter";
 import "./globals.css";
 import { CookieNotice } from "@/components/CookieNotice";
-import { SoundLayer } from "@/components/SoundLayer";
 import { INDEXABLE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -86,7 +85,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           {children}
           <CookieNotice />
-          <SoundLayer />
         </ClerkProvider>
       </body>
     </html>

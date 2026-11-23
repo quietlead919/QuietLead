@@ -28,7 +28,7 @@ export function Nav() {
           ))}
         </ul>
         <div className="flex items-center gap-2">
-          <a href="#waitlist" data-sfx="click" className="btn-light inline-flex h-7 items-center px-3.5 text-[12px] tracking-normal">
+          <a href="#waitlist" className="btn-light inline-flex h-7 items-center px-3.5 text-[12px] tracking-normal">
             Join waitlist
           </a>
         </div>
