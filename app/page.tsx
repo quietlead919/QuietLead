@@ -371,32 +371,35 @@ export default function Home() {
           </Reveal>
         </div>
 
-        {/* FEATURES: white tiles with hairline borders on light grey */}
-        <section id="features" className="scroll-mt-12 bg-mist px-4 py-28 sm:py-36">
+        {/* FEATURES: grainy blue-violet glass tiles with an inner glow and light waves */}
+        <section id="features" className="scroll-mt-12 px-4 py-24 sm:py-32">
           <SectionHead eyebrow="Features" title={"Everything you need.\nNothing you don't."} />
-          <div className="mx-auto mt-16 max-w-[980px] space-y-5">
+          <div className="mx-auto mt-12 grid max-w-[900px] gap-4">
             {panels.map((p) => (
               <Reveal key={p.title}>
-                <div className="panel px-7 py-10 sm:px-14 sm:py-14">
+                <div className="panel relative overflow-hidden rounded-[24px] px-6 py-7 sm:px-9 sm:py-9">
+                  <span className="live-bars absolute top-7 right-6 sm:top-9 sm:right-9" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                  </span>
                   <ScrollWords
                     text={p.title}
-                    className="max-w-[680px] text-[30px] leading-[1.1] font-medium tracking-[-0.025em] text-ink sm:text-[40px]"
+                    className="text-grad max-w-[600px] pr-10 text-[24px] leading-[1.15] font-semibold tracking-[-0.025em] sm:text-[30px]"
                   />
-                  <p className="mt-4 max-w-[640px] text-[19px] leading-snug text-ink-soft [&_em]:not-italic [&_em]:text-ink">
+                  <p className="mt-3 max-w-[600px] text-[16px] leading-relaxed text-ink-soft sm:text-[17px]">
                     {p.intro}
                   </p>
-                  <div className="mt-10 grid border-t border-line md:grid-cols-2">
-                    {p.items.map((it, i) => (
-                      <div
-                        key={it.title}
-                        className={`pt-7 pb-2 ${i === 0 ? "md:border-r md:border-line md:pr-10" : "border-t border-line md:border-t-0 md:pl-10"}`}
-                      >
-                        <h3 className="text-[19px] font-medium tracking-tight text-ink">{it.title}</h3>
-                        <p className="mt-2 text-[17px] leading-relaxed text-ink-soft">{it.text}</p>
+                  <div className="mt-6 grid gap-3 md:grid-cols-2">
+                    {p.items.map((it) => (
+                      <div key={it.title} className="rounded-2xl bg-white/[0.04] p-5">
+                        <h3 className="text-[16px] font-semibold tracking-tight">{it.title}</h3>
+                        <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{it.text}</p>
                       </div>
                     ))}
                   </div>
-                  <a href="#waitlist" className="link-arrow mt-9">
+                  <a href="#waitlist" className="link-arrow mt-6">
                     Join the waitlist
                     <Chevron />
                   </a>
@@ -465,7 +468,7 @@ export default function Home() {
                   }`}
                 >
                   {p.popular && (
-                    <span className="absolute top-7 right-7 rounded-full border border-white/25 px-2.5 py-1 text-[12px]">
+                    <span className="absolute top-7 right-7 rounded-full bg-white/10 px-2.5 py-1 text-[12px]">
                       Recommended
                     </span>
                   )}
@@ -479,14 +482,14 @@ export default function Home() {
                   <p className={`mt-1 text-[14px] ${p.popular ? "text-white" : "text-ink"}`}>then €{p.price} / month</p>
                   <p className={`mt-1 text-[12px] ${p.popular ? "text-[#a1a1a6]" : "text-ink-faint"}`}>{p.leads}</p>
                   <ul
-                    className={`mt-7 flex-1 space-y-3 border-t pt-7 text-[15px] ${p.popular ? "border-line-dark" : "border-line"}`}
+                    className={`mt-7 flex-1 space-y-3 text-[15px]`}
                   >
                     {p.features.map((f) =>
                       f === p.highlight ? (
                         <li key={f} className="flex items-center gap-2.5">
                           <Check />
                           <span className="font-medium text-ink">{f}</span>
-                          <span className="shrink-0 rounded-full border border-line px-2 py-0.5 text-[11px] whitespace-nowrap text-ink-soft">
+                          <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-[11px] whitespace-nowrap text-ink-soft">
                             Only in Studio
                           </span>
                         </li>
