@@ -8,10 +8,9 @@ import { HeroMotion } from "@/components/HeroMotion";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollWords } from "@/components/ScrollWords";
 import { StepsStory } from "@/components/StepsStory";
-import { GlassLights } from "@/components/GlassLights";
+import { CinematicRibs } from "@/components/CinematicRibs";
 import { ChromeLogo } from "@/components/ChromeLogo";
 import { CtaArcs } from "@/components/CtaArcs";
-import { FlowLights } from "@/components/FlowLights";
 import { Marquee } from "@/components/Marquee";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -303,16 +302,14 @@ export default function Home() {
         // Static data from this file only, escaped so it cannot close the script tag.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()).replaceAll("<", LT_ESCAPE) }}
       />
+      <CinematicRibs />
       <Nav />
       <ScrollProgress />
       <HeroMotion />
 
-      <main id="top">
+      <main id="top" className="relative z-10">
         {/* HERO: black, centered, big type */}
-        <section data-hero className="hero-bg dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
-          <div className="hero-glass" aria-hidden="true">
-            <GlassLights />
-          </div>
+        <section data-hero className="dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
           <div data-hero-copy className="hero-veil relative z-10 mx-auto max-w-[980px]">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 text-[17px] font-medium text-ink-faint">
@@ -358,9 +355,6 @@ export default function Home() {
 
         {/* Endless marquee band */}
         <div className="after-hero">
-          <div className="after-hero-bg" aria-hidden="true">
-            <FlowLights />
-          </div>
         <section aria-label="Why QuietLead" className="dark-section py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
           <Marquee items={marquee} />
         </section>
@@ -579,7 +573,7 @@ export default function Home() {
       </main>
 
       {/* FOOTER: Apple-style small print on light grey */}
-      <footer className="border-t border-line bg-black px-4 pt-10 pb-12 text-[12px] text-ink-soft">
+      <footer className="relative z-10 border-t border-line bg-black px-4 pt-10 pb-12 text-[12px] text-ink-soft">
         <div className="mx-auto max-w-[980px]">
           <p className="border-b border-line pb-5 leading-relaxed text-ink-faint">
             No tracking. The only cookies are the ones the waitlist needs to work, so there is nothing to consent to.{" "}
