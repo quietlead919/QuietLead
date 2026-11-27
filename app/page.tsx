@@ -11,18 +11,7 @@ import { StepsStory } from "@/components/StepsStory";
 import { CinematicRibs } from "@/components/CinematicRibs";
 import { ChromeLogo } from "@/components/ChromeLogo";
 import { CtaArcs } from "@/components/CtaArcs";
-import { Marquee } from "@/components/Marquee";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
-
-const marquee = [
-  "Up to 50 leads a day",
-  "You approve every message",
-  "Sent from your own inbox",
-  "Real research on every lead",
-  "Buying-signal alerts",
-  "Designed for GDPR",
-  "Built in Frankfurt",
-];
 
 type Panel = {
   title: string;
@@ -310,7 +299,7 @@ export default function Home() {
       <main id="top" className="relative z-10">
         {/* HERO: black, centered, big type */}
         <section data-hero className="dark-section relative overflow-hidden px-4 pt-36 pb-24 text-center text-white sm:pt-44 sm:pb-32">
-          <div data-hero-copy className="hero-veil relative z-10 mx-auto max-w-[980px]">
+          <div data-hero-copy className="relative z-10 mx-auto max-w-[980px]">
             <div className="fade-up">
               <p className="inline-flex items-center gap-2 text-[17px] font-medium text-ink-faint">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-white text-white" />
@@ -353,11 +342,7 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Endless marquee band */}
         <div className="after-hero">
-        <section aria-label="Why QuietLead" className="dark-section py-7 text-[24px] font-medium tracking-[-0.01em] text-[#86868b] uppercase sm:py-9 sm:text-[36px]">
-          <Marquee items={marquee} />
-        </section>
 
         {/* STEPS: pinned scroll story on white */}
         <StepsStory />

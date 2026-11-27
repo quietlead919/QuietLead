@@ -12,7 +12,7 @@ const links = [
 // Slim dark glass bar: liquid chrome mark, quiet links, a clear glass call to action.
 export function Nav() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[rgba(10,12,18,0.6)] backdrop-blur-xl backdrop-saturate-[1.8]">
+    <header className="nav-fade fixed inset-x-0 top-0 z-50">
       <nav className="mx-auto flex h-12 max-w-[1024px] items-center justify-between px-4 sm:px-6">
         <a href="#top" className="flex items-center gap-2" aria-label="QuietLead home">
           <ChromeLogo size={24} />

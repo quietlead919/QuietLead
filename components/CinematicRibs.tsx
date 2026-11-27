@@ -67,15 +67,16 @@ void main() {
 
   // Colour drift between deep blue and indigo-violet.
   float drift = 0.5 + 0.5 * sin(uTime * 0.07);
-  vec3 deep = mix(vec3(0.012, 0.045, 0.34), vec3(0.050, 0.030, 0.30), drift);
-  vec3 mid = mix(vec3(0.060, 0.230, 0.95), vec3(0.230, 0.180, 0.95), drift);
-  vec3 hi = vec3(0.62, 0.78, 1.0);
+  // Midnight blue, drifting only slightly towards indigo
+  vec3 deep = mix(vec3(0.004, 0.012, 0.075), vec3(0.010, 0.010, 0.080), drift);
+  vec3 mid = mix(vec3(0.030, 0.095, 0.40), vec3(0.060, 0.075, 0.42), drift);
+  vec3 hi = vec3(0.80, 0.87, 1.0);              // cool white light
 
   vec3 col = deep * (0.6 + 0.4 * tube);
   col = mix(col, mid, clamp(pow(tube, 1.6) * light, 0.0, 1.0));
   col += hi * spec * (0.25 + light) * 1.25;          // glossy streak on every rib
   col *= mix(0.12, 1.0, groove);                     // deep grooves between ribs
-  col += vec3(0.85, 0.92, 1.0) * core * 0.55;        // glowing centre seam
+  col += vec3(0.82, 0.88, 1.0) * core * 0.45;        // glowing centre seam
 
   // Dark channel running down the floor in the middle, like the reference.
   float floorMask = 1.0 - floorFade;
@@ -141,7 +142,7 @@ export function CinematicRibs() {
       const hero = document.querySelector<HTMLElement>("[data-hero]");
       const end = hero ? hero.offsetHeight * 0.7 : window.innerHeight;
       const t = Math.min(1, Math.max(0, window.scrollY / Math.max(1, end)));
-      return 1 - t * 0.6;
+      return 1 - t * 0.2;
     };
 
     let t = 0;
